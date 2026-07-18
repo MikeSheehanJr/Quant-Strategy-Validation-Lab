@@ -1,0 +1,47 @@
+# Plain-English GitHub launch copy
+
+Replace the two bracketed URLs only after they work in a logged-out browser.
+
+## Repository description
+
+Work-in-progress Python quant research dashboard focused on testing whether a simple strategy survives costs, bias checks, parameter changes, and out-of-sample validation.
+
+## GitHub profile pin description
+
+I built this project to show the research process behind a backtest—not just the final equity curve. It combines adversarial validation, an aggregate-only public data boundary, interactive Monte Carlo and parameter testing, automated tests, and release security checks.
+
+## Launch post
+
+I’ve published a work-in-progress quantitative research project: **Quant Strategy Validation Lab**.
+
+The project starts with a deliberately simple intraday futures strategy. The interesting part is not the strategy itself; it is the process used to test whether the result is fragile.
+
+The repository shows how I handled transaction costs, lookahead checks, out-of-sample validation, parameter sensitivity, multiple-testing risk, Monte Carlo resampling, rejected ideas, and unresolved limitations. The Streamlit app presents only reviewed monthly and parameter aggregates. It does not include raw market data, individual trades, credentials, brokerage details, or live signals.
+
+The historical June 2021–June 2026 sample contains 729 cost-adjusted trades with a 58.8% win rate and 1.315 profit factor. Those figures describe the research sample; they are not expected returns. Pre-2021 validation and a completed paper forward-test remain open.
+
+The engineering side includes a modular Python/Altair/Streamlit architecture, deterministic simulations, pytest coverage, commit-pinned GitHub Actions, dependency auditing, CodeQL, Dependabot, and a fail-closed public-release scanner.
+
+Repository: [GITHUB_URL]  
+Live app: [APP_URL]
+
+This is a research and software-engineering demonstration, not investment advice or a live trading system.
+
+## First release notes
+
+### v0.1.0 — public work-in-progress release
+
+- Added five dashboard views covering headline evidence, monthly Monte Carlo, parameter stability, validation results, and the build roadmap
+- Published an aggregate-only research snapshot with source hashes and no raw or trade-level data
+- Added deterministic 12/24/36-month block-bootstrap stress testing
+- Added execution, parameter, gate, and entry-window sensitivity views
+- Added automated tests, dependency auditing, CodeQL, Dependabot, secret/PII scanning, artifact controls, and commit-pinned automation
+- Documented the missing pre-2021 sample and unfinished paper forward-test
+
+## Social-preview caption
+
+Quant Strategy Validation Lab — a work-in-progress Python research project about testing robustness, documenting failures, and publishing evidence safely.
+
+## Language guardrails
+
+Use “historical research sample,” “cost-adjusted simulation,” “work in progress,” and “research demonstration.” Avoid “proven strategy,” “guaranteed edge,” “live returns,” or any statement that turns the Monte Carlo output into a forecast.

@@ -1,0 +1,2018 @@
+{
+  "meta": {
+    "schema_version": "1.1.0",
+    "snapshot_date": "2026-07-18",
+    "research_window": "Jun 2021\u2013Jun 2026",
+    "instrument": "MNQ (Micro E-mini Nasdaq-100 futures)",
+    "strategy_family": "30-minute opening-range breakout",
+    "data_granularity": "Monthly P&L and reviewed aggregate stress cells",
+    "source_data_description": "Licensed exchange-derived MNQ intraday bars",
+    "raw_market_data_included": false,
+    "trade_level_records_included": false,
+    "source_artifact_hashes": {
+      "engine": "1acf6408f4d0c2e897fe60d94de78ae225e90cc934882611857a2b90d2a9ec80",
+      "atlas": "f9aa99db8a96f7dd8b986004e0b314fc9dbf4b2623e3fe3584f5e5136e4f0519",
+      "stress_report": "2189669891fa6d2ec3ee356dda093282bafa61726d20edcfdc9d7adfbdf7b859"
+    }
+  },
+  "headline": {
+    "trade_count": 729,
+    "win_rate_pct": 58.8,
+    "profit_factor": 1.315,
+    "net_pnl_per_contract_usd": 16935,
+    "max_loss_per_contract_usd": -605,
+    "expectancy_r": 0.104,
+    "daily_sharpe": 1.317,
+    "commission_round_turn_usd": 1.2,
+    "modeled_slippage_ticks": 0.5,
+    "fill_resolution_minutes": 30
+  },
+  "monthly": [
+    {
+      "month": "2021-06",
+      "period_status": "Partial",
+      "pnl_usd": -86.4,
+      "cumulative_pnl_usd": -86.4,
+      "trades": 2,
+      "wins": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2021-07",
+      "period_status": "Complete",
+      "pnl_usd": 572.9,
+      "cumulative_pnl_usd": 486.5,
+      "trades": 8,
+      "wins": 7,
+      "win_rate_pct": 87.5
+    },
+    {
+      "month": "2021-08",
+      "period_status": "Complete",
+      "pnl_usd": 591.0,
+      "cumulative_pnl_usd": 1077.5,
+      "trades": 10,
+      "wins": 8,
+      "win_rate_pct": 80.0
+    },
+    {
+      "month": "2021-09",
+      "period_status": "Complete",
+      "pnl_usd": 511.8,
+      "cumulative_pnl_usd": 1589.3,
+      "trades": 6,
+      "wins": 4,
+      "win_rate_pct": 66.7
+    },
+    {
+      "month": "2021-10",
+      "period_status": "Complete",
+      "pnl_usd": 199.3,
+      "cumulative_pnl_usd": 1788.6,
+      "trades": 16,
+      "wins": 10,
+      "win_rate_pct": 62.5
+    },
+    {
+      "month": "2021-11",
+      "period_status": "Complete",
+      "pnl_usd": 599.7,
+      "cumulative_pnl_usd": 2388.3,
+      "trades": 9,
+      "wins": 7,
+      "win_rate_pct": 77.8
+    },
+    {
+      "month": "2021-12",
+      "period_status": "Complete",
+      "pnl_usd": -563.0,
+      "cumulative_pnl_usd": 1825.3,
+      "trades": 10,
+      "wins": 5,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2022-01",
+      "period_status": "Complete",
+      "pnl_usd": -115.0,
+      "cumulative_pnl_usd": 1710.3,
+      "trades": 10,
+      "wins": 5,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2022-02",
+      "period_status": "Complete",
+      "pnl_usd": 372.9,
+      "cumulative_pnl_usd": 2083.2,
+      "trades": 18,
+      "wins": 11,
+      "win_rate_pct": 61.1
+    },
+    {
+      "month": "2022-03",
+      "period_status": "Complete",
+      "pnl_usd": 963.6,
+      "cumulative_pnl_usd": 3046.8,
+      "trades": 17,
+      "wins": 10,
+      "win_rate_pct": 58.8
+    },
+    {
+      "month": "2022-04",
+      "period_status": "Complete",
+      "pnl_usd": 892.0,
+      "cumulative_pnl_usd": 3938.8,
+      "trades": 10,
+      "wins": 7,
+      "win_rate_pct": 70.0
+    },
+    {
+      "month": "2022-05",
+      "period_status": "Complete",
+      "pnl_usd": 411.8,
+      "cumulative_pnl_usd": 4350.6,
+      "trades": 16,
+      "wins": 9,
+      "win_rate_pct": 56.2
+    },
+    {
+      "month": "2022-06",
+      "period_status": "Complete",
+      "pnl_usd": 951.0,
+      "cumulative_pnl_usd": 5301.6,
+      "trades": 20,
+      "wins": 14,
+      "win_rate_pct": 70.0
+    },
+    {
+      "month": "2022-07",
+      "period_status": "Complete",
+      "pnl_usd": 1399.0,
+      "cumulative_pnl_usd": 6700.6,
+      "trades": 15,
+      "wins": 10,
+      "win_rate_pct": 66.7
+    },
+    {
+      "month": "2022-08",
+      "period_status": "Complete",
+      "pnl_usd": 545.2,
+      "cumulative_pnl_usd": 7245.8,
+      "trades": 14,
+      "wins": 9,
+      "win_rate_pct": 64.3
+    },
+    {
+      "month": "2022-09",
+      "period_status": "Complete",
+      "pnl_usd": -1235.5,
+      "cumulative_pnl_usd": 6010.3,
+      "trades": 20,
+      "wins": 8,
+      "win_rate_pct": 40.0
+    },
+    {
+      "month": "2022-10",
+      "period_status": "Complete",
+      "pnl_usd": -1028.5,
+      "cumulative_pnl_usd": 4981.8,
+      "trades": 15,
+      "wins": 5,
+      "win_rate_pct": 33.3
+    },
+    {
+      "month": "2022-11",
+      "period_status": "Complete",
+      "pnl_usd": 871.6,
+      "cumulative_pnl_usd": 5853.4,
+      "trades": 12,
+      "wins": 9,
+      "win_rate_pct": 75.0
+    },
+    {
+      "month": "2022-12",
+      "period_status": "Complete",
+      "pnl_usd": 243.2,
+      "cumulative_pnl_usd": 6096.6,
+      "trades": 14,
+      "wins": 8,
+      "win_rate_pct": 57.1
+    },
+    {
+      "month": "2023-01",
+      "period_status": "Complete",
+      "pnl_usd": 780.8,
+      "cumulative_pnl_usd": 6877.4,
+      "trades": 11,
+      "wins": 8,
+      "win_rate_pct": 72.7
+    },
+    {
+      "month": "2023-02",
+      "period_status": "Complete",
+      "pnl_usd": 63.1,
+      "cumulative_pnl_usd": 6940.5,
+      "trades": 7,
+      "wins": 4,
+      "win_rate_pct": 57.1
+    },
+    {
+      "month": "2023-03",
+      "period_status": "Complete",
+      "pnl_usd": 926.9,
+      "cumulative_pnl_usd": 7867.4,
+      "trades": 13,
+      "wins": 9,
+      "win_rate_pct": 69.2
+    },
+    {
+      "month": "2023-04",
+      "period_status": "Complete",
+      "pnl_usd": 496.2,
+      "cumulative_pnl_usd": 8363.6,
+      "trades": 9,
+      "wins": 7,
+      "win_rate_pct": 77.8
+    },
+    {
+      "month": "2023-05",
+      "period_status": "Complete",
+      "pnl_usd": 657.6,
+      "cumulative_pnl_usd": 9021.2,
+      "trades": 7,
+      "wins": 6,
+      "win_rate_pct": 85.7
+    },
+    {
+      "month": "2023-06",
+      "period_status": "Complete",
+      "pnl_usd": 472.3,
+      "cumulative_pnl_usd": 9493.5,
+      "trades": 11,
+      "wins": 6,
+      "win_rate_pct": 54.5
+    },
+    {
+      "month": "2023-07",
+      "period_status": "Complete",
+      "pnl_usd": -281.0,
+      "cumulative_pnl_usd": 9212.5,
+      "trades": 10,
+      "wins": 4,
+      "win_rate_pct": 40.0
+    },
+    {
+      "month": "2023-08",
+      "period_status": "Complete",
+      "pnl_usd": 1058.8,
+      "cumulative_pnl_usd": 10271.3,
+      "trades": 16,
+      "wins": 12,
+      "win_rate_pct": 75.0
+    },
+    {
+      "month": "2023-09",
+      "period_status": "Complete",
+      "pnl_usd": 305.2,
+      "cumulative_pnl_usd": 10576.5,
+      "trades": 14,
+      "wins": 10,
+      "win_rate_pct": 71.4
+    },
+    {
+      "month": "2023-10",
+      "period_status": "Complete",
+      "pnl_usd": -133.5,
+      "cumulative_pnl_usd": 10443.0,
+      "trades": 15,
+      "wins": 6,
+      "win_rate_pct": 40.0
+    },
+    {
+      "month": "2023-11",
+      "period_status": "Complete",
+      "pnl_usd": 874.1,
+      "cumulative_pnl_usd": 11317.1,
+      "trades": 12,
+      "wins": 8,
+      "win_rate_pct": 66.7
+    },
+    {
+      "month": "2023-12",
+      "period_status": "Complete",
+      "pnl_usd": 460.8,
+      "cumulative_pnl_usd": 11777.9,
+      "trades": 11,
+      "wins": 8,
+      "win_rate_pct": 72.7
+    },
+    {
+      "month": "2024-01",
+      "period_status": "Complete",
+      "pnl_usd": 208.9,
+      "cumulative_pnl_usd": 11986.8,
+      "trades": 13,
+      "wins": 7,
+      "win_rate_pct": 53.8
+    },
+    {
+      "month": "2024-02",
+      "period_status": "Complete",
+      "pnl_usd": -724.0,
+      "cumulative_pnl_usd": 11262.8,
+      "trades": 10,
+      "wins": 2,
+      "win_rate_pct": 20.0
+    },
+    {
+      "month": "2024-03",
+      "period_status": "Complete",
+      "pnl_usd": 492.4,
+      "cumulative_pnl_usd": 11755.2,
+      "trades": 8,
+      "wins": 5,
+      "win_rate_pct": 62.5
+    },
+    {
+      "month": "2024-04",
+      "period_status": "Complete",
+      "pnl_usd": 467.1,
+      "cumulative_pnl_usd": 12222.3,
+      "trades": 12,
+      "wins": 6,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2024-05",
+      "period_status": "Complete",
+      "pnl_usd": 118.3,
+      "cumulative_pnl_usd": 12340.6,
+      "trades": 16,
+      "wins": 8,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2024-06",
+      "period_status": "Complete",
+      "pnl_usd": 141.8,
+      "cumulative_pnl_usd": 12482.4,
+      "trades": 11,
+      "wins": 6,
+      "win_rate_pct": 54.5
+    },
+    {
+      "month": "2024-07",
+      "period_status": "Complete",
+      "pnl_usd": 888.2,
+      "cumulative_pnl_usd": 13370.6,
+      "trades": 9,
+      "wins": 7,
+      "win_rate_pct": 77.8
+    },
+    {
+      "month": "2024-08",
+      "period_status": "Complete",
+      "pnl_usd": 620.6,
+      "cumulative_pnl_usd": 13991.2,
+      "trades": 12,
+      "wins": 9,
+      "win_rate_pct": 75.0
+    },
+    {
+      "month": "2024-09",
+      "period_status": "Complete",
+      "pnl_usd": -1176.4,
+      "cumulative_pnl_usd": 12814.8,
+      "trades": 7,
+      "wins": 2,
+      "win_rate_pct": 28.6
+    },
+    {
+      "month": "2024-10",
+      "period_status": "Complete",
+      "pnl_usd": -233.3,
+      "cumulative_pnl_usd": 12581.5,
+      "trades": 14,
+      "wins": 6,
+      "win_rate_pct": 42.9
+    },
+    {
+      "month": "2024-11",
+      "period_status": "Complete",
+      "pnl_usd": 39.5,
+      "cumulative_pnl_usd": 12621.0,
+      "trades": 10,
+      "wins": 5,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2024-12",
+      "period_status": "Complete",
+      "pnl_usd": 897.6,
+      "cumulative_pnl_usd": 13518.6,
+      "trades": 12,
+      "wins": 8,
+      "win_rate_pct": 66.7
+    },
+    {
+      "month": "2025-01",
+      "period_status": "Complete",
+      "pnl_usd": -237.6,
+      "cumulative_pnl_usd": 13281.0,
+      "trades": 13,
+      "wins": 7,
+      "win_rate_pct": 53.8
+    },
+    {
+      "month": "2025-02",
+      "period_status": "Complete",
+      "pnl_usd": 377.3,
+      "cumulative_pnl_usd": 13658.3,
+      "trades": 11,
+      "wins": 6,
+      "win_rate_pct": 54.5
+    },
+    {
+      "month": "2025-03",
+      "period_status": "Complete",
+      "pnl_usd": 698.8,
+      "cumulative_pnl_usd": 14357.1,
+      "trades": 16,
+      "wins": 10,
+      "win_rate_pct": 62.5
+    },
+    {
+      "month": "2025-04",
+      "period_status": "Complete",
+      "pnl_usd": 850.7,
+      "cumulative_pnl_usd": 15207.8,
+      "trades": 14,
+      "wins": 10,
+      "win_rate_pct": 71.4
+    },
+    {
+      "month": "2025-05",
+      "period_status": "Complete",
+      "pnl_usd": -787.8,
+      "cumulative_pnl_usd": 14420.0,
+      "trades": 14,
+      "wins": 7,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2025-06",
+      "period_status": "Complete",
+      "pnl_usd": -1052.5,
+      "cumulative_pnl_usd": 13367.5,
+      "trades": 15,
+      "wins": 7,
+      "win_rate_pct": 46.7
+    },
+    {
+      "month": "2025-07",
+      "period_status": "Complete",
+      "pnl_usd": -74.0,
+      "cumulative_pnl_usd": 13293.5,
+      "trades": 10,
+      "wins": 5,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2025-08",
+      "period_status": "Complete",
+      "pnl_usd": 63.3,
+      "cumulative_pnl_usd": 13356.8,
+      "trades": 11,
+      "wins": 7,
+      "win_rate_pct": 63.6
+    },
+    {
+      "month": "2025-09",
+      "period_status": "Complete",
+      "pnl_usd": 20.8,
+      "cumulative_pnl_usd": 13377.6,
+      "trades": 11,
+      "wins": 7,
+      "win_rate_pct": 63.6
+    },
+    {
+      "month": "2025-10",
+      "period_status": "Complete",
+      "pnl_usd": 162.7,
+      "cumulative_pnl_usd": 13540.3,
+      "trades": 9,
+      "wins": 5,
+      "win_rate_pct": 55.6
+    },
+    {
+      "month": "2025-11",
+      "period_status": "Complete",
+      "pnl_usd": 778.0,
+      "cumulative_pnl_usd": 14318.3,
+      "trades": 5,
+      "wins": 3,
+      "win_rate_pct": 60.0
+    },
+    {
+      "month": "2025-12",
+      "period_status": "Complete",
+      "pnl_usd": -607.9,
+      "cumulative_pnl_usd": 13710.4,
+      "trades": 12,
+      "wins": 6,
+      "win_rate_pct": 50.0
+    },
+    {
+      "month": "2026-01",
+      "period_status": "Complete",
+      "pnl_usd": 131.3,
+      "cumulative_pnl_usd": 13841.7,
+      "trades": 11,
+      "wins": 5,
+      "win_rate_pct": 45.5
+    },
+    {
+      "month": "2026-02",
+      "period_status": "Complete",
+      "pnl_usd": 115.9,
+      "cumulative_pnl_usd": 13957.6,
+      "trades": 13,
+      "wins": 7,
+      "win_rate_pct": 53.8
+    },
+    {
+      "month": "2026-03",
+      "period_status": "Complete",
+      "pnl_usd": 225.7,
+      "cumulative_pnl_usd": 14183.3,
+      "trades": 19,
+      "wins": 9,
+      "win_rate_pct": 47.4
+    },
+    {
+      "month": "2026-04",
+      "period_status": "Complete",
+      "pnl_usd": 1546.4,
+      "cumulative_pnl_usd": 15729.7,
+      "trades": 13,
+      "wins": 9,
+      "win_rate_pct": 69.2
+    },
+    {
+      "month": "2026-05",
+      "period_status": "Complete",
+      "pnl_usd": 1001.4,
+      "cumulative_pnl_usd": 16731.1,
+      "trades": 13,
+      "wins": 8,
+      "win_rate_pct": 61.5
+    },
+    {
+      "month": "2026-06",
+      "period_status": "Partial",
+      "pnl_usd": 204.1,
+      "cumulative_pnl_usd": 16935.2,
+      "trades": 7,
+      "wins": 5,
+      "win_rate_pct": 71.4
+    }
+  ],
+  "yearly": [
+    {
+      "year": "2021",
+      "period_status": "Partial",
+      "pnl_usd": 1825.3,
+      "trades": 61,
+      "wins": 42,
+      "win_rate_pct": 68.9,
+      "profit_factor": 1.713
+    },
+    {
+      "year": "2022",
+      "period_status": "Complete",
+      "pnl_usd": 4271.3,
+      "trades": 181,
+      "wins": 105,
+      "win_rate_pct": 58.0,
+      "profit_factor": 1.266
+    },
+    {
+      "year": "2023",
+      "period_status": "Complete",
+      "pnl_usd": 5681.3,
+      "trades": 136,
+      "wins": 88,
+      "win_rate_pct": 64.7,
+      "profit_factor": 1.937
+    },
+    {
+      "year": "2024",
+      "period_status": "Complete",
+      "pnl_usd": 1740.7,
+      "trades": 134,
+      "wins": 71,
+      "win_rate_pct": 53.0,
+      "profit_factor": 1.193
+    },
+    {
+      "year": "2025",
+      "period_status": "Complete",
+      "pnl_usd": 191.8,
+      "trades": 141,
+      "wins": 80,
+      "win_rate_pct": 56.7,
+      "profit_factor": 1.015
+    },
+    {
+      "year": "2026",
+      "period_status": "Partial",
+      "pnl_usd": 3224.8,
+      "trades": 76,
+      "wins": 43,
+      "win_rate_pct": 56.6,
+      "profit_factor": 1.458
+    }
+  ],
+  "sides": [
+    {
+      "pnl_usd": 11794.3,
+      "trades": 586,
+      "wins": 346,
+      "win_rate_pct": 59.0,
+      "profit_factor": 1.299,
+      "side": "Long"
+    },
+    {
+      "pnl_usd": 5140.9,
+      "trades": 143,
+      "wins": 83,
+      "win_rate_pct": 58.0,
+      "profit_factor": 1.358,
+      "side": "Short"
+    }
+  ],
+  "execution": [
+    {
+      "fill_minutes": 1,
+      "slippage_ticks": 0.5,
+      "trades": 742,
+      "win_rate_pct": 57.3,
+      "profit_factor": 1.268,
+      "daily_sharpe": 1.244,
+      "net_pnl_usd": 16071
+    },
+    {
+      "fill_minutes": 1,
+      "slippage_ticks": 1.0,
+      "trades": 742,
+      "win_rate_pct": 57.3,
+      "profit_factor": 1.261,
+      "daily_sharpe": 1.216,
+      "net_pnl_usd": 15700
+    },
+    {
+      "fill_minutes": 1,
+      "slippage_ticks": 2.0,
+      "trades": 742,
+      "win_rate_pct": 57.1,
+      "profit_factor": 1.247,
+      "daily_sharpe": 1.159,
+      "net_pnl_usd": 14958
+    },
+    {
+      "fill_minutes": 5,
+      "slippage_ticks": 0.5,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.326,
+      "daily_sharpe": 1.465,
+      "net_pnl_usd": 19265
+    },
+    {
+      "fill_minutes": 5,
+      "slippage_ticks": 1.0,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.319,
+      "daily_sharpe": 1.436,
+      "net_pnl_usd": 18891
+    },
+    {
+      "fill_minutes": 5,
+      "slippage_ticks": 2.0,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.305,
+      "daily_sharpe": 1.38,
+      "net_pnl_usd": 18143
+    },
+    {
+      "fill_minutes": 15,
+      "slippage_ticks": 0.5,
+      "trades": 740,
+      "win_rate_pct": 58.6,
+      "profit_factor": 1.268,
+      "daily_sharpe": 1.192,
+      "net_pnl_usd": 15898
+    },
+    {
+      "fill_minutes": 15,
+      "slippage_ticks": 1.0,
+      "trades": 740,
+      "win_rate_pct": 58.6,
+      "profit_factor": 1.261,
+      "daily_sharpe": 1.164,
+      "net_pnl_usd": 15528
+    },
+    {
+      "fill_minutes": 15,
+      "slippage_ticks": 2.0,
+      "trades": 740,
+      "win_rate_pct": 58.5,
+      "profit_factor": 1.247,
+      "daily_sharpe": 1.109,
+      "net_pnl_usd": 14788
+    },
+    {
+      "fill_minutes": 30,
+      "slippage_ticks": 0.5,
+      "trades": 729,
+      "win_rate_pct": 58.8,
+      "profit_factor": 1.315,
+      "daily_sharpe": 1.317,
+      "net_pnl_usd": 16935
+    },
+    {
+      "fill_minutes": 30,
+      "slippage_ticks": 1.0,
+      "trades": 729,
+      "win_rate_pct": 58.7,
+      "profit_factor": 1.307,
+      "daily_sharpe": 1.288,
+      "net_pnl_usd": 16571
+    },
+    {
+      "fill_minutes": 30,
+      "slippage_ticks": 2.0,
+      "trades": 729,
+      "win_rate_pct": 58.7,
+      "profit_factor": 1.292,
+      "daily_sharpe": 1.232,
+      "net_pnl_usd": 15842
+    }
+  ],
+  "rr_sensitivity": [
+    {
+      "reward_risk": 0.5,
+      "trades": 748,
+      "win_rate_pct": 66.6,
+      "profit_factor": 1.153,
+      "daily_sharpe": 0.733,
+      "net_pnl_usd": 7473
+    },
+    {
+      "reward_risk": 0.75,
+      "trades": 748,
+      "win_rate_pct": 61.4,
+      "profit_factor": 1.256,
+      "daily_sharpe": 1.2,
+      "net_pnl_usd": 14268
+    },
+    {
+      "reward_risk": 1.0,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.326,
+      "daily_sharpe": 1.465,
+      "net_pnl_usd": 19265
+    },
+    {
+      "reward_risk": 1.25,
+      "trades": 748,
+      "win_rate_pct": 55.2,
+      "profit_factor": 1.271,
+      "daily_sharpe": 1.224,
+      "net_pnl_usd": 16832
+    },
+    {
+      "reward_risk": 1.5,
+      "trades": 748,
+      "win_rate_pct": 54.7,
+      "profit_factor": 1.269,
+      "daily_sharpe": 1.195,
+      "net_pnl_usd": 16853
+    },
+    {
+      "reward_risk": 1.75,
+      "trades": 748,
+      "win_rate_pct": 54.4,
+      "profit_factor": 1.281,
+      "daily_sharpe": 1.231,
+      "net_pnl_usd": 17705
+    },
+    {
+      "reward_risk": 2.0,
+      "trades": 748,
+      "win_rate_pct": 54.0,
+      "profit_factor": 1.282,
+      "daily_sharpe": 1.221,
+      "net_pnl_usd": 17927
+    },
+    {
+      "reward_risk": 2.5,
+      "trades": 748,
+      "win_rate_pct": 53.9,
+      "profit_factor": 1.301,
+      "daily_sharpe": 1.275,
+      "net_pnl_usd": 19153
+    },
+    {
+      "reward_risk": 3.0,
+      "trades": 748,
+      "win_rate_pct": 53.9,
+      "profit_factor": 1.306,
+      "daily_sharpe": 1.285,
+      "net_pnl_usd": 19491
+    }
+  ],
+  "parameter_surfaces": {
+    "reward_risk_x_filter_drop": [
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 0,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 60.8,
+        "profit_factor": 1.178,
+        "daily_sharpe": 0.897,
+        "net_pnl_usd": 12882
+      },
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 5,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 61.3,
+        "profit_factor": 1.237,
+        "daily_sharpe": 1.152,
+        "net_pnl_usd": 14655
+      },
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 10,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 61.4,
+        "profit_factor": 1.256,
+        "daily_sharpe": 1.2,
+        "net_pnl_usd": 14268
+      },
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 15,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 60.7,
+        "profit_factor": 1.202,
+        "daily_sharpe": 0.941,
+        "net_pnl_usd": 10666
+      },
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 20,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 61.6,
+        "profit_factor": 1.24,
+        "daily_sharpe": 1.076,
+        "net_pnl_usd": 11595
+      },
+      {
+        "reward_risk": 0.75,
+        "filter_drop_pct": 30,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 62.6,
+        "profit_factor": 1.29,
+        "daily_sharpe": 1.176,
+        "net_pnl_usd": 11158
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 0,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 5,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 57.9,
+        "profit_factor": 1.299,
+        "daily_sharpe": 1.4,
+        "net_pnl_usd": 19545
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 10,
+        "is_frozen": true,
+        "trades": 748,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.326,
+        "daily_sharpe": 1.465,
+        "net_pnl_usd": 19265
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 15,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 57.0,
+        "profit_factor": 1.272,
+        "daily_sharpe": 1.219,
+        "net_pnl_usd": 15216
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 20,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.303,
+        "daily_sharpe": 1.308,
+        "net_pnl_usd": 15546
+      },
+      {
+        "reward_risk": 1.0,
+        "filter_drop_pct": 30,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 58.4,
+        "profit_factor": 1.352,
+        "daily_sharpe": 1.377,
+        "net_pnl_usd": 14487
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 0,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 55.3,
+        "profit_factor": 1.229,
+        "daily_sharpe": 1.095,
+        "net_pnl_usd": 18174
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 5,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 55.4,
+        "profit_factor": 1.243,
+        "daily_sharpe": 1.146,
+        "net_pnl_usd": 16728
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 10,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 55.2,
+        "profit_factor": 1.271,
+        "daily_sharpe": 1.224,
+        "net_pnl_usd": 16832
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 15,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 54.3,
+        "profit_factor": 1.225,
+        "daily_sharpe": 1.01,
+        "net_pnl_usd": 13253
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 20,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 54.8,
+        "profit_factor": 1.243,
+        "daily_sharpe": 1.056,
+        "net_pnl_usd": 13171
+      },
+      {
+        "reward_risk": 1.25,
+        "filter_drop_pct": 30,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 55.2,
+        "profit_factor": 1.266,
+        "daily_sharpe": 1.065,
+        "net_pnl_usd": 11752
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 0,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 54.5,
+        "profit_factor": 1.212,
+        "daily_sharpe": 0.997,
+        "net_pnl_usd": 17012
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 5,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 54.8,
+        "profit_factor": 1.234,
+        "daily_sharpe": 1.088,
+        "net_pnl_usd": 16226
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 10,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 54.7,
+        "profit_factor": 1.269,
+        "daily_sharpe": 1.195,
+        "net_pnl_usd": 16853
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 15,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 53.7,
+        "profit_factor": 1.219,
+        "daily_sharpe": 0.972,
+        "net_pnl_usd": 13059
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 20,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 54.2,
+        "profit_factor": 1.245,
+        "daily_sharpe": 1.044,
+        "net_pnl_usd": 13433
+      },
+      {
+        "reward_risk": 1.5,
+        "filter_drop_pct": 30,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 54.4,
+        "profit_factor": 1.261,
+        "daily_sharpe": 1.032,
+        "net_pnl_usd": 11697
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 0,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 54.0,
+        "profit_factor": 1.237,
+        "daily_sharpe": 1.076,
+        "net_pnl_usd": 19287
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 5,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 54.2,
+        "profit_factor": 1.249,
+        "daily_sharpe": 1.13,
+        "net_pnl_usd": 17534
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 10,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 54.0,
+        "profit_factor": 1.282,
+        "daily_sharpe": 1.221,
+        "net_pnl_usd": 17927
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 15,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 53.0,
+        "profit_factor": 1.234,
+        "daily_sharpe": 1.007,
+        "net_pnl_usd": 14143
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 20,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 53.5,
+        "profit_factor": 1.258,
+        "daily_sharpe": 1.069,
+        "net_pnl_usd": 14391
+      },
+      {
+        "reward_risk": 2.0,
+        "filter_drop_pct": 30,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 53.7,
+        "profit_factor": 1.283,
+        "daily_sharpe": 1.083,
+        "net_pnl_usd": 12851
+      }
+    ],
+    "opening_range_x_reward_risk": [
+      {
+        "opening_range_minutes": 15,
+        "reward_risk": 0.75,
+        "is_frozen": false,
+        "trades": 725,
+        "win_rate_pct": 62.1,
+        "profit_factor": 1.215,
+        "daily_sharpe": 1.04,
+        "net_pnl_usd": 10647
+      },
+      {
+        "opening_range_minutes": 15,
+        "reward_risk": 1.0,
+        "is_frozen": false,
+        "trades": 725,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.287,
+        "daily_sharpe": 1.351,
+        "net_pnl_usd": 15561
+      },
+      {
+        "opening_range_minutes": 15,
+        "reward_risk": 1.25,
+        "is_frozen": false,
+        "trades": 725,
+        "win_rate_pct": 54.3,
+        "profit_factor": 1.303,
+        "daily_sharpe": 1.404,
+        "net_pnl_usd": 17564
+      },
+      {
+        "opening_range_minutes": 15,
+        "reward_risk": 1.5,
+        "is_frozen": false,
+        "trades": 725,
+        "win_rate_pct": 52.3,
+        "profit_factor": 1.313,
+        "daily_sharpe": 1.423,
+        "net_pnl_usd": 18821
+      },
+      {
+        "opening_range_minutes": 30,
+        "reward_risk": 0.75,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 61.4,
+        "profit_factor": 1.256,
+        "daily_sharpe": 1.2,
+        "net_pnl_usd": 14268
+      },
+      {
+        "opening_range_minutes": 30,
+        "reward_risk": 1.0,
+        "is_frozen": true,
+        "trades": 748,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.326,
+        "daily_sharpe": 1.465,
+        "net_pnl_usd": 19265
+      },
+      {
+        "opening_range_minutes": 30,
+        "reward_risk": 1.25,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 55.2,
+        "profit_factor": 1.271,
+        "daily_sharpe": 1.224,
+        "net_pnl_usd": 16832
+      },
+      {
+        "opening_range_minutes": 30,
+        "reward_risk": 1.5,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 54.7,
+        "profit_factor": 1.269,
+        "daily_sharpe": 1.195,
+        "net_pnl_usd": 16853
+      },
+      {
+        "opening_range_minutes": 45,
+        "reward_risk": 0.75,
+        "is_frozen": false,
+        "trades": 752,
+        "win_rate_pct": 60.5,
+        "profit_factor": 1.181,
+        "daily_sharpe": 0.828,
+        "net_pnl_usd": 10395
+      },
+      {
+        "opening_range_minutes": 45,
+        "reward_risk": 1.0,
+        "is_frozen": false,
+        "trades": 752,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.215,
+        "daily_sharpe": 0.958,
+        "net_pnl_usd": 12892
+      },
+      {
+        "opening_range_minutes": 45,
+        "reward_risk": 1.25,
+        "is_frozen": false,
+        "trades": 752,
+        "win_rate_pct": 56.8,
+        "profit_factor": 1.199,
+        "daily_sharpe": 0.877,
+        "net_pnl_usd": 12111
+      },
+      {
+        "opening_range_minutes": 45,
+        "reward_risk": 1.5,
+        "is_frozen": false,
+        "trades": 752,
+        "win_rate_pct": 56.6,
+        "profit_factor": 1.224,
+        "daily_sharpe": 0.966,
+        "net_pnl_usd": 13679
+      },
+      {
+        "opening_range_minutes": 60,
+        "reward_risk": 0.75,
+        "is_frozen": false,
+        "trades": 740,
+        "win_rate_pct": 60.3,
+        "profit_factor": 1.256,
+        "daily_sharpe": 1.104,
+        "net_pnl_usd": 13355
+      },
+      {
+        "opening_range_minutes": 60,
+        "reward_risk": 1.0,
+        "is_frozen": false,
+        "trades": 740,
+        "win_rate_pct": 58.9,
+        "profit_factor": 1.294,
+        "daily_sharpe": 1.228,
+        "net_pnl_usd": 15668
+      },
+      {
+        "opening_range_minutes": 60,
+        "reward_risk": 1.25,
+        "is_frozen": false,
+        "trades": 740,
+        "win_rate_pct": 58.1,
+        "profit_factor": 1.297,
+        "daily_sharpe": 1.221,
+        "net_pnl_usd": 16104
+      },
+      {
+        "opening_range_minutes": 60,
+        "reward_risk": 1.5,
+        "is_frozen": false,
+        "trades": 740,
+        "win_rate_pct": 58.1,
+        "profit_factor": 1.322,
+        "daily_sharpe": 1.291,
+        "net_pnl_usd": 17458
+      }
+    ],
+    "filter_drop_x_lookback": [
+      {
+        "filter_drop_pct": 0,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "filter_drop_pct": 0,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "filter_drop_pct": 0,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "filter_drop_pct": 0,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "filter_drop_pct": 0,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 873,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.26,
+        "daily_sharpe": 1.252,
+        "net_pnl_usd": 19732
+      },
+      {
+        "filter_drop_pct": 5,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 804,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.303,
+        "daily_sharpe": 1.407,
+        "net_pnl_usd": 19909
+      },
+      {
+        "filter_drop_pct": 5,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 792,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.289,
+        "daily_sharpe": 1.348,
+        "net_pnl_usd": 18673
+      },
+      {
+        "filter_drop_pct": 5,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 807,
+        "win_rate_pct": 57.9,
+        "profit_factor": 1.299,
+        "daily_sharpe": 1.4,
+        "net_pnl_usd": 19545
+      },
+      {
+        "filter_drop_pct": 5,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 804,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.3,
+        "daily_sharpe": 1.406,
+        "net_pnl_usd": 19509
+      },
+      {
+        "filter_drop_pct": 5,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 796,
+        "win_rate_pct": 58.2,
+        "profit_factor": 1.344,
+        "daily_sharpe": 1.574,
+        "net_pnl_usd": 21545
+      },
+      {
+        "filter_drop_pct": 10,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 58.2,
+        "profit_factor": 1.32,
+        "daily_sharpe": 1.439,
+        "net_pnl_usd": 19038
+      },
+      {
+        "filter_drop_pct": 10,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 746,
+        "win_rate_pct": 57.1,
+        "profit_factor": 1.244,
+        "daily_sharpe": 1.131,
+        "net_pnl_usd": 14888
+      },
+      {
+        "filter_drop_pct": 10,
+        "lookback_days": 60,
+        "is_frozen": true,
+        "trades": 748,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.326,
+        "daily_sharpe": 1.465,
+        "net_pnl_usd": 19265
+      },
+      {
+        "filter_drop_pct": 10,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 751,
+        "win_rate_pct": 58.3,
+        "profit_factor": 1.377,
+        "daily_sharpe": 1.662,
+        "net_pnl_usd": 21826
+      },
+      {
+        "filter_drop_pct": 10,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 748,
+        "win_rate_pct": 58.4,
+        "profit_factor": 1.383,
+        "daily_sharpe": 1.682,
+        "net_pnl_usd": 21818
+      },
+      {
+        "filter_drop_pct": 15,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 708,
+        "win_rate_pct": 57.3,
+        "profit_factor": 1.266,
+        "daily_sharpe": 1.192,
+        "net_pnl_usd": 15216
+      },
+      {
+        "filter_drop_pct": 15,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 691,
+        "win_rate_pct": 57.3,
+        "profit_factor": 1.322,
+        "daily_sharpe": 1.394,
+        "net_pnl_usd": 17133
+      },
+      {
+        "filter_drop_pct": 15,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 704,
+        "win_rate_pct": 57.0,
+        "profit_factor": 1.272,
+        "daily_sharpe": 1.219,
+        "net_pnl_usd": 15216
+      },
+      {
+        "filter_drop_pct": 15,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 707,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.319,
+        "daily_sharpe": 1.402,
+        "net_pnl_usd": 17455
+      },
+      {
+        "filter_drop_pct": 15,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 699,
+        "win_rate_pct": 57.8,
+        "profit_factor": 1.316,
+        "daily_sharpe": 1.39,
+        "net_pnl_usd": 16842
+      },
+      {
+        "filter_drop_pct": 20,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 651,
+        "win_rate_pct": 57.1,
+        "profit_factor": 1.296,
+        "daily_sharpe": 1.266,
+        "net_pnl_usd": 15096
+      },
+      {
+        "filter_drop_pct": 20,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 658,
+        "win_rate_pct": 58.1,
+        "profit_factor": 1.339,
+        "daily_sharpe": 1.427,
+        "net_pnl_usd": 17036
+      },
+      {
+        "filter_drop_pct": 20,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 666,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.303,
+        "daily_sharpe": 1.308,
+        "net_pnl_usd": 15546
+      },
+      {
+        "filter_drop_pct": 20,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 654,
+        "win_rate_pct": 57.6,
+        "profit_factor": 1.304,
+        "daily_sharpe": 1.303,
+        "net_pnl_usd": 15010
+      },
+      {
+        "filter_drop_pct": 20,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 636,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.277,
+        "daily_sharpe": 1.185,
+        "net_pnl_usd": 13194
+      },
+      {
+        "filter_drop_pct": 25,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 619,
+        "win_rate_pct": 57.4,
+        "profit_factor": 1.295,
+        "daily_sharpe": 1.231,
+        "net_pnl_usd": 14241
+      },
+      {
+        "filter_drop_pct": 25,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 620,
+        "win_rate_pct": 57.4,
+        "profit_factor": 1.305,
+        "daily_sharpe": 1.27,
+        "net_pnl_usd": 14560
+      },
+      {
+        "filter_drop_pct": 25,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 619,
+        "win_rate_pct": 58.0,
+        "profit_factor": 1.296,
+        "daily_sharpe": 1.238,
+        "net_pnl_usd": 13844
+      },
+      {
+        "filter_drop_pct": 25,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 605,
+        "win_rate_pct": 57.7,
+        "profit_factor": 1.287,
+        "daily_sharpe": 1.197,
+        "net_pnl_usd": 13015
+      },
+      {
+        "filter_drop_pct": 25,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 589,
+        "win_rate_pct": 57.9,
+        "profit_factor": 1.28,
+        "daily_sharpe": 1.155,
+        "net_pnl_usd": 12137
+      },
+      {
+        "filter_drop_pct": 30,
+        "lookback_days": 30,
+        "is_frozen": false,
+        "trades": 584,
+        "win_rate_pct": 57.0,
+        "profit_factor": 1.256,
+        "daily_sharpe": 1.062,
+        "net_pnl_usd": 11669
+      },
+      {
+        "filter_drop_pct": 30,
+        "lookback_days": 40,
+        "is_frozen": false,
+        "trades": 582,
+        "win_rate_pct": 57.4,
+        "profit_factor": 1.29,
+        "daily_sharpe": 1.185,
+        "net_pnl_usd": 12835
+      },
+      {
+        "filter_drop_pct": 30,
+        "lookback_days": 60,
+        "is_frozen": false,
+        "trades": 562,
+        "win_rate_pct": 58.4,
+        "profit_factor": 1.352,
+        "daily_sharpe": 1.377,
+        "net_pnl_usd": 14487
+      },
+      {
+        "filter_drop_pct": 30,
+        "lookback_days": 90,
+        "is_frozen": false,
+        "trades": 552,
+        "win_rate_pct": 58.5,
+        "profit_factor": 1.328,
+        "daily_sharpe": 1.288,
+        "net_pnl_usd": 12959
+      },
+      {
+        "filter_drop_pct": 30,
+        "lookback_days": 120,
+        "is_frozen": false,
+        "trades": 539,
+        "win_rate_pct": 58.6,
+        "profit_factor": 1.329,
+        "daily_sharpe": 1.269,
+        "net_pnl_usd": 12507
+      }
+    ]
+  },
+  "gate_sensitivity": [
+    {
+      "gate_kind": "EMA",
+      "gate_length": 10,
+      "is_frozen": false,
+      "trades": 776,
+      "win_rate_pct": 57.6,
+      "profit_factor": 1.308,
+      "daily_sharpe": 1.421,
+      "net_pnl_usd": 18815
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 20,
+      "is_frozen": false,
+      "trades": 757,
+      "win_rate_pct": 57.9,
+      "profit_factor": 1.341,
+      "daily_sharpe": 1.534,
+      "net_pnl_usd": 20232
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 30,
+      "is_frozen": false,
+      "trades": 751,
+      "win_rate_pct": 57.5,
+      "profit_factor": 1.307,
+      "daily_sharpe": 1.395,
+      "net_pnl_usd": 18380
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 50,
+      "is_frozen": false,
+      "trades": 744,
+      "win_rate_pct": 57.9,
+      "profit_factor": 1.328,
+      "daily_sharpe": 1.465,
+      "net_pnl_usd": 19120
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 75,
+      "is_frozen": false,
+      "trades": 741,
+      "win_rate_pct": 57.9,
+      "profit_factor": 1.331,
+      "daily_sharpe": 1.477,
+      "net_pnl_usd": 19207
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 100,
+      "is_frozen": false,
+      "trades": 732,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.331,
+      "daily_sharpe": 1.468,
+      "net_pnl_usd": 18935
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 150,
+      "is_frozen": false,
+      "trades": 722,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.328,
+      "daily_sharpe": 1.443,
+      "net_pnl_usd": 18372
+    },
+    {
+      "gate_kind": "EMA",
+      "gate_length": 200,
+      "is_frozen": false,
+      "trades": 720,
+      "win_rate_pct": 57.5,
+      "profit_factor": 1.31,
+      "daily_sharpe": 1.37,
+      "net_pnl_usd": 17260
+    },
+    {
+      "gate_kind": "Off",
+      "gate_length": 0,
+      "is_frozen": false,
+      "trades": 1090,
+      "win_rate_pct": 54.9,
+      "profit_factor": 1.205,
+      "daily_sharpe": 1.167,
+      "net_pnl_usd": 17946
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 10,
+      "is_frozen": false,
+      "trades": 787,
+      "win_rate_pct": 57.6,
+      "profit_factor": 1.286,
+      "daily_sharpe": 1.341,
+      "net_pnl_usd": 17924
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 20,
+      "is_frozen": false,
+      "trades": 762,
+      "win_rate_pct": 57.0,
+      "profit_factor": 1.274,
+      "daily_sharpe": 1.27,
+      "net_pnl_usd": 16796
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 30,
+      "is_frozen": false,
+      "trades": 753,
+      "win_rate_pct": 57.2,
+      "profit_factor": 1.29,
+      "daily_sharpe": 1.33,
+      "net_pnl_usd": 17535
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 50,
+      "is_frozen": true,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.326,
+      "daily_sharpe": 1.465,
+      "net_pnl_usd": 19265
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 75,
+      "is_frozen": false,
+      "trades": 748,
+      "win_rate_pct": 57.6,
+      "profit_factor": 1.317,
+      "daily_sharpe": 1.431,
+      "net_pnl_usd": 18772
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 100,
+      "is_frozen": false,
+      "trades": 744,
+      "win_rate_pct": 57.4,
+      "profit_factor": 1.311,
+      "daily_sharpe": 1.401,
+      "net_pnl_usd": 18291
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 150,
+      "is_frozen": false,
+      "trades": 735,
+      "win_rate_pct": 57.1,
+      "profit_factor": 1.293,
+      "daily_sharpe": 1.322,
+      "net_pnl_usd": 17077
+    },
+    {
+      "gate_kind": "SMA",
+      "gate_length": 200,
+      "is_frozen": false,
+      "trades": 726,
+      "win_rate_pct": 57.4,
+      "profit_factor": 1.313,
+      "daily_sharpe": 1.388,
+      "net_pnl_usd": 17645
+    }
+  ],
+  "entry_cutoff_sensitivity": [
+    {
+      "entry_cutoff": "10:30",
+      "display_order": 0,
+      "is_frozen": false,
+      "trades": 512,
+      "win_rate_pct": 58.2,
+      "profit_factor": 1.333,
+      "daily_sharpe": 1.262,
+      "net_pnl_usd": 14287
+    },
+    {
+      "entry_cutoff": "11:00",
+      "display_order": 1,
+      "is_frozen": false,
+      "trades": 635,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.323,
+      "daily_sharpe": 1.353,
+      "net_pnl_usd": 16882
+    },
+    {
+      "entry_cutoff": "12:00",
+      "display_order": 2,
+      "is_frozen": false,
+      "trades": 709,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.327,
+      "daily_sharpe": 1.442,
+      "net_pnl_usd": 18698
+    },
+    {
+      "entry_cutoff": "13:00",
+      "display_order": 3,
+      "is_frozen": false,
+      "trades": 727,
+      "win_rate_pct": 57.9,
+      "profit_factor": 1.333,
+      "daily_sharpe": 1.475,
+      "net_pnl_usd": 19314
+    },
+    {
+      "entry_cutoff": "14:30",
+      "display_order": 4,
+      "is_frozen": false,
+      "trades": 735,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.323,
+      "daily_sharpe": 1.442,
+      "net_pnl_usd": 18923
+    },
+    {
+      "entry_cutoff": "15:00",
+      "display_order": 5,
+      "is_frozen": false,
+      "trades": 744,
+      "win_rate_pct": 57.9,
+      "profit_factor": 1.332,
+      "daily_sharpe": 1.485,
+      "net_pnl_usd": 19518
+    },
+    {
+      "entry_cutoff": "16:00 (none)",
+      "display_order": 6,
+      "is_frozen": true,
+      "trades": 748,
+      "win_rate_pct": 57.8,
+      "profit_factor": 1.326,
+      "daily_sharpe": 1.465,
+      "net_pnl_usd": 19265
+    }
+  ],
+  "validation": [
+    {
+      "test": "Lookahead audit",
+      "status": "Passed",
+      "evidence": "0/1,289 opening-range mismatches; 0/1,508 trend-gate mismatches",
+      "why_it_matters": "Confirms inputs were reconstructed from information available before entry."
+    },
+    {
+      "test": "Probabilistic Sharpe ratio",
+      "status": "Passed",
+      "evidence": "PSR 0.9995; 3.30\u03c3 versus zero",
+      "why_it_matters": "Adjusts the Sharpe evidence for non-normal returns."
+    },
+    {
+      "test": "Deflated Sharpe ratio",
+      "status": "Passed with caveat",
+      "evidence": "DSR 0.961 at raw N=140 configurations",
+      "why_it_matters": "Penalizes the result for multiple testing and model search."
+    },
+    {
+      "test": "Combinatorial purged CV",
+      "status": "Passed",
+      "evidence": "45/45 OOS-positive splits; p10 Sharpe 0.63",
+      "why_it_matters": "Tests the result across embargoed out-of-sample combinations."
+    },
+    {
+      "test": "Direction permutation",
+      "status": "Passed",
+      "evidence": "Actual Sharpe 1.46; p < 0.0005",
+      "why_it_matters": "Rejects the null that breakout direction was arbitrary."
+    },
+    {
+      "test": "Fill resolution \u00d7 costs",
+      "status": "Passed",
+      "evidence": "24/24 full stress cells profitable; displayed PF range 1.247\u20131.326",
+      "why_it_matters": "Checks whether the edge depends on optimistic execution assumptions."
+    }
+  ],
+  "failed_ideas": [
+    {
+      "idea": "Regime-switched reward:risk targets",
+      "result": "Honest walk-forward delta was approximately +0.01; selection wins were unstable.",
+      "decision": "Rejected"
+    },
+    {
+      "idea": "VWAP trailing exit",
+      "result": "Win rate fell to roughly 35\u201338% and funded-objective performance deteriorated.",
+      "decision": "Rejected"
+    },
+    {
+      "idea": "End-of-day exit",
+      "result": "Lost 34/45 CPCV splits versus the frozen 1:1 exit.",
+      "decision": "Rejected"
+    },
+    {
+      "idea": "Universal cross-instrument edge",
+      "result": "ES/MES retained only about 40% of the effect; gold was weak pre-sample.",
+      "decision": "Rejected"
+    },
+    {
+      "idea": "Retune to the best full-sample parameter",
+      "result": "Several higher full-sample cells failed the pre-registered CPCV adoption bar.",
+      "decision": "Rejected"
+    }
+  ],
+  "project_status": [
+    {
+      "phase": "1. Public safety boundary",
+      "status": "Complete",
+      "objective": "Separate the portfolio project from the private strategy workspace.",
+      "evidence": "Aggregate-only data contract and release scanner."
+    },
+    {
+      "phase": "2. Evidence snapshot",
+      "status": "Complete",
+      "objective": "Package verified metrics without redistributing intraday data.",
+      "evidence": "Versioned JSON with source hashes and reconciliation tests."
+    },
+    {
+      "phase": "3. Dashboard MVP",
+      "status": "Complete",
+      "objective": "Make the research legible to a recruiter in under one minute.",
+      "evidence": "Overview, robustness, and build-log views."
+    },
+    {
+      "phase": "4. Automated QA",
+      "status": "Complete",
+      "objective": "Test calculations, charts, app rendering, and release safety.",
+      "evidence": "pytest suite, CI workflow, and public-release preflight."
+    },
+    {
+      "phase": "5. Publishing kit",
+      "status": "Complete",
+      "objective": "Prepare LinkedIn, GitHub, profile, and resume instructions.",
+      "evidence": "Step-by-step publishing guide and copy templates."
+    },
+    {
+      "phase": "6. Hosted launch",
+      "status": "Pending",
+      "objective": "Publish only after a final human review of the staged repository.",
+      "evidence": "Public GitHub URL, live Streamlit URL, and logged-out review."
+    },
+    {
+      "phase": "7. Forward validation",
+      "status": "Planned",
+      "objective": "Reconcile paper signals and extend evidence beyond the research sample.",
+      "evidence": "Versioned forward-test log and predefined pass/fail criteria."
+    }
+  ],
+  "limitations": [
+    "Historical backtests can overstate future performance even after extensive validation.",
+    "The MNQ/NQ sample begins in June 2021; pre-2021 Nasdaq regimes are not covered.",
+    "The 2026 calendar bar is a partial year ending in June.",
+    "Monthly aggregates conceal intramonth drawdown and path dependence.",
+    "The public snapshot cannot reproduce the backtest without separately licensed raw data.",
+    "No live-money execution claim is made; paper forward-testing remains outstanding."
+  ]
+}
