@@ -1,0 +1,17 @@
+# Data notice
+
+This repository does **not** include raw market data, resampled OHLCV data, trade-level records, credentials, account records, or live signals.
+
+`data/public_snapshot.json` contains monthly P&L aggregates plus reviewed execution, parameter-surface, gate, cutoff, and validation summaries. It does not contain daily observations, intraday timestamps, or trade records. The optional exporter requires a separate private workspace and separately licensed source data.
+
+The Monte Carlo paths shown in the app are generated at runtime from the 59 complete public monthly aggregates. They are synthetic resamples, contain no additional private observations, and are not written back into the snapshot.
+
+Before publishing any regenerated snapshot:
+
+1. Confirm that your data-provider agreement permits publication of the intended derived statistics.
+2. Run `python scripts/release_gate.py`.
+3. Inspect the full staged diff and every file size.
+4. Verify that no intraday timestamp, bar, trade, credential, or local path is present.
+5. Publish only the aggregate artifact—not the source data directory.
+
+The dashboard reference images supplied during design were used only as visual mood references. They are not included, copied, or redistributed here.

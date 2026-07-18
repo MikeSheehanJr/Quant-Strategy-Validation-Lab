@@ -1,0 +1,74 @@
+# Professional dark research theme with blue-to-white analytical accents.
+# The supplied dashboard images remain visual references only and are not embedded.
+
+[theme]
+base = "dark"
+primaryColor = "#2563EB"
+backgroundColor = "#070B14"
+secondaryBackgroundColor = "#0D1726"
+codeBackgroundColor = "#09111F"
+textColor = "#F4F8FF"
+linkColor = "#7DB7FF"
+borderColor = "#203A5F"
+codeTextColor = "#D9E9FF"
+showWidgetBorder = true
+showSidebarBorder = true
+baseRadius = "8px"
+buttonRadius = "6px"
+
+font = "'Inter':https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+headingFont = "'Inter':https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap"
+codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+baseFontSize = 14
+baseFontWeight = 400
+codeFontSize = "13px"
+headingFontSizes = ["30px", "22px", "18px", "16px", "14px", "12px"]
+headingFontWeights = [700, 600, 600, 600, 500, 500]
+linkUnderline = false
+
+greenColor = "#60A5FA"
+redColor = "#F87171"
+yellowColor = "#FACC15"
+orangeColor = "#FB923C"
+blueColor = "#60A5FA"
+violetColor = "#93C5FD"
+grayColor = "#94A3B8"
+
+chartCategoricalColors = [
+    "#F4F8FF",
+    "#BFDBFE",
+    "#7DB7FF",
+    "#3B82F6",
+    "#2563EB",
+    "#174EA6",
+]
+
+chartSequentialColors = [
+    "#0B1628",
+    "#10233E",
+    "#15345A",
+    "#1A477A",
+    "#1F5EA3",
+    "#2563EB",
+    "#5795F5",
+    "#8DBEFF",
+    "#C7DFFF",
+    "#F4F8FF",
+]
+
+dataframeBorderColor = "#203A5F"
+dataframeHeaderBackgroundColor = "#10233E"
+
+[theme.sidebar]
+backgroundColor = "#080E19"
+secondaryBackgroundColor = "#0F1B2D"
+codeBackgroundColor = "#09111F"
+textColor = "#D9E9FF"
+borderColor = "#1B3558"
+primaryColor = "#3B82F6"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
