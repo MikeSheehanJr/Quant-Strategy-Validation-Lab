@@ -33,6 +33,7 @@ These are historical research results, not expected returns. The sample begins i
 - Explicit failure documentation
 - Five hash-pinned Pine Script versions with a change/evidence ledger
 - Reviewed TradingView-derived monthly, window, and QA CSV downloads
+- Hash-pinned forward-validation status with an explicit "not started" evidence state
 - Aggregate-only public data design
 - Streamlit, pandas, Altair, pytest, and GitHub Actions
 - Fail-closed safeguards for secrets, PII, local paths, artifact metadata, raw data, runtime network surfaces, GitHub Actions, and vulnerable dependencies
@@ -57,11 +58,14 @@ python scripts/release_gate.py
 ## Project map
 
 ```text
-streamlit_app.py              Streamlit presentation layer
+streamlit_app.py              Top navigation and shared app frame
+app_pages/                    Four focused Streamlit research pages
 src/data.py                   Aggregate snapshot contract and loading
 src/metrics.py                Testable calculations
 src/charts.py                 Explicit Altair chart specifications
+src/forward.py                Forward-status and candidate-hash validation
 data/public_snapshot.json     Public-safe, aggregate-only evidence
+data/forward_validation.json  Machine-readable forward evidence state
 data/backtests/               Aggregate TradingView-derived CSV evidence
 pinescript/                   Hash-pinned Pine Script v1–v4.1 archive
 scripts/build_public_snapshot.py
@@ -75,14 +79,12 @@ tests/                        Data, chart, app, and safety tests
 docs/                         Methodology, roadmap, and publishing guide
 ```
 
-## Dashboard views
+## App structure
 
-- **Overview:** strategy background, headline evidence, historical path, yearly outcomes, and high-level quant risk diagnostics
-- **Monte Carlo:** interactive 12/24/36-month moving-block bootstrap with percentile fan, terminal distribution, and maximum-drawdown distribution
-- **Parameter lab:** 81 reviewed two-dimensional cells, reward:risk curve, 17 gate variants, and seven entry cutoffs
-- **Validation:** execution stress, exact validation ledger, and failure journal
-- **Pine Script:** inspectable v1–v4.1 source evolution, reviewed TradingView aggregate path, downloadable CSV evidence, open acceptance checks, and next steps
-- **Build log:** architecture, roadmap, limitations, and remaining exit criteria
+- **Research brief:** plain-English strategy, headline evidence, historical path, and the current research conclusion
+- **Robustness:** one focused control for historical risk, Monte Carlo, parameter stability, validation evidence, and rejected ideas
+- **Implementation:** inspectable Pine Script v1–v4.1 evolution, reviewed TradingView aggregates, downloadable CSV evidence, and open acceptance checks
+- **Forward validation:** the hash-pinned v4.1 paper candidate, aggregate-only reporting protocol, and an explicit not-started evidence state
 
 The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed. It is a resampling stress view—not a forecast—and cannot create regimes absent from the historical sample.
 
@@ -92,14 +94,15 @@ The current MVP and safety boundary are complete. Remaining launch work includes
 
 1. GitHub and Streamlit deployment after the automated gate passes.
 2. Logged-out verification of the two public URLs.
-3. A reconciled paper forward-test.
-4. Pre-2021 MNQ/NQ validation under an appropriate data license.
+3. Register the forward-test sample, integrity checks, and decision rule before collection begins.
+4. Complete and reconcile the paper forward-test.
+5. Add pre-2021 MNQ/NQ validation under an appropriate data license.
 
 See [PLAN.md](PLAN.md) for the full build plan, [docs/GITHUB_LAUNCH_COPY.md](docs/GITHUB_LAUNCH_COPY.md) for plain-English GitHub copy, and [docs/PUBLISHING_GUIDE.md](docs/PUBLISHING_GUIDE.md) for safe launch instructions.
 
 ## Data and risk boundary
 
-The checked-in JSON and CSVs are derived aggregate research artifacts. They cannot reproduce either underlying backtest without separately licensed source data. The Pine Script track is a related implementation study and is not the exact engine behind the dashboard headline snapshot. See [DATA_NOTICE.md](DATA_NOTICE.md), [docs/PINESCRIPT_EVIDENCE.md](docs/PINESCRIPT_EVIDENCE.md), and [SECURITY.md](SECURITY.md).
+The checked-in JSON and CSVs are derived aggregate research artifacts. They cannot reproduce either underlying backtest without separately licensed source data. The Pine Script track is a related implementation study and is not the exact engine behind the dashboard headline snapshot. The forward page currently contains no observations or performance claim. See [DATA_NOTICE.md](DATA_NOTICE.md), [docs/PINESCRIPT_EVIDENCE.md](docs/PINESCRIPT_EVIDENCE.md), [docs/FORWARD_VALIDATION.md](docs/FORWARD_VALIDATION.md), and [SECURITY.md](SECURITY.md).
 
 ## Disclaimer
 

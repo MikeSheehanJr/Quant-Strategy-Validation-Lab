@@ -164,13 +164,14 @@ Streamlit recommends a single dependency file and explains how Community Cloud i
 
 Open the live app and verify:
 
-- Overview loads before any click.
+- Research brief loads before any click.
 - All four hero metrics display.
 - Monthly and yearly charts render.
-- Monte Carlo view renders the percentile fan plus terminal and drawdown distributions.
-- Parameter lab renders all three surfaces, reward:risk curve, gate chart, and cutoff chart.
-- Validation view renders the execution heatmap, validation table, and failure journal.
-- Build log renders the roadmap and limitations.
+- Robustness → Monte Carlo renders the percentile fan plus terminal and drawdown distributions.
+- Robustness → Parameters renders all three surfaces, reward:risk curve, gate chart, and cutoff chart.
+- Robustness → Validation renders the execution heatmap, validation table, and failure journal.
+- Implementation renders the Pine version ledger, aggregate path, tables, and downloads.
+- Forward validation visibly states that collection has not started and shows no performance chart.
 - No Python traceback appears.
 - No private file path is visible in the UI or browser source.
 - No app secret exists in Streamlit settings.
@@ -189,11 +190,11 @@ Use only screenshots from the completed app. Do not upload the original dashboar
 
 Recommended screenshots:
 
-1. Overview at approximately 1440×900.
-2. Monte Carlo view showing the percentile fan and clearly visible simulation caveat.
-3. Parameter lab showing a frozen-cell heatmap.
-4. Validation view showing the execution matrix.
-5. Build log showing the WIP roadmap.
+1. Research brief at approximately 1440×900.
+2. Robustness → Monte Carlo showing the percentile fan and simulation caveat.
+3. Robustness → Parameters showing a frozen-cell heatmap.
+4. Implementation showing the version ledger or reviewed aggregate path.
+5. Forward validation showing the not-started evidence state and source lock.
 
 Before capturing:
 
@@ -353,7 +354,7 @@ If only one project link is allowed, use the GitHub repository because it has th
 
 - [ ] Python 3.12 selected
 - [ ] No secrets configured
-- [ ] Overview, Monte Carlo, Parameter lab, Validation, and Build log work
+- [ ] Research brief, all Robustness subviews, Implementation, and Forward validation work
 - [ ] Desktop and narrow layouts reviewed
 - [ ] Public URL works while logged out
 - [ ] Search-indexing choice understood
