@@ -1,0 +1,371 @@
+//@version=6
+// ============================================================================
+// ORB SYMMETRIC v3 — v2 + OPTIONAL M1 margin skip (MGC only)   MNQ/MGC 15m
+// ============================================================================
+// WHAT CHANGED vs orb_sym_v2 (and what deliberately did NOT)
+//   ONE optional filter, DEFAULT OFF: the M1 margin skip. When enabled ON AN
+//   MGC CHART, a day whose first breakout bar closes less than 0.05 x OR-width
+//   past the broken OR bound is SKIPPED (the day still locks — one decision
+//   per day, skip-day semantics; entries on kept days are byte-identical).
+//   With the input OFF (default) the decision path is byte-identical to v2b.
+//   The input is IGNORED on MNQ by construction (see WHY). Entries, exits,
+//   stops, targets, dynamic sizing, session flat, visuals: unchanged from v2b.
+//
+// WHY (validated 2026-07-05, reports/confirmation/ 01_catalog -> 02 protocol
+// -> 03 scan -> 04 verdict; pre-registered battery, real data, costs on):
+//   30 confirmation cells were tested (margins 0.05/0.10/0.25 x OR-width,
+//   BOS/ChoCh structure rules, close-position/body bar quality — each as
+//   skip-day AND wait-for-later variants). 29 of 30 FAILED. The lone weak
+//   survivor is THIS filter, on MGC ONLY:
+//     MGC : p=.0070 (BH-pass), kept avg +0.1033R vs +0.0854R base, R/yr
+//           21.39 vs 20.69, folds 4/5, skipped subset (n=261) avg -0.020R
+//           (genuinely toxic). Independent re-implementation: 100% agreement.
+//           Lightning MC (paired seeds, BOTH book dyn $300): P(first payout)
+//           86.7% -> 89.0%, EV +$62-69/attempt, median days unchanged.
+//     MNQ : FAILS economics — its skipped subset averages +0.063R
+//           (profitable), R/yr drops 29.51 -> 26.76. NEVER apply M1 to MNQ;
+//           the script enforces this (input has no effect on MNQ charts).
+//   Protocol disposition: a lone single-symbol weak survivor ships AT MOST as
+//   an optional input DEFAULT-OFF (family expected ~0.2-0.4 false survivors;
+//   this cell passed every gate but remains single-symbol). Hence default OFF.
+//   The 0.05 threshold is a FROZEN CONSTANT, not an input: 0.10 and 0.25 were
+//   BH-significant on MGC but LOSE R/yr (below-average != toxic) — REFUTED.
+//   Do not expose or tune the threshold.
+//
+//   ALSO REFUTED IN THE SAME BATTERY (do not re-add): every wait-for-later
+//   variant (7/7 cells, zero selection skill vs delay-matched nulls — do NOT
+//   "wait for a better bar"); BOS / ChoCh structure confirmations; strong-
+//   close (0.67) and body-dominance (0.50) bar-quality rules. Earlier and
+//   still standing: close-confirmed exits, ALL 20 ICT/quant confluences,
+//   direction gates, swing overlays, DXY filters (see v2 header + HANDOFF).
+//
+// THE TRADE (unchanged from v1/v2, one decision per day):
+//   Chart    : 15-minute, CME_MINI:MNQ1! or COMEX:MGC1! (continuous ticker).
+//   OR       : 09:30-10:00 ET session window. Entry: first 15m CLOSE beyond
+//              the OR (either side), 10:00-16:00 ET; first breakout locks day
+//              (including M1-skipped and risk-skipped days).
+//   Stop     : opposite OR boundary.   Target : 1:1.   Flat at session end.
+//
+// SIZING (unchanged from v2 — validated 2026-07-05, reports/tweaks/):
+//   Default DYNAMIC: qty = min(floor($300 / (stop distance x point value)), 10).
+//   BOTH-book 50k Lightning: 86.9% first payout, EV +$2,312/attempt, worst
+//   both-legs day ~ -$609, consistency tax eliminated; median ~60 days.
+//   "Fixed contracts" mode reproduces v1 exactly (2ct, $575 cap). Budgets
+//   $400/$500/$575 REFUTED (bust 28-35%). MGC-only dynamic REFUTED (70.8%).
+//
+// BASE VALIDATION (per-trade edge, unchanged — full record in orb_sym_v1
+// header): MNQ +0.119R/trade (CI 0.089-0.150, n=1245), MGC +0.085R
+// (CI 0.055-0.115, n=1801); fade-null negative, 1-bar-lag survives, all 10
+// chronological folds positive.
+//
+// ALERTS: one alert, "Any alert() function call" — fires only when a real
+// strategy order is placed (same bar it fills, entries are market-on-close).
+// margin_long/short = 0 so the broker emulator never rejects a capped signal.
+// Research / advisory only — NOT auto-trading.
+//
+// CHANGELOG:
+//   2026-07-05 v3a: optional M1 margin skip added (default OFF; active on MGC
+//     charts only; frozen 0.05 x OR-width, close-basis, skip-day semantics —
+//     skipped day turns the OR box orange and still locks). Decision path with
+//     the input OFF is byte-identical to v2b (re-audited: 2 entry / 2 exit /
+//     1 close_all, no request.security, no islastbar). NOT TV-TESTED.
+//   2026-07-06 v2b: SL/TP/entry line freeze made self-healing (any flat bar,
+//     anchored to strategy.closedtrades exit bar). Display only. NOT TV-tested.
+//   2026-07-05 v2a: dynamic $-risk sizing (default ON, $300/leg, max 10
+//     micros) per reports/tweaks/03_verdict.md; fixed mode = v1 fallback.
+// ============================================================================
+
+strategy("ORB Symmetric v3 (MNQ/MGC 15m NY, dynamic size, opt. M1)",
+     shorttitle = "ORB-SYM-v3",
+     overlay = true,
+     process_orders_on_close = true,
+     calc_on_every_tick = false,
+     initial_capital = 50000,
+     default_qty_type = strategy.fixed,
+     default_qty_value = 1,
+     commission_type = strategy.commission.cash_per_contract,
+     commission_value = 0.62,   // ~$1.24 RT/2 (MNQ); MGC ~$1.20 RT — matches the validated cost model
+     slippage = 1,              // 1 tick per fill
+     margin_long = 0, margin_short = 0,  // no emulator margin check: every signal under the
+                                         // budget must fill, exactly like the validated sim
+     max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500)
+// NOTE on drawings: TV keeps only the most recent ~500 line/label/box objects, so
+// per-trade markers fade out in deep history. The SL/TP PLOT overlays and the OR
+// plot lines have no such cap and follow the chart everywhere you scroll.
+
+// ---------------------------------------------------------------------------
+// INPUTS
+// ---------------------------------------------------------------------------
+TZ = "America/New_York"
+
+sizeMode = input.string("Dynamic $ budget", "Sizing mode",
+     options = ["Dynamic $ budget", "Fixed contracts"],
+     tooltip = "DYNAMIC (validated default, reports/tweaks/03_verdict.md): " +
+               "qty = floor(budget / (stop distance x point value)), capped at " +
+               "max contracts — every trade risks ~the same dollars. BOTH-book " +
+               "50k Lightning: 86.9% first payout, median ~60 days, EV " +
+               "+$2,312/attempt, worst both-legs day ~-$609, consistency tax " +
+               "eliminated. FIXED reproduces orb_sym_v1 exactly (2ct, $575 cap).")
+riskBudgetUSD = input.float(300.0, "Dynamic: $ risk budget per trade", minval = 50,
+     tooltip = "Per chart/leg. $300 is the ONLY budget that passed the " +
+               "pre-registered gate ($400/$500/$575 all bust more than they " +
+               "gain). Running BOTH symbols: worst-case both-legs-stopped day " +
+               "~ -2x budget = -$600 vs the $1,250 DLL. Do NOT raise without " +
+               "re-running the optimizer (reports/tweaks/).")
+maxQty = input.int(10, "Dynamic: max contracts (micros)", minval = 1, maxval = 40,
+     tooltip = "Hard ceiling on the dynamic quantity (Tradeify 50k allows 40 " +
+               "micros; 10 is the validated cap). Binds only on very narrow ORs.")
+qtyFixed = input.int(2, "Fixed: contracts (micros)", minval = 1, maxval = 5,
+     tooltip = "Used only in Fixed mode — v1's Lightning-optimized default.")
+maxRiskUSD = input.float(575.0, "Fixed: max $ risk per trade (skip wider days)", minval = 50,
+     tooltip = "Used only in Fixed mode — v1's cap. In Dynamic mode the budget " +
+               "itself is the cap (a day is skipped only if even 1 contract " +
+               "risks more than the budget).")
+useM1 = input.bool(false, "M1 margin skip — MGC charts only (default OFF)",
+     tooltip = "Lone weak survivor of the 2026-07-05 pre-registered 30-cell " +
+               "confirmation battery (reports/confirmation/04_verdict.md): skip " +
+               "the day when the first breakout bar closes < 0.05 x OR-width " +
+               "past the broken bound. Validated on MGC ONLY (p=.007, skipped " +
+               "subset -0.020R, Lightning pass 86.7%->89.0%); on MNQ it removes " +
+               "PROFITABLE trades (R/yr 29.5->26.8) so this input is IGNORED on " +
+               "MNQ by construction. Default OFF per protocol (single-symbol " +
+               "weak survivor). The 0.05 threshold is frozen — 0.10/0.25 were " +
+               "refuted (significant but R/yr losers).")
+showPanel = input.bool(true, "Show diagnostic panel")
+
+isDyn = sizeMode == "Dynamic $ budget"
+
+// M1 frozen constant — NOT an input (0.10 / 0.25 tested and REFUTED; do not tune).
+M1_FRAC = 0.05
+
+// ---------------------------------------------------------------------------
+// SESSION + OPENING RANGE (window-defined; no clock arithmetic)
+// ---------------------------------------------------------------------------
+inSess   = not na(time(timeframe.period, "0930-1600", TZ))
+orActive = not na(time(timeframe.period, "0930-1000", TZ))
+sessStart = inSess and not inSess[1]
+sessEnd   = (not inSess) and inSess[1]
+
+tfOK  = timeframe.isminutes and timeframe.multiplier == 15
+isMNQ = str.contains(syminfo.ticker, "MNQ")
+isMGC = not isMNQ and str.contains(syminfo.ticker, "MGC")
+symOK = isMNQ or isMGC
+cfgOK = tfOK and symOK
+
+// M1 is armed only when the user enables it AND the chart is MGC (the filter
+// FAILS economics on MNQ — enforced here, not left to the user's memory).
+m1Armed = useM1 and isMGC
+
+var float orHi = na
+var float orLo = na
+var bool  orSeen = false
+var bool  locked = false
+var int nSessions = 0
+var int nEntries = 0
+var int nRiskSkips = 0
+var int nM1Skips = 0
+
+// live-position state (display only — order levels are set at entry via strategy.exit)
+var float posEntry = na
+var float posStop  = na
+var float posTgt   = na
+var int   posSide  = 0
+var int   posQty   = 0
+// per-trade drawing handles
+var line  lnEntry = na
+var line  lnStop  = na
+var line  lnTgt   = na
+var box   orBox   = na
+
+if sessStart
+    orHi := na
+    orLo := na
+    orSeen := false
+    locked := false
+    nSessions += 1
+if orActive
+    orHi := na(orHi) ? high : math.max(orHi, high)
+    orLo := na(orLo) ? low : math.min(orLo, low)
+    orSeen := true
+
+// OR is tradeable once the window has passed, this bar is still in-session,
+// and the range is sane. No other conditions exist — by design.
+orDone = inSess and not orActive and orSeen and not na(orHi) and orHi > orLo
+
+// ---------------------------------------------------------------------------
+// ONE-SHOT SYMMETRIC BREAKOUT (decision path identical to v2b when M1 is OFF;
+// M1 adds exactly one skip-day condition on the first breakout bar's close)
+// ---------------------------------------------------------------------------
+canTrade  = orDone and not locked and cfgOK and strategy.position_size == 0
+longBrk   = canTrade and close > orHi
+shortBrk  = canTrade and close < orLo
+
+if longBrk or shortBrk
+    side    = longBrk ? 1 : -1
+    entryPx = close
+    riskPts = longBrk ? entryPx - orLo : orHi - entryPx
+    // M1 margin test (close-basis, pure float, frozen 0.05 x OR-width; same
+    // formula the scan validated). m1Pass is vacuously true when not armed.
+    orW    = orHi - orLo
+    m1Pass = not m1Armed or (longBrk ? entryPx > orHi + M1_FRAC * orW
+                                     : entryPx < orLo - M1_FRAC * orW)
+    risk1cUSD = riskPts * syminfo.pointvalue
+    qtyDyn  = risk1cUSD > 0 ? math.min(maxQty, math.floor(riskBudgetUSD / risk1cUSD)) : 0
+    qtyUse  = isDyn ? qtyDyn : qtyFixed
+    riskUSD = risk1cUSD * qtyUse
+    sizeOK  = isDyn ? qtyUse >= 1 : riskUSD <= maxRiskUSD
+    if riskPts > 0 and qtyUse >= 1 and sizeOK and m1Pass
+        stopPx = entryPx - side * riskPts
+        tgtPx  = entryPx + side * riskPts
+        if longBrk
+            strategy.entry("L", strategy.long, qty = qtyUse, comment = "OR-break long")
+            strategy.exit("Lx", "L", stop = stopPx, limit = tgtPx)
+        else
+            strategy.entry("S", strategy.short, qty = qtyUse, comment = "OR-break short")
+            strategy.exit("Sx", "S", stop = stopPx, limit = tgtPx)
+        // ---- visual layer (display only, no order logic) ----
+        posEntry := entryPx
+        posStop  := stopPx
+        posTgt   := tgtPx
+        posSide  := side
+        posQty   := qtyUse
+        // clean lines only — no price labels; extend right so the levels are
+        // unmissable ahead of price while the trade is live
+        lnEntry := line.new(bar_index, entryPx, bar_index + 1, entryPx,
+             color = color.new(color.gray, 20), style = line.style_dotted, width = 1,
+             extend = extend.right)
+        lnStop := line.new(bar_index, stopPx, bar_index + 1, stopPx,
+             color = color.new(color.red, 0), style = line.style_solid, width = 3,
+             extend = extend.right)
+        lnTgt := line.new(bar_index, tgtPx, bar_index + 1, tgtPx,
+             color = color.new(color.green, 0), style = line.style_solid, width = 3,
+             extend = extend.right)
+        linefill.new(lnEntry, lnTgt,  color.new(color.green, 88))   // reward zone
+        linefill.new(lnEntry, lnStop, color.new(color.red, 90))     // risk zone
+        nEntries += 1
+        alert("ORB-SYM v3 " + (longBrk ? "LONG " : "SHORT ") + syminfo.ticker +
+              " qty=" + str.tostring(qtyUse) + (isDyn ? " (dyn)" : " (fixed)") +
+              " entry~" + str.tostring(entryPx, format.mintick) +
+              " SL=" + str.tostring(stopPx, format.mintick) +
+              " TP=" + str.tostring(tgtPx, format.mintick) +
+              " risk$~" + str.tostring(riskUSD, "#") +
+              " (signal = confirmed 15m close; fills lag)",
+              alert.freq_once_per_bar_close)
+    else
+        if not m1Pass
+            nM1Skips += 1
+            // M1-skipped day: OR zone turns ORANGE (distinct from red risk skips)
+            if not na(orBox)
+                box.set_bgcolor(orBox, color.new(color.orange, 80))
+                box.set_border_color(orBox, color.new(color.orange, 30))
+        else
+            nRiskSkips += 1
+            // risk-skipped entry: the whole opening-range zone turns red for the day
+            if not na(orBox)
+                box.set_bgcolor(orBox, color.new(color.red, 82))
+                box.set_border_color(orBox, color.new(color.red, 30))
+    // ANY first breakout locks the day — including M1-skipped and risk-skipped
+    // ones — matching the validated one-decision-per-day simulation exactly.
+    locked := true
+
+// extend the live trade's lines while the position is open; stamp the result on exit.
+// Freeze fires on ANY flat bar where the handles are still live (not only the single
+// bar where position_size is first observed to transition to 0) -- self-healing against
+// a missed transition bar (e.g. a data gap around a session boundary), which previously
+// could leave a line's extend=right set forever with nothing left to clear it. Anchored
+// to the trade's actual recorded exit bar via strategy.closedtrades, not "this bar", so
+// the line stops exactly at the exit rather than wherever the flat check happened to fire.
+if strategy.position_size != 0 and not na(lnStop)
+    line.set_x2(lnEntry, bar_index)
+    line.set_x2(lnStop, bar_index)
+    line.set_x2(lnTgt, bar_index)
+if strategy.position_size == 0 and not na(lnStop)
+    exitBarIdx = strategy.closedtrades > 0 ?
+         strategy.closedtrades.exit_bar_index(strategy.closedtrades - 1) : bar_index
+    line.set_extend(lnEntry, extend.none), line.set_x2(lnEntry, exitBarIdx)
+    line.set_extend(lnStop, extend.none),  line.set_x2(lnStop, exitBarIdx)
+    line.set_extend(lnTgt, extend.none),   line.set_x2(lnTgt, exitBarIdx)
+    lastPnl = strategy.closedtrades > 0 ?
+         strategy.closedtrades.profit(strategy.closedtrades - 1) : 0.0
+    label.new(bar_index, close,
+         (lastPnl >= 0 ? "✔ +$" : "✘ −$") + str.tostring(math.abs(lastPnl), "#"),
+         style = posSide == 1 ? label.style_label_down : label.style_label_up,
+         color = lastPnl >= 0 ? color.new(color.green, 25) : color.new(color.red, 25),
+         textcolor = color.white, size = size.small)
+    posEntry := na
+    posStop := na
+    posTgt := na
+    posSide := 0
+    posQty := 0
+    lnEntry := na
+    lnStop := na
+    lnTgt := na
+
+// Force-flat at session end: pre-B7 mechanism only (see orb_sym_v1 header
+// KNOWN OPEN ITEMS before touching this line).
+if sessEnd and strategy.position_size != 0
+    strategy.close_all(comment = "session flat")
+
+// ---------------------------------------------------------------------------
+// VISUALS + PANEL
+// ---------------------------------------------------------------------------
+// OR box: shaded while forming, frozen once complete (drawing — fades in deep history)
+if orActive and na(orBox)
+    orBox := box.new(bar_index, high, bar_index, low,
+         bgcolor = color.new(color.blue, 88), border_color = color.new(color.blue, 40))
+if orActive and not na(orBox)
+    box.set_rightbottom(orBox, bar_index, orLo)
+    box.set_top(orBox, orHi)
+if sessStart
+    orBox := na
+
+// OR levels as PLOTS — uncapped, follow the chart into deep history
+plot(orDone ? orHi : na, "OR high", color = color.new(color.teal, 0),  style = plot.style_linebr)
+plot(orDone ? orLo : na, "OR low",  color = color.new(color.maroon, 0), style = plot.style_linebr)
+
+// live SL/TP as PLOTS while a position is open (uncapped backup to the lines)
+inPos = strategy.position_size != 0
+plot(inPos ? posStop : na, "Stop (live)",   color = color.new(color.red, 30),
+     style = plot.style_linebr, linewidth = 2)
+plot(inPos ? posTgt : na,  "Target (live)", color = color.new(color.green, 30),
+     style = plot.style_linebr, linewidth = 2)
+plot(inPos ? posEntry : na, "Entry (live)", color = color.new(color.gray, 40),
+     style = plot.style_linebr)
+
+// entry arrows — plotshapes are uncapped and survive full history
+plotshape(nEntries > nEntries[1] and posSide == 1,  "Long entry",  style = shape.triangleup,
+     location = location.belowbar, color = color.new(color.green, 0), size = size.normal,
+     text = "LONG", textcolor = color.new(color.green, 0))
+plotshape(nEntries > nEntries[1] and posSide == -1, "Short entry", style = shape.triangledown,
+     location = location.abovebar, color = color.new(color.red, 0), size = size.normal,
+     text = "SHORT", textcolor = color.new(color.red, 0))
+
+bgcolor(orActive ? color.new(color.blue, 92) : na)
+
+var table pnl = table.new(position.top_right, 2, 7, border_width = 1)
+if showPanel and barstate.islast
+    table.cell(pnl, 0, 0, "Config"), table.cell(pnl, 1, 0,
+         (tfOK ? "15m OK" : "WRONG TF — NEED 15m") + " / " +
+         (isMNQ ? "MNQ" : isMGC ? "MGC" : "UNSUPPORTED SYMBOL"),
+         text_color = cfgOK ? color.gray : color.red,
+         bgcolor = cfgOK ? na : color.new(color.red, 80))
+    table.cell(pnl, 0, 1, "Sizing"), table.cell(pnl, 1, 1,
+         isDyn ? "DYNAMIC $" + str.tostring(riskBudgetUSD, "#") + "/trade, max " +
+              str.tostring(maxQty) + "ct" + (posQty > 0 ? " (live: " + str.tostring(posQty) + "ct)" : "") :
+              "FIXED " + str.tostring(qtyFixed) + "ct, cap $" + str.tostring(maxRiskUSD, "#"))
+    table.cell(pnl, 0, 2, "M1 margin skip"), table.cell(pnl, 1, 2,
+         m1Armed ? "ON (MGC, 0.05 x OR-width)" :
+         useM1 ? "IGNORED — MGC only (refuted on this symbol)" : "OFF (default)",
+         text_color = useM1 and not m1Armed ? color.orange : color.gray)
+    table.cell(pnl, 0, 3, "Status"), table.cell(pnl, 1, 3,
+         not cfgOK ? "CONFIG ERROR — NO TRADES WILL FIRE" :
+         locked ? "LOCKED (day done)" : orDone ? "ARMED" : orActive ? "OR FORMING" : "OFF-SESSION",
+         text_color = cfgOK ? color.gray : color.red)
+    table.cell(pnl, 0, 4, "Sessions / entries / risk-skips / M1-skips"),
+         table.cell(pnl, 1, 4, str.tostring(nSessions) + " / " + str.tostring(nEntries) + " / " +
+              str.tostring(nRiskSkips) + " / " + str.tostring(nM1Skips))
+    table.cell(pnl, 0, 5, "Entry rate (expect ~0.7/session)"),
+         table.cell(pnl, 1, 5, nSessions > 0 ? str.tostring(nEntries / float(nSessions), "#.##") : "-")
+    table.cell(pnl, 0, 6, "Net profit"),
+         table.cell(pnl, 1, 6, str.tostring(strategy.netprofit, "#.##"),
+         text_color = strategy.netprofit >= 0 ? color.green : color.red)

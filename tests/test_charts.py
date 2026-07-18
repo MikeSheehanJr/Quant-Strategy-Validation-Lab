@@ -10,6 +10,7 @@ from src.charts import (
     monthly_pnl_distribution,
     monte_carlo_fan,
     parameter_surface_heatmap,
+    pinescript_equity_curve,
     rr_sensitivity,
     terminal_distribution,
 )
@@ -24,6 +25,7 @@ from src.data import (
     yearly_frame,
 )
 from src.simulations import monthly_block_bootstrap
+from src.pinescript import load_pinescript_backtests
 
 
 def test_chart_specs_compile():
@@ -54,6 +56,7 @@ def test_chart_specs_compile():
         ),
         gate_sensitivity_chart(gate_frame(snapshot), "profit_factor"),
         cutoff_sensitivity_chart(entry_cutoff_frame(snapshot), "net_pnl_usd"),
+        pinescript_equity_curve(load_pinescript_backtests()["monthly"]),
     ]
     for chart in charts:
         spec = chart.to_dict()

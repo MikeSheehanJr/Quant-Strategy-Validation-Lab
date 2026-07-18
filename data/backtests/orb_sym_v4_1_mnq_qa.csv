@@ -1,0 +1,10 @@
+check,status,value,interpretation
+source_sha256,PASS,db022fe527e5ccb06eb38b1fc764110ca1cd461f3c6c50daea93e0112dc56800,Pins the reviewed TradingView export without publishing it.
+source_rows,PASS,2538,TradingView emits one entry and one exit row per completed trade.
+complete_trades,PASS,1269,Complete entry/exit pairs available for aggregation.
+duplicate_rows,PASS,0,Exact duplicate source rows found.
+missing_cells,PASS,0,Blank source cells found.
+entry_exit_pnl_max_error_usd,PASS,0.000000,Maximum P&L disagreement within a trade pair.
+cumulative_pnl_max_error_usd,PASS,0.000000,Maximum error versus reconstructed cumulative P&L.
+first_exit_month,PASS,2019-05,First month represented in the reviewed export.
+last_exit_month,PASS,2026-07,Last month represented in the reviewed export.

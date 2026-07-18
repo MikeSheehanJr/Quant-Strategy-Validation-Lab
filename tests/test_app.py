@@ -30,3 +30,9 @@ def test_deep_research_views_render():
     app.radio[0].set_value("Validation").run()
     assert not app.exception
     assert any(metric.label == "Displayed execution cells" for metric in app.metric)
+
+    app.radio[0].set_value("Pine Script").run()
+    assert not app.exception
+    assert any(item.value == "Pine Script evolution and export evidence" for item in app.subheader)
+    assert any(metric.label == "Reviewed MNQ trades" for metric in app.metric)
+    assert any(metric.label == "2026 YTD net P&L" for metric in app.metric)
