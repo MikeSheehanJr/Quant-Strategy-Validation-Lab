@@ -4,6 +4,7 @@ from pathlib import Path
 
 from scripts.preflight_public_release import (
     PROJECT_ROOT,
+    _configuration_security_problems,
     _png_metadata_chunks,
     _text_problems,
     _workflow_security_problems,
@@ -49,3 +50,15 @@ def test_unpinned_github_action_is_rejected(tmp_path):
     )
     problems = _workflow_security_problems(tmp_path)
     assert any("not commit-pinned" in problem for problem in problems)
+
+
+def test_disabled_streamlit_browser_protection_is_rejected(tmp_path):
+    devcontainer = tmp_path / ".devcontainer"
+    devcontainer.mkdir()
+    (devcontainer / "devcontainer.json").write_text(
+        '{"postAttachCommand": "streamlit run streamlit_app.py '
+        '--server.enableXsrfProtection false"}',
+        encoding="utf-8",
+    )
+    problems = _configuration_security_problems(tmp_path)
+    assert any("XSRF protection disabled" in problem for problem in problems)

@@ -242,6 +242,31 @@ def _runtime_surface_problems(root: Path) -> list[str]:
     return problems
 
 
+def _configuration_security_problems(root: Path) -> list[str]:
+    """Reject checked-in settings that disable Streamlit browser protections."""
+
+    problems: list[str] = []
+    paths = [
+        *sorted((root / ".devcontainer").glob("*.json")),
+        root / ".streamlit" / "config.toml",
+    ]
+    unsafe_tokens = {
+        "--server.enablecors false": "CORS protection disabled",
+        "--server.enablexsrfprotection false": "XSRF protection disabled",
+        "enablecors = false": "CORS protection disabled",
+        "enablexsrfprotection = false": "XSRF protection disabled",
+    }
+    for path in paths:
+        if not path.exists():
+            continue
+        normalized = re.sub(r"\s+", " ", path.read_text(encoding="utf-8").lower())
+        relative = path.relative_to(root)
+        for token, label in unsafe_tokens.items():
+            if token in normalized:
+                problems.append(f"{label} in public configuration: {relative}")
+    return problems
+
+
 def _workflow_security_problems(root: Path) -> list[str]:
     problems: list[str] = []
     workflow_root = root / ".github" / "workflows"
@@ -442,6 +467,7 @@ def scan_project(root: Path = PROJECT_ROOT) -> list[str]:
         problems.extend(_text_problems(relative, text))
 
     problems.extend(_runtime_surface_problems(root))
+    problems.extend(_configuration_security_problems(root))
     problems.extend(_workflow_security_problems(root))
     problems.extend(_snapshot_problems(root))
     problems.extend(_forward_validation_problems(root))
