@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+import csv
 import json
 import re
 import sys
@@ -12,11 +13,21 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MAX_PUBLIC_FILE_BYTES = 1_500_000
-TEXT_SUFFIXES = {".ini", ".json", ".md", ".py", ".toml", ".txt", ".yaml", ".yml"}
+TEXT_SUFFIXES = {
+    ".csv",
+    ".ini",
+    ".json",
+    ".md",
+    ".pine",
+    ".py",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
 ALLOWED_SUFFIXES = TEXT_SUFFIXES | {".png"}
 ALLOWED_EXTENSIONLESS = {".gitignore", "LICENSE"}
 FORBIDDEN_SUFFIXES = {
-    ".csv",
     ".db",
     ".feather",
     ".gz",
@@ -67,6 +78,44 @@ RAW_SNAPSHOT_KEYS = {
     "trade_day",
     "volume",
     "wallet",
+}
+ALLOWED_PUBLIC_DATA_FILES = {
+    "data/public_snapshot.json",
+    "data/backtests/orb_sym_v4_1_mnq_monthly.csv",
+    "data/backtests/orb_sym_v4_1_mnq_qa.csv",
+    "data/backtests/orb_sym_v4_1_mnq_windows.csv",
+}
+BACKTEST_CSV_SCHEMAS = {
+    "data/backtests/orb_sym_v4_1_mnq_monthly.csv": [
+        "month",
+        "trades",
+        "winning_trades",
+        "losing_trades",
+        "win_rate_pct",
+        "net_pnl_usd",
+        "cumulative_pnl_usd",
+        "gross_profit_usd",
+        "gross_loss_usd",
+        "profit_factor",
+        "within_month_max_drawdown_usd",
+    ],
+    "data/backtests/orb_sym_v4_1_mnq_qa.csv": [
+        "check",
+        "status",
+        "value",
+        "interpretation",
+    ],
+    "data/backtests/orb_sym_v4_1_mnq_windows.csv": [
+        "window",
+        "start_month",
+        "end_month",
+        "trades",
+        "net_pnl_usd",
+        "mean_trade_usd",
+        "win_rate_pct",
+        "profit_factor",
+        "max_drawdown_usd",
+    ],
 }
 FORBIDDEN_RUNTIME_MODULES = {
     "ftplib",
@@ -214,8 +263,11 @@ def _snapshot_problems(root: Path) -> list[str]:
         for path in data_root.rglob("*")
         if path.is_file()
     } if data_root.exists() else set()
-    if data_files != {"data/public_snapshot.json"}:
-        problems.append(f"public data directory must contain only data/public_snapshot.json: {sorted(data_files)}")
+    if data_files != ALLOWED_PUBLIC_DATA_FILES:
+        problems.append(
+            "public data directory differs from the aggregate-only allowlist: "
+            f"{sorted(data_files)}"
+        )
 
     snapshot_path = data_root / "public_snapshot.json"
     if not snapshot_path.exists():
@@ -241,6 +293,52 @@ def _snapshot_problems(root: Path) -> list[str]:
         problems.append("snapshot source hashes are missing")
     elif any(not re.fullmatch(r"[0-9a-f]{64}", str(value)) for value in hashes.values()):
         problems.append("snapshot contains an invalid source SHA-256")
+    return problems
+
+
+def _backtest_csv_problems(root: Path) -> list[str]:
+    problems: list[str] = []
+    raw_header_tokens = {
+        "date and time",
+        "entry",
+        "exit",
+        "price",
+        "quantity",
+        "signal",
+        "stop",
+        "target",
+        "timestamp",
+        "trade_number",
+        "volume",
+    }
+    for relative_name, expected_header in BACKTEST_CSV_SCHEMAS.items():
+        path = root / relative_name
+        if not path.exists():
+            problems.append(f"missing aggregate backtest CSV: {relative_name}")
+            continue
+        try:
+            with path.open(encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                rows = list(reader)
+        except (UnicodeDecodeError, csv.Error) as exc:
+            problems.append(f"invalid aggregate backtest CSV ({exc}): {relative_name}")
+            continue
+        if reader.fieldnames != expected_header:
+            problems.append(f"aggregate backtest CSV schema mismatch: {relative_name}")
+            continue
+        normalized_header = {field.lower().replace(" ", "_") for field in reader.fieldnames}
+        if normalized_header.intersection(raw_header_tokens):
+            problems.append(f"trade-level field found in aggregate backtest CSV: {relative_name}")
+        if not rows or len(rows) > 200:
+            problems.append(f"aggregate backtest CSV row count outside public bounds: {relative_name}")
+        if any(value is None or value == "" for row in rows for value in row.values()):
+            problems.append(f"blank cell found in aggregate backtest CSV: {relative_name}")
+        if any(
+            str(value).lstrip().startswith(("=", "+", "@"))
+            for row in rows
+            for value in row.values()
+        ):
+            problems.append(f"spreadsheet formula prefix found in aggregate backtest CSV: {relative_name}")
     return problems
 
 
@@ -287,6 +385,7 @@ def scan_project(root: Path = PROJECT_ROOT) -> list[str]:
     problems.extend(_runtime_surface_problems(root))
     problems.extend(_workflow_security_problems(root))
     problems.extend(_snapshot_problems(root))
+    problems.extend(_backtest_csv_problems(root))
     return sorted(set(problems))
 
 
@@ -298,7 +397,7 @@ def main() -> int:
             print(f"- {problem}")
         return 1
     print(
-        "Public-release preflight passed: aggregate-only data, metadata-clean artifacts, "
+        "Public-release preflight passed: aggregate-only evidence, metadata-clean artifacts, "
         "commit-pinned automation, and no common secret, PII, path, upload, network, or raw-data leaks found."
     )
     return 0

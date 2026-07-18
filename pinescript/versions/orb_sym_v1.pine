@@ -1,0 +1,336 @@
+//@version=6
+// ============================================================================
+// ORB SYMMETRIC v1 — ungated two-sided opening-range breakout   MNQ / MGC, 15m
+// ============================================================================
+// WHAT THIS IS — AND WHAT IT DELIBERATELY IS NOT
+//   The final product of the 2026-07-05 regime-adaptive research arc. The arc's
+//   own permutation tests REFUTED every direction-forecasting layer it tried:
+//     - regime-classifier label switching (p=0.79 vs frequency-matched noise)
+//     - prior-day SMA50 trend gate       (p=0.15)  } best-in-class but
+//     - momentum / gap / confluence votes (p>=0.15) } indistinguishable from
+//                                                     the pooled drift
+//   What the nulls exposed instead: the SYMMETRIC breakout effect itself —
+//   "the first 15m close beyond the 30-minute NY opening range continues,
+//   in whichever direction it breaks" — carries the whole edge. This script
+//   trades exactly that and nothing else. There is NO trend gate, NO regime
+//   detection, NO OR-width filter (tested: wash on MNQ, mildly negative on
+//   MGC), and NO warmup requirement. Do not add direction filters without a
+//   new permutation-tested validation pass; they are on the refuted list.
+//   CONFLUENCES ALSO REFUTED (2026-07-05 pre-registered scan, 20 candidates):
+//   ICT (liquidity sweeps, FVGs, killzones, PDH/PDL, midnight/weekly open,
+//   NDOG/NWOG) and quant (rel. volume, VWAP, gap size, Monday, NR7, narrow OR,
+//   overnight range/inventory, high-vol downsizing) — ZERO survived the
+//   permutation + both-symbol + R/yr battery (reports/confluence/04_verdict.md).
+//   This script is deliberately filter-free. Take every valid signal.
+//
+// VALIDATION (reports/sym_validation_note.md + sym_validation.csv; real
+// MNQ 2021-2026 / MGC 2019-2026 15m data; commission + slippage included):
+//   MNQ NY: avg +0.119R/trade (90% CI [0.089, 0.150]), 57.3% win, n=1245,
+//           ~29.5R/yr. Long-days +0.148R / short-days +0.085R, both positive.
+//   MGC NY: avg +0.085R/trade (90% CI [0.055, 0.115]), 52.9% win, n=1801,
+//           ~20.7R/yr. Long-days +0.074R / short-days +0.098R, both positive.
+//   Falsification checks passed on BOTH symbols:
+//     fade-null (enter opposite dir, same bar/levels): -0.072R / -0.096R —
+//       clearly negative, ruling out a cost/mechanics artifact;
+//     entry one bar late: +0.099R / +0.071R — decays, doesn't collapse;
+//     5-fold chronological: positive in all 10 folds (worst +0.058R).
+//   Funded MC (Tradeify 50k: $2,000 EOD trailing DD, $1,250 DLL, +$3k target,
+//   500 block-bootstrap paths of the real daily $ series):
+//     MNQ 1 micro: P(target) 85.6% / P(bust) 14.4% / median 80 trading days
+//     MGC 1 micro: P(target) 93.8% / P(bust)  6.0% / median 205 days
+//     MGC 2 micro: P(target) 74.4% / P(bust) 25.6% / median  98 days
+//
+// THE TRADE (one decision per day):
+//   Chart    : 15-minute, CME_MINI:MNQ1! or COMEX:MGC1! (continuous ticker).
+//   OR       : 09:30-10:00 ET (defined as a session WINDOW, not clock math —
+//              robust to off-grid opens and partial sessions).
+//   Entry    : first 15m bar CLOSE above OR high (long) or below OR low
+//              (short), any time 10:00-16:00 ET. First breakout locks the day.
+//   Stop     : opposite OR boundary.   Target : 1:1 (= stop distance).
+//   Flat     : session end, always. No overnight, ever.
+//
+// SIZING vs TRADEIFY (reports/01_tradeify_rules_table.md — secondary-source):
+//   Default 1 micro. The $1,250 Lightning daily loss limit can only be hit by
+//   a single trade's risk (one trade/day), so the maxRiskUSD input is the DLL
+//   protection — it skips any day whose OR implies more risk than the cap.
+//   MGC at 2 micros roughly halves time-to-target but triples bust risk (74%
+//   vs 94% pass) — that trade-off is the user's, not the script's; see tooltip.
+//   Session-flat always -> no-overnight rule satisfied. 15m holds -> the >10s
+//   scalping rule is irrelevant.
+//
+// KNOWN OPEN ITEMS:
+//   - NOT TV-TESTED. Per the workspace's standing rule after repeated burns:
+//     unverified until a live TradingView compile + backtest is reported.
+//     Expect roughly one trade every ~1.4 sessions on full loaded history.
+//   - B7 half-days: flat-at-session-end is the pre-B7 mechanism. On ~2-3 CME
+//     half-days/yr bars stop before 16:00 ET and a position can carry through
+//     the 13:00 halt to the reopen. The shelved detectors are NOT here; do not
+//     re-add without a live bar-replay test (see Fable Quant/HANDOFF.md).
+//   - strategy_v2.pine (MNQ NY, 30m chart) remains the workspace's most-
+//     validated strategy (PSR 3.30 sigma, 45/45 CPCV). On MNQ this script is a
+//     simpler COUSIN with a different chart/mechanics, not a replacement. On
+//     MGC it is the first validated script in the workspace.
+//
+// ALERTS: one alert, "Any alert() function call". Fires on confirmed bar close.
+// Research / advisory only — NOT auto-trading.
+//
+// CHANGELOG:
+//   2026-07-06 f: same SL/TP/entry line-freeze reliability fix as
+//     orb_sym_v2's v2b (mirrored here to keep the fixed-mode fallback
+//     consistent) — freeze now fires on any flat bar with live handles
+//     (self-healing vs a single missed transition bar) and anchors to the
+//     trade's actual closedtrades exit bar. DISPLAY ONLY. NOT TV-tested.
+//   2026-07-05 e: margin_long/margin_short = 0 in strategy() — disables the
+//     broker emulator's margin rejection so every capped signal fills, matching
+//     the validated simulator (which sizes by the $575 risk cap, not notional
+//     vs equity; 2 micros' notional can exceed the 50k initial capital). Fill
+//     behavior can only become MORE permissive; decision logic untouched.
+//   2026-07-05 d: header-only update after the confluence scan (20 ICT/quant
+//     filters tested, zero survived — script confirmed final as-is). NO code
+//     change: decision path, inputs, and visuals byte-identical to build c.
+//   2026-07-05 c: visual trade layer — entry labels/arrows, SL/TP lines with
+//     shaded risk (red) / reward (green) zones, exit result stamps, risk-skip
+//     tags, live OR box. DISPLAY ONLY: the entry/exit/sizing decision path is
+//     byte-identical to the validated build (re-audited). Uncapped plot-based
+//     SL/TP/entry overlays back up the capped drawing objects in deep history.
+//   2026-07-05 b: Lightning-optimized defaults (qty=2, cap=$575) per
+//     reports/lightning_playbook.md.
+//   2026-07-05 a: initial validated build (see header + HANDOFF.md).
+// ============================================================================
+
+strategy("ORB Symmetric v1 (MNQ/MGC 15m NY)",
+     shorttitle = "ORB-SYM-v1",
+     overlay = true,
+     process_orders_on_close = true,
+     calc_on_every_tick = false,
+     initial_capital = 50000,
+     default_qty_type = strategy.fixed,
+     default_qty_value = 1,
+     commission_type = strategy.commission.cash_per_contract,
+     commission_value = 0.62,   // ~$1.24 RT/2 (MNQ); MGC ~$1.20 RT — matches the validated cost model
+     slippage = 1,              // 1 tick per fill
+     margin_long = 0, margin_short = 0,  // no emulator margin check: every signal under the
+                                         // $575 cap must fill, exactly like the validated sim
+                                         // (2 micros' notional can exceed 50k equity — TV's
+                                         // default margin would silently reject those entries)
+     max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500)
+// NOTE on drawings: TV keeps only the most recent ~500 line/label/box objects, so
+// per-trade markers fade out in deep history. The SL/TP PLOT overlays and the OR
+// plot lines have no such cap and follow the chart everywhere you scroll.
+
+// ---------------------------------------------------------------------------
+// INPUTS
+// ---------------------------------------------------------------------------
+TZ = "America/New_York"
+
+qty = input.int(2, "Contracts (micros)", minval = 1, maxval = 5,
+     tooltip = "Lightning-optimized default (reports/lightning_playbook.md): " +
+               "BOTH symbols x 2 micros x $575 cap = 85.5% first-payout rate, " +
+               "median 51 days, EV +$2,270/attempt. Single-symbol fallback: " +
+               "MNQ 2ct (84%/60d). Conservative: 1ct (MNQ 85.6%/80d, MGC " +
+               "93.8%/205d). Above 2ct is optimizer-REJECTED (bust rate).")
+maxRiskUSD = input.float(575.0, "Max $ risk per trade (skip wider days)", minval = 50,
+     tooltip = "Stop distance x point value x contracts, PER CHART. One " +
+               "trade/day means this cap is the $1,250 daily-loss-limit " +
+               "protection. Running BOTH symbols at the $575 default, the " +
+               "worst-case combined day is ~-$1,150 vs the $1,250 DLL — do " +
+               "NOT raise this without re-running the Lightning optimizer.")
+showPanel = input.bool(true, "Show diagnostic panel")
+
+// ---------------------------------------------------------------------------
+// SESSION + OPENING RANGE (window-defined; no clock arithmetic)
+// ---------------------------------------------------------------------------
+inSess   = not na(time(timeframe.period, "0930-1600", TZ))
+orActive = not na(time(timeframe.period, "0930-1000", TZ))
+sessStart = inSess and not inSess[1]
+sessEnd   = (not inSess) and inSess[1]
+
+tfOK  = timeframe.isminutes and timeframe.multiplier == 15
+isMNQ = str.contains(syminfo.ticker, "MNQ")
+isMGC = not isMNQ and str.contains(syminfo.ticker, "MGC")
+symOK = isMNQ or isMGC
+cfgOK = tfOK and symOK
+
+var float orHi = na
+var float orLo = na
+var bool  orSeen = false
+var bool  locked = false
+var int nSessions = 0
+var int nEntries = 0
+var int nRiskSkips = 0
+
+// live-position state (display only — order levels are set at entry via strategy.exit)
+var float posEntry = na
+var float posStop  = na
+var float posTgt   = na
+var int   posSide  = 0
+// per-trade drawing handles
+var line  lnEntry = na
+var line  lnStop  = na
+var line  lnTgt   = na
+var box   orBox   = na
+
+if sessStart
+    orHi := na
+    orLo := na
+    orSeen := false
+    locked := false
+    nSessions += 1
+if orActive
+    orHi := na(orHi) ? high : math.max(orHi, high)
+    orLo := na(orLo) ? low : math.min(orLo, low)
+    orSeen := true
+
+// OR is tradeable once the window has passed, this bar is still in-session,
+// and the range is sane. No other conditions exist — by design.
+orDone = inSess and not orActive and orSeen and not na(orHi) and orHi > orLo
+
+// ---------------------------------------------------------------------------
+// ONE-SHOT SYMMETRIC BREAKOUT
+// ---------------------------------------------------------------------------
+canTrade  = orDone and not locked and cfgOK and strategy.position_size == 0
+longBrk   = canTrade and close > orHi
+shortBrk  = canTrade and close < orLo
+
+if longBrk or shortBrk
+    side    = longBrk ? 1 : -1
+    entryPx = close
+    riskPts = longBrk ? entryPx - orLo : orHi - entryPx
+    riskUSD = riskPts * syminfo.pointvalue * qty
+    if riskPts > 0 and riskUSD <= maxRiskUSD
+        stopPx = entryPx - side * riskPts
+        tgtPx  = entryPx + side * riskPts
+        if longBrk
+            strategy.entry("L", strategy.long, qty = qty, comment = "OR-break long")
+            strategy.exit("Lx", "L", stop = stopPx, limit = tgtPx)
+        else
+            strategy.entry("S", strategy.short, qty = qty, comment = "OR-break short")
+            strategy.exit("Sx", "S", stop = stopPx, limit = tgtPx)
+        // ---- visual layer (display only, no order logic) ----
+        posEntry := entryPx
+        posStop  := stopPx
+        posTgt   := tgtPx
+        posSide  := side
+        // clean lines only — no price labels; extend right so the levels are
+        // unmissable ahead of price while the trade is live
+        lnEntry := line.new(bar_index, entryPx, bar_index + 1, entryPx,
+             color = color.new(color.gray, 20), style = line.style_dotted, width = 1,
+             extend = extend.right)
+        lnStop := line.new(bar_index, stopPx, bar_index + 1, stopPx,
+             color = color.new(color.red, 0), style = line.style_solid, width = 3,
+             extend = extend.right)
+        lnTgt := line.new(bar_index, tgtPx, bar_index + 1, tgtPx,
+             color = color.new(color.green, 0), style = line.style_solid, width = 3,
+             extend = extend.right)
+        linefill.new(lnEntry, lnTgt,  color.new(color.green, 88))   // reward zone
+        linefill.new(lnEntry, lnStop, color.new(color.red, 90))     // risk zone
+        nEntries += 1
+        alert("ORB-SYM " + (longBrk ? "LONG " : "SHORT ") + syminfo.ticker +
+              " qty=" + str.tostring(qty) +
+              " entry~" + str.tostring(entryPx, format.mintick) +
+              " SL=" + str.tostring(stopPx, format.mintick) +
+              " TP=" + str.tostring(tgtPx, format.mintick) +
+              " risk$~" + str.tostring(riskUSD, "#") +
+              " (signal = confirmed 15m close; fills lag)",
+              alert.freq_once_per_bar_close)
+    else
+        nRiskSkips += 1
+        // skipped entry: the whole opening-range zone turns red for the day
+        if not na(orBox)
+            box.set_bgcolor(orBox, color.new(color.red, 82))
+            box.set_border_color(orBox, color.new(color.red, 30))
+    // ANY first breakout locks the day — including risk-skipped ones —
+    // matching the validated one-decision-per-day simulation exactly.
+    locked := true
+
+// extend the live trade's lines while the position is open; stamp the result on exit.
+// Freeze fires on ANY flat bar where the handles are still live (not only the single
+// bar where position_size is first observed to transition to 0) -- self-healing against
+// a missed transition bar (e.g. a data gap around a session boundary), which previously
+// could leave a line's extend=right set forever with nothing left to clear it. Anchored
+// to the trade's actual recorded exit bar via strategy.closedtrades, not "this bar", so
+// the line stops exactly at the exit rather than wherever the flat check happened to fire.
+if strategy.position_size != 0 and not na(lnStop)
+    line.set_x2(lnEntry, bar_index)
+    line.set_x2(lnStop, bar_index)
+    line.set_x2(lnTgt, bar_index)
+if strategy.position_size == 0 and not na(lnStop)
+    exitBarIdx = strategy.closedtrades > 0 ?
+         strategy.closedtrades.exit_bar_index(strategy.closedtrades - 1) : bar_index
+    line.set_extend(lnEntry, extend.none), line.set_x2(lnEntry, exitBarIdx)
+    line.set_extend(lnStop, extend.none),  line.set_x2(lnStop, exitBarIdx)
+    line.set_extend(lnTgt, extend.none),   line.set_x2(lnTgt, exitBarIdx)
+    lastPnl = strategy.closedtrades > 0 ?
+         strategy.closedtrades.profit(strategy.closedtrades - 1) : 0.0
+    label.new(bar_index, close,
+         (lastPnl >= 0 ? "✔ +$" : "✘ −$") + str.tostring(math.abs(lastPnl), "#"),
+         style = posSide == 1 ? label.style_label_down : label.style_label_up,
+         color = lastPnl >= 0 ? color.new(color.green, 25) : color.new(color.red, 25),
+         textcolor = color.white, size = size.small)
+    posEntry := na
+    posStop := na
+    posTgt := na
+    posSide := 0
+    lnEntry := na
+    lnStop := na
+    lnTgt := na
+
+// Force-flat at session end: pre-B7 mechanism only (see header KNOWN OPEN
+// ITEMS before touching this line).
+if sessEnd and strategy.position_size != 0
+    strategy.close_all(comment = "session flat")
+
+// ---------------------------------------------------------------------------
+// VISUALS + PANEL
+// ---------------------------------------------------------------------------
+// OR box: shaded while forming, frozen once complete (drawing — fades in deep history)
+if orActive and na(orBox)
+    orBox := box.new(bar_index, high, bar_index, low,
+         bgcolor = color.new(color.blue, 88), border_color = color.new(color.blue, 40))
+if orActive and not na(orBox)
+    box.set_rightbottom(orBox, bar_index, orLo)
+    box.set_top(orBox, orHi)
+if sessStart
+    orBox := na
+
+// OR levels as PLOTS — uncapped, follow the chart into deep history
+plot(orDone ? orHi : na, "OR high", color = color.new(color.teal, 0),  style = plot.style_linebr)
+plot(orDone ? orLo : na, "OR low",  color = color.new(color.maroon, 0), style = plot.style_linebr)
+
+// live SL/TP as PLOTS while a position is open (uncapped backup to the lines)
+inPos = strategy.position_size != 0
+plot(inPos ? posStop : na, "Stop (live)",   color = color.new(color.red, 30),
+     style = plot.style_linebr, linewidth = 2)
+plot(inPos ? posTgt : na,  "Target (live)", color = color.new(color.green, 30),
+     style = plot.style_linebr, linewidth = 2)
+plot(inPos ? posEntry : na, "Entry (live)", color = color.new(color.gray, 40),
+     style = plot.style_linebr)
+
+// entry arrows — plotshapes are uncapped and survive full history
+plotshape(nEntries > nEntries[1] and posSide == 1,  "Long entry",  style = shape.triangleup,
+     location = location.belowbar, color = color.new(color.green, 0), size = size.normal,
+     text = "LONG", textcolor = color.new(color.green, 0))
+plotshape(nEntries > nEntries[1] and posSide == -1, "Short entry", style = shape.triangledown,
+     location = location.abovebar, color = color.new(color.red, 0), size = size.normal,
+     text = "SHORT", textcolor = color.new(color.red, 0))
+
+bgcolor(orActive ? color.new(color.blue, 92) : na)
+
+var table pnl = table.new(position.top_right, 2, 5, border_width = 1)
+if showPanel and barstate.islast
+    table.cell(pnl, 0, 0, "Config"), table.cell(pnl, 1, 0,
+         (tfOK ? "15m OK" : "WRONG TF — NEED 15m") + " / " +
+         (isMNQ ? "MNQ" : isMGC ? "MGC" : "UNSUPPORTED SYMBOL"),
+         text_color = cfgOK ? color.gray : color.red,
+         bgcolor = cfgOK ? na : color.new(color.red, 80))
+    table.cell(pnl, 0, 1, "Status"), table.cell(pnl, 1, 1,
+         not cfgOK ? "CONFIG ERROR — NO TRADES WILL FIRE" :
+         locked ? "LOCKED (day done)" : orDone ? "ARMED" : orActive ? "OR FORMING" : "OFF-SESSION",
+         text_color = cfgOK ? color.gray : color.red)
+    table.cell(pnl, 0, 2, "Sessions / entries / risk-skips"),
+         table.cell(pnl, 1, 2, str.tostring(nSessions) + " / " + str.tostring(nEntries) + " / " + str.tostring(nRiskSkips))
+    table.cell(pnl, 0, 3, "Entry rate (expect ~0.7/session)"),
+         table.cell(pnl, 1, 3, nSessions > 0 ? str.tostring(nEntries / float(nSessions), "#.##") : "-")
+    table.cell(pnl, 0, 4, "Net profit"),
+         table.cell(pnl, 1, 4, str.tostring(strategy.netprofit, "#.##"),
+         text_color = strategy.netprofit >= 0 ? color.green : color.red)
