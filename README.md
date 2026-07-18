@@ -73,7 +73,7 @@ docs/                         Methodology, roadmap, and publishing guide
 
 ## Dashboard views
 
-- **Overview:** headline evidence, historical path, yearly outcomes, and high-level quant risk diagnostics
+- **Overview:** strategy background, headline evidence, historical path, yearly outcomes, and high-level quant risk diagnostics
 - **Monte Carlo:** interactive 12/24/36-month moving-block bootstrap with percentile fan, terminal distribution, and maximum-drawdown distribution
 - **Parameter lab:** 81 reviewed two-dimensional cells, reward:risk curve, 17 gate variants, and seven entry cutoffs
 - **Validation:** execution stress, exact validation ledger, and failure journal

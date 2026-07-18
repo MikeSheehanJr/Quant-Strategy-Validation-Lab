@@ -12,6 +12,7 @@ def test_default_app_view_renders():
     app = AppTest.from_file(str(APP), default_timeout=30).run()
     assert not app.exception
     assert app.title[0].value == "Quant strategy validation lab"
+    assert any(item.value == "Strategy background" for item in app.subheader)
     assert any(metric.label == "Cost-adjusted trades" for metric in app.metric)
 
 
