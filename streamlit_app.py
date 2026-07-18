@@ -135,6 +135,38 @@ if view == "Overview":
         st.metric("Profit factor", f"{headline['profit_factor']:.3f}", border=True)
         st.metric("Calendar-honest Sharpe", f"{headline['daily_sharpe']:.2f}", border=True)
 
+    with st.container(border=True):
+        st.subheader("Strategy background")
+        st.markdown(
+            "The case study is a rules-based opening-range breakout on the Micro E-mini "
+            "Nasdaq-100 futures contract (MNQ). It tests whether expansion beyond the "
+            "regular-session opening range remains positive after realistic implementation "
+            "costs and adversarial validation."
+        )
+        market_col, signal_col, risk_col = st.columns(3, gap="large")
+        with market_col:
+            st.markdown("**Market context**")
+            st.write(
+                "The first 30 minutes of the regular session define the reference high and low."
+            )
+        with signal_col:
+            st.markdown("**Entry logic**")
+            st.write(
+                "A completed bar must close beyond the range. Strictly prior filters determine "
+                "eligibility, with at most one trade per session."
+            )
+        with risk_col:
+            st.markdown("**Risk and execution**")
+            st.write(
+                "The frozen design uses a symmetric 1:1 stop and target, explicit commission, "
+                "modeled slippage, and stress tests under worse fills."
+            )
+        st.caption(
+            "Why this case study: the strategy is simple, interpretable, and low-dimensional, "
+            "which makes it useful for demonstrating bias control and robustness without a "
+            "black-box model. Historical research only—not a live signal."
+        )
+
     left, right = st.columns([1.65, 1], gap="large")
     with left:
         with st.container(border=True):
@@ -494,21 +526,7 @@ elif view == "Validation":
 
 
 else:
-    completed = sum(item["status"] == "Complete" for item in snapshot["project_status"])
-    total = len(snapshot["project_status"])
     st.subheader("Public-project roadmap")
-    st.progress(completed / total, text=f"{completed} of {total} milestones complete")
-    status = pd.DataFrame(snapshot["project_status"])
-    st.dataframe(
-        status,
-        hide_index=True,
-        column_config={
-            "phase": st.column_config.TextColumn("Phase", pinned=True),
-            "status": st.column_config.TextColumn("Status"),
-            "objective": st.column_config.TextColumn("Objective", width="large"),
-            "evidence": st.column_config.TextColumn("Exit evidence", width="large"),
-        },
-    )
 
     left, right = st.columns(2, gap="large")
     with left:
