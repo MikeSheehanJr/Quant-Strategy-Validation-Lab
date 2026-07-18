@@ -56,12 +56,11 @@ Does a simple MNQ opening-range breakout remain positive after realistic costs a
 
 1. Work-in-progress status and research question
 2. Four hero metrics
-3. Monthly cumulative P&L and calendar-year comparison
-4. Validation summary and missing evidence
-5. Aggregate monthly Monte Carlo with terminal and drawdown distributions
-6. Parameter lab with three two-dimensional surfaces and one-dimensional sensitivity views
-7. Validation ledger and failure journal
-8. Build log, architecture, and limitations
+3. Plain-English strategy sequence
+4. Monthly cumulative P&L and calendar-year comparison
+5. Reviewed and missing evidence
+
+Top navigation keeps the full project to four pages: Research brief, Robustness, Implementation, and Forward validation. Historical risk, Monte Carlo, parameter testing, validation evidence, and the failure journal share one focused Robustness control.
 
 ### Visual system
 
@@ -160,9 +159,10 @@ Status: **Complete**
 
 Tasks:
 
-- Implement Overview, Monte Carlo, Parameter lab, Validation, and Build log views.
+- Implement Research brief, Robustness, Implementation, and Forward validation pages.
 - Add metric cards, an honest zero-based cumulative chart, annual bars, execution heatmap, and parameter curve.
 - Add aggregate monthly percentile fans, terminal/drawdown distributions, quant risk diagnostics, and reviewed parameter heatmaps.
+- Keep forward validation protocol-only until reconciled observations exist.
 - Show partial-year and incomplete-evidence labels.
 - Use native Streamlit layout, selection, theming, tables, and Altair charts.
 

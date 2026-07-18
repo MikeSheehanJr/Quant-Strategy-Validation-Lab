@@ -46,7 +46,17 @@ def main() -> int:
     checks = [
         (
             "Compile Python",
-            [sys.executable, "-m", "compileall", "-q", "streamlit_app.py", "src", "scripts", "tests"],
+            [
+                sys.executable,
+                "-m",
+                "compileall",
+                "-q",
+                "streamlit_app.py",
+                "app_pages",
+                "src",
+                "scripts",
+                "tests",
+            ],
         ),
         ("Public-release scan", [sys.executable, "scripts/preflight_public_release.py"]),
         ("Automated tests", [sys.executable, "-m", "pytest", "-q"]),

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "status": "not_started",
+  "last_updated": "2026-07-18",
+  "candidate": {
+    "track": "15-minute symmetric ORB Pine Script companion",
+    "version": "v4.1",
+    "freeze_date": "2026-07-16",
+    "source_sha256": "e240d1259a0343ad92aee521004f977ed1c7cd01f6b6795b881dc34fcd423275",
+    "relationship_to_headline": "Related paper-control implementation; not the 30-minute Python headline engine."
+  },
+  "public_reporting": {
+    "cadence": "complete calendar months only",
+    "minimum_delay": "after the reported month closes",
+    "granularity": "aggregate monthly",
+    "live_signals": false,
+    "trade_level_records": false
+  },
+  "evidence": {
+    "public_observation_count": 0,
+    "complete_months": 0,
+    "conclusion": "No forward-performance conclusion."
+  },
+  "next_gate": "Register the minimum sample, integrity checks, and decision rule in version control before observation collection begins."
+}
