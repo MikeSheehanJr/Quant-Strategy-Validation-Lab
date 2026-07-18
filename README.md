@@ -6,7 +6,7 @@ This project asks a deliberately narrow question:
 
 > Can a simple intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and adversarial review?
 
-The case study is a 30-minute opening-range breakout on MNQ. The project is about the research process—not a promise of trading performance. The public app uses monthly P&L and reviewed aggregate stress cells only. It contains no raw market data, credentials, brokerage information, live signals, or trade-level records.
+The headline case study is a 30-minute opening-range breakout on MNQ. A separate Pine Script evidence track preserves the real `v1`–`v4.1` evolution of a related 15-minute symmetric ORB and its reviewed aggregate TradingView results. The tracks are labeled separately and their metrics are never combined. The project contains no raw market data, credentials, brokerage information, live signals, or trade-level records.
 
 ## Current research snapshot
 
@@ -31,6 +31,8 @@ These are historical research results, not expected returns. The sample begins i
 - Dollar-based Sortino, volatility, VaR, CVaR, skewness, kurtosis, and recovery diagnostics
 - Three reviewed two-dimensional parameter surfaces with frozen-cell markers
 - Explicit failure documentation
+- Five hash-pinned Pine Script versions with a change/evidence ledger
+- Reviewed TradingView-derived monthly, window, and QA CSV downloads
 - Aggregate-only public data design
 - Streamlit, pandas, Altair, pytest, and GitHub Actions
 - Fail-closed safeguards for secrets, PII, local paths, artifact metadata, raw data, runtime network surfaces, GitHub Actions, and vulnerable dependencies
@@ -60,6 +62,8 @@ src/data.py                   Aggregate snapshot contract and loading
 src/metrics.py                Testable calculations
 src/charts.py                 Explicit Altair chart specifications
 data/public_snapshot.json     Public-safe, aggregate-only evidence
+data/backtests/               Aggregate TradingView-derived CSV evidence
+pinescript/                   Hash-pinned Pine Script v1–v4.1 archive
 scripts/build_public_snapshot.py
                               Optional exporter requiring licensed source data
 scripts/preflight_public_release.py
@@ -77,6 +81,7 @@ docs/                         Methodology, roadmap, and publishing guide
 - **Monte Carlo:** interactive 12/24/36-month moving-block bootstrap with percentile fan, terminal distribution, and maximum-drawdown distribution
 - **Parameter lab:** 81 reviewed two-dimensional cells, reward:risk curve, 17 gate variants, and seven entry cutoffs
 - **Validation:** execution stress, exact validation ledger, and failure journal
+- **Pine Script:** inspectable v1–v4.1 source evolution, reviewed TradingView aggregate path, downloadable CSV evidence, open acceptance checks, and next steps
 - **Build log:** architecture, roadmap, limitations, and remaining exit criteria
 
 The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed. It is a resampling stress view—not a forecast—and cannot create regimes absent from the historical sample.
@@ -94,7 +99,7 @@ See [PLAN.md](PLAN.md) for the full build plan, [docs/GITHUB_LAUNCH_COPY.md](doc
 
 ## Data and risk boundary
 
-The checked-in JSON is a derived research artifact. It cannot reproduce the backtest without separately licensed source data. See [DATA_NOTICE.md](DATA_NOTICE.md) and [SECURITY.md](SECURITY.md).
+The checked-in JSON and CSVs are derived aggregate research artifacts. They cannot reproduce either underlying backtest without separately licensed source data. The Pine Script track is a related implementation study and is not the exact engine behind the dashboard headline snapshot. See [DATA_NOTICE.md](DATA_NOTICE.md), [docs/PINESCRIPT_EVIDENCE.md](docs/PINESCRIPT_EVIDENCE.md), and [SECURITY.md](SECURITY.md).
 
 ## Disclaimer
 

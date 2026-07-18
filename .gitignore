@@ -25,6 +25,9 @@ dist/
 
 # Raw or high-resolution market data must never enter this public project.
 *.csv
+!data/backtests/orb_sym_v4_1_mnq_monthly.csv
+!data/backtests/orb_sym_v4_1_mnq_qa.csv
+!data/backtests/orb_sym_v4_1_mnq_windows.csv
 *.parquet
 *.feather
 *.h5

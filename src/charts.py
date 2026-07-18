@@ -62,6 +62,32 @@ def equity_curve(monthly: pd.DataFrame) -> alt.Chart:
     return _base(line + zero, height=330)
 
 
+def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
+    """Aggregate TradingView v4.1 MNQ path with monthly evidence tooltips."""
+
+    line = (
+        alt.Chart(monthly)
+        .mark_line(color=BLUE_MID, strokeWidth=2.5)
+        .encode(
+            x=alt.X("month:T", title="Exit month", axis=alt.Axis(format="%b %Y")),
+            y=alt.Y(
+                "cumulative_pnl_usd:Q",
+                title="Cumulative TradingView P&L (USD)",
+                scale=alt.Scale(zero=True),
+            ),
+            tooltip=[
+                alt.Tooltip("month:T", title="Month", format="%B %Y"),
+                alt.Tooltip("trades:Q", title="Completed trades"),
+                alt.Tooltip("win_rate_pct:Q", title="Win rate", format=".2f"),
+                alt.Tooltip("net_pnl_usd:Q", title="Monthly P&L", format="$,.2f"),
+                alt.Tooltip("cumulative_pnl_usd:Q", title="Cumulative P&L", format="$,.2f"),
+            ],
+        )
+    )
+    zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=MUTED, opacity=0.65).encode(y="y:Q")
+    return _base(line + zero, height=330)
+
+
 def annual_pnl(yearly: pd.DataFrame) -> alt.Chart:
     """Annual aggregate P&L; partial periods use lower opacity."""
 

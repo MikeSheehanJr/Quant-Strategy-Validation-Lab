@@ -1,0 +1,83 @@
+{
+  "manifest_version": "1.0.0",
+  "track_name": "ORB Symmetric Pine Script evolution",
+  "track_scope": "15-minute, two-sided opening-range breakout companion implementation",
+  "relationship_to_headline": "This Pine Script track is a related implementation study, not the exact 30-minute filtered Python engine behind the dashboard headline metrics.",
+  "versions": [
+    {
+      "version": "v1",
+      "title": "Symmetric baseline",
+      "research_date": "2026-07-05",
+      "file": "versions/orb_sym_v1.pine",
+      "sha256": "5730ef4196b5373342182337d6fe9f51a80b8cf80e057326862862f051bc9cca",
+      "line_count": 336,
+      "change": "Established the ungated two-sided 15-minute opening-range breakout with one decision per session, a 1R target, opposite-range stop, and fixed-contract sizing.",
+      "why": "The research arc rejected the attempted direction and confluence filters, leaving the symmetric breakout as the simpler falsifiable baseline.",
+      "evidence_status": "Historical baseline; later operational builds supersede it.",
+      "known_limitations": "Fixed sizing makes dollar risk vary with opening-range width. The source header preserves contemporaneous estimates that were later corrected.",
+      "excerpt_start": 101,
+      "excerpt_end": 137,
+      "current": false
+    },
+    {
+      "version": "v2",
+      "title": "Dynamic dollar-risk sizing",
+      "research_date": "2026-07-05",
+      "file": "versions/orb_sym_v2.pine",
+      "sha256": "bf8797e6b67b7927de76290f49f9f9b152bca865e2eace48bf573e73c5c17a00",
+      "line_count": 335,
+      "change": "Replaced fixed sizing with a capped dollar-risk budget while retaining a fixed-contract parity mode and the original entry/exit path.",
+      "why": "Normalize the dollar distribution across narrow and wide opening ranges without introducing a new predictive rule.",
+      "evidence_status": "Sizing study passed its registered comparison; later versions retain the mechanism.",
+      "known_limitations": "The sizing result is configuration-dependent and does not establish that higher size improves strategy edge.",
+      "excerpt_start": 78,
+      "excerpt_end": 121,
+      "current": false
+    },
+    {
+      "version": "v3",
+      "title": "Optional MGC margin filter",
+      "research_date": "2026-07-05",
+      "file": "versions/orb_sym_v3.pine",
+      "sha256": "c40f338f4a855480aaa7bed1d307a0e116e79d5520e694969742ef28d2adb1c1",
+      "line_count": 371,
+      "change": "Added one frozen, default-off breakout-margin skip for MGC only; it is ignored on MNQ and still locks the session when triggered.",
+      "why": "One MGC-only cell survived a preregistered confirmation battery, while the same filter removed profitable MNQ trades.",
+      "evidence_status": "Weak single-symbol survivor; intentionally optional and default off.",
+      "known_limitations": "A lone survivor after multiple tests can still be a false discovery and is not evidence for applying the rule to MNQ.",
+      "excerpt_start": 101,
+      "excerpt_end": 148,
+      "current": false
+    },
+    {
+      "version": "v4",
+      "title": "Early-close operating guard",
+      "research_date": "2026-07-06",
+      "file": "versions/orb_sym_v4.pine",
+      "sha256": "6588b8e0ba35055edbf4552ba47d8994b5efc4571d32e8b01c372250f3bf8f96",
+      "line_count": 366,
+      "change": "Added a user-maintained early-close calendar guard and later simplified chart drawings without changing the ordinary-session decision path.",
+      "why": "Mechanize the rule that positions must be flat before shortened-session halts instead of relying on a manual reminder.",
+      "evidence_status": "Guard mechanism replayed in the combined script; superseded by symbol-locked v4.1 controls.",
+      "known_limitations": "The calendar is not auto-detected and silently becomes stale unless maintained and replay-tested.",
+      "excerpt_start": 169,
+      "excerpt_end": 207,
+      "current": false
+    },
+    {
+      "version": "v4.1",
+      "title": "MNQ symbol-locked paper control",
+      "research_date": "2026-07-16",
+      "file": "versions/orb_sym_v4_1_mnq.pine",
+      "sha256": "e240d1259a0343ad92aee521004f977ed1c7cd01f6b6795b881dc34fcd423275",
+      "line_count": 260,
+      "change": "Split the combined script into an MNQ-only control, hard-disabled the MGC-only filter, updated commission, and enabled the early-close guard by default.",
+      "why": "Reduce wrong-symbol and configuration risk before observation-only paper validation.",
+      "evidence_status": "TradingView compile/run and 1,269-trade path parity passed; interactive acceptance remains partial.",
+      "known_limitations": "Wrong-symbol UI, chart/alert behavior, and a split-script historical half-day replay remain open. It is not authorized for live execution.",
+      "excerpt_start": 26,
+      "excerpt_end": 91,
+      "current": true
+    }
+  ]
+}
