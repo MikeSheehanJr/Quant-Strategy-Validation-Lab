@@ -31,7 +31,8 @@ This is a research and software-engineering demonstration, not investment advice
 
 ### v0.1.0 — public work-in-progress release
 
-- Added five dashboard views covering headline evidence, monthly Monte Carlo, parameter stability, validation results, and the build roadmap
+- Reorganized the app into four focused pages: research brief, robustness, implementation evidence, and forward validation
+- Added a hash-pinned forward-validation status that explicitly reports zero observations and no forward conclusion
 - Published an aggregate-only research snapshot with source hashes and no raw or trade-level data
 - Added deterministic 12/24/36-month block-bootstrap stress testing
 - Added execution, parameter, gate, and entry-window sensitivity views

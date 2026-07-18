@@ -81,6 +81,7 @@ RAW_SNAPSHOT_KEYS = {
 }
 ALLOWED_PUBLIC_DATA_FILES = {
     "data/public_snapshot.json",
+    "data/forward_validation.json",
     "data/backtests/orb_sym_v4_1_mnq_monthly.csv",
     "data/backtests/orb_sym_v4_1_mnq_qa.csv",
     "data/backtests/orb_sym_v4_1_mnq_windows.csv",
@@ -218,7 +219,11 @@ def _png_metadata_chunks(data: bytes) -> set[str]:
 
 def _runtime_surface_problems(root: Path) -> list[str]:
     problems: list[str] = []
-    runtime_paths = [root / "streamlit_app.py", *sorted((root / "src").glob("*.py"))]
+    runtime_paths = [
+        root / "streamlit_app.py",
+        *sorted((root / "app_pages").glob("*.py")),
+        *sorted((root / "src").glob("*.py")),
+    ]
     for path in runtime_paths:
         relative = path.relative_to(root)
         source = path.read_text(encoding="utf-8")
@@ -293,6 +298,60 @@ def _snapshot_problems(root: Path) -> list[str]:
         problems.append("snapshot source hashes are missing")
     elif any(not re.fullmatch(r"[0-9a-f]{64}", str(value)) for value in hashes.values()):
         problems.append("snapshot contains an invalid source SHA-256")
+    return problems
+
+
+def _forward_validation_problems(root: Path) -> list[str]:
+    problems: list[str] = []
+    path = root / "data" / "forward_validation.json"
+    if not path.exists():
+        return ["missing data/forward_validation.json"]
+    try:
+        status = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [f"invalid forward-validation JSON: {exc}"]
+
+    required = {
+        "schema_version",
+        "status",
+        "last_updated",
+        "candidate",
+        "public_reporting",
+        "evidence",
+        "next_gate",
+    }
+    missing = required.difference(status)
+    if missing:
+        problems.append(f"forward-validation status missing sections: {sorted(missing)}")
+        return problems
+
+    reporting = status.get("public_reporting", {})
+    if reporting.get("live_signals") is not False:
+        problems.append("forward-validation status does not exclude live signals")
+    if reporting.get("trade_level_records") is not False:
+        problems.append("forward-validation status does not exclude trade-level records")
+    if str(reporting.get("granularity", "")).lower() != "aggregate monthly":
+        problems.append("forward-validation public granularity is not aggregate monthly")
+
+    evidence = status.get("evidence", {})
+    if status.get("status") == "not_started" and (
+        evidence.get("public_observation_count") != 0
+        or evidence.get("complete_months") != 0
+    ):
+        problems.append("not-started forward-validation status reports observations")
+
+    candidate = status.get("candidate", {})
+    manifest_path = root / "pinescript" / "manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        current = next(version for version in manifest["versions"] if version["current"])
+    except (FileNotFoundError, json.JSONDecodeError, KeyError, StopIteration) as exc:
+        problems.append(f"cannot validate forward candidate against Pine manifest: {exc}")
+        return problems
+    if candidate.get("version") != current.get("version"):
+        problems.append("forward candidate version differs from current Pine version")
+    if candidate.get("source_sha256") != current.get("sha256"):
+        problems.append("forward candidate hash differs from current Pine source hash")
     return problems
 
 
@@ -385,6 +444,7 @@ def scan_project(root: Path = PROJECT_ROOT) -> list[str]:
     problems.extend(_runtime_surface_problems(root))
     problems.extend(_workflow_security_problems(root))
     problems.extend(_snapshot_problems(root))
+    problems.extend(_forward_validation_problems(root))
     problems.extend(_backtest_csv_problems(root))
     return sorted(set(problems))
 
