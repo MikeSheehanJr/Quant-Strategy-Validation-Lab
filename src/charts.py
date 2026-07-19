@@ -21,6 +21,7 @@ MUTED = "#A6A18A"
 GRID = "#355965"
 WHITE = CREAM
 HEATMAP_PALETTE = [NAVY_DARK, RED, ORANGE, GOLD, CREAM]
+ANNUAL_BAR_PALETTE = [RED, "#E64A17", ORANGE, "#FAA327", GOLD, CREAM]
 LINE_GRADIENT = alt.LinearGradient(
     gradient="linear",
     x1=0,
@@ -124,24 +125,37 @@ def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
 def annual_pnl(yearly: pd.DataFrame) -> alt.Chart:
     """Annual aggregate P&L; partial periods use lower opacity."""
 
+    annual_max = max(float(yearly["pnl_usd"].max()), 1.0)
+    annual_min = min(float(yearly["pnl_usd"].min()), 0.0)
+    y_domain = [
+        annual_min - abs(annual_min) * 0.16,
+        annual_max + annual_max * 0.16,
+    ]
+    year_domain = yearly["year"].tolist()
+    year_range = [
+        ANNUAL_BAR_PALETTE[index % len(ANNUAL_BAR_PALETTE)]
+        for index in range(len(year_domain))
+    ]
+
     bars = (
         alt.Chart(yearly)
         .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
         .encode(
             x=alt.X("year:O", title="Calendar year", sort=None),
-            y=alt.Y("pnl_usd:Q", title="P&L per contract (USD)", scale=alt.Scale(zero=True)),
+            y=alt.Y(
+                "pnl_usd:Q",
+                title="P&L per contract (USD)",
+                scale=alt.Scale(domain=y_domain, zero=True, nice=False),
+            ),
             opacity=alt.Opacity(
                 "period_status:N",
                 title="Period",
                 scale=alt.Scale(domain=["Complete", "Partial"], range=[0.92, 0.72]),
+                legend=None,
             ),
             color=alt.Color(
-                "period_status:N",
-                title="Period",
-                scale=alt.Scale(
-                    domain=["Complete", "Partial"],
-                    range=[ORANGE, GOLD],
-                ),
+                "year:O",
+                scale=alt.Scale(domain=year_domain, range=year_range),
                 legend=None,
             ),
             tooltip=[
@@ -154,8 +168,21 @@ def annual_pnl(yearly: pd.DataFrame) -> alt.Chart:
             ],
         )
     )
-    labels = bars.mark_text(dy=-9, color=INK, fontSize=11).encode(
-        text=alt.Text("pnl_usd:Q", format="$,.0f")
+    labels = (
+        alt.Chart(yearly)
+        .mark_text(
+            baseline="bottom",
+            clip=False,
+            color=CREAM,
+            dy=-7,
+            fontSize=11,
+            fontWeight=600,
+        )
+        .encode(
+            x=alt.X("year:O", sort=None),
+            y=alt.Y("pnl_usd:Q", scale=alt.Scale(domain=y_domain, zero=True, nice=False)),
+            text=alt.Text("pnl_usd:Q", format="$,.0f"),
+        )
     )
     return _base(bars + labels, height=320)
 
