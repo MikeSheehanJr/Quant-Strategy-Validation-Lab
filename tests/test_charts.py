@@ -77,6 +77,27 @@ def test_equity_curve_uses_semantic_palette_and_focused_scale():
     assert all(layer["mark"]["type"] != "point" for layer in chart_spec["layer"])
 
 
+def test_annual_bars_use_full_ordered_palette_and_label_headroom():
+    yearly = yearly_frame(load_snapshot())
+    spec = annual_pnl(yearly).to_dict()
+    bars, labels = spec["layer"]
+
+    assert bars["encoding"]["color"]["scale"]["range"] == [
+        "#D62828",
+        "#E64A17",
+        "#F77F00",
+        "#FAA327",
+        "#FCBF49",
+        "#EAE2B7",
+    ]
+    y_domain = bars["encoding"]["y"]["scale"]["domain"]
+    assert y_domain[0] == 0.0
+    assert y_domain[1] >= float(yearly["pnl_usd"].max()) * 1.15
+    assert bars["encoding"]["opacity"]["legend"] is None
+    assert labels["mark"]["clip"] is False
+    assert labels["mark"]["color"] == "#EAE2B7"
+
+
 def test_single_series_lines_use_gradient_strokes_without_nodes():
     snapshot = load_snapshot()
     monthly = monthly_frame(snapshot)
