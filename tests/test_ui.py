@@ -36,7 +36,9 @@ def test_widget_mosaic_has_consistent_spacing_and_compact_status():
     assert "--qsvl-radius: 0.4rem" in css
     assert "border-radius: var(--qsvl-radius) !important" in css
     assert ".st-key-page_status" in css
-    assert "font-size: 1.85rem" in css
+    assert "font-size: 2rem" in css
+    assert "background: transparent !important" in css
+    assert "stToolbarActionButtonLabel" in css
     assert ".st-key-app_footer" in css
 
 

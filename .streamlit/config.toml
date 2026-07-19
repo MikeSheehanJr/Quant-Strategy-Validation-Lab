@@ -70,5 +70,10 @@ primaryColor = "#2F6174"
 [browser]
 gatherUsageStats = false
 
+[client]
+toolbarMode = "minimal"
+showErrorDetails = "type"
+showErrorLinks = false
+
 [server]
 headless = true

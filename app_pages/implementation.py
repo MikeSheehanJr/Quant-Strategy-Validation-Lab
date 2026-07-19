@@ -33,8 +33,8 @@ ytd_2026 = pine_windows.loc[pine_windows["window"] == "2026 YTD"].iloc[0]
 render_page_header(
     "Versioned implementation evidence",
     "Pine Script implementation",
-    "Inspect how the companion TradingView implementation changed from a research baseline "
-    "to a symbol-locked paper-control build.",
+    "I keep the TradingView companion separate from the headline Python engine so its rule "
+    "changes, safeguards, and evidence trail can be reviewed on their own.",
 )
 
 lineage = pd.DataFrame(
@@ -47,7 +47,7 @@ lineage = pd.DataFrame(
         {
             "Track": "Headline Python engine",
             "Specification": "30-minute filtered ORB",
-            "Evidence role": "729-trade public research snapshot",
+            "Evidence role": "729-trade reviewed research snapshot",
         },
     ]
 )
@@ -186,7 +186,7 @@ with st.container(border=True, key="pine_evidence_summary"):
     st.caption(
         "Aggregate derivatives of the July 16, 2026 TradingView List of Trades export. The "
         "source trade list is hash-pinned but not published; timestamps, prices, quantities, "
-        "and individual outcomes remain outside the public boundary."
+        "and individual outcomes remain outside the release boundary."
     )
     with st.container(horizontal=True, gap="small"):
         st.metric("Full-export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
@@ -290,24 +290,24 @@ review_boundary = pd.DataFrame(
             "State": ":gray-badge[Open]",
         },
         {
-            "Area": "Public boundary",
+            "Area": "Release boundary",
             "Item": "Licensed intraday bars and full trade exports",
             "State": ":blue-badge[Private]",
         },
         {
-            "Area": "Public boundary",
+            "Area": "Release boundary",
             "Item": "Signal timestamps, prices, and quantities",
             "State": ":blue-badge[Private]",
         },
         {
-            "Area": "Public boundary",
+            "Area": "Release boundary",
             "Item": "Broker, account, execution, and credentials",
             "State": ":blue-badge[Excluded]",
         },
     ]
 )
 with st.container(border=True, key="implementation_review_boundary"):
-    st.subheader("Acceptance and publication boundary")
+    st.subheader("Acceptance and release boundary")
     st.caption("Open engineering checks remain visible beside deliberately excluded data.")
     st.dataframe(
         review_boundary,
