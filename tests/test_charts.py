@@ -131,11 +131,23 @@ def test_gate_sensitivity_lines_have_no_point_nodes():
     assert "point" not in spec["layer"][0]["mark"]
 
 
-def test_quantitative_heatmap_runs_through_the_reviewed_palette():
+def test_execution_heatmaps_use_distinct_two_color_gradients():
     snapshot = load_snapshot()
-    spec = json.dumps(
-        execution_heatmap(execution_frame(snapshot), "profit_factor").to_dict()
-    )
+    execution = execution_frame(snapshot)
+    expected = {
+        "profit_factor": ["#003049", "#8ECAE6"],
+        "daily_sharpe": ["#7A1C23", "#F4A6A0"],
+        "net_pnl_usd": ["#8A4300", "#FCBF49"],
+    }
 
-    expected = ["#003049", "#D62828", "#F77F00", "#FCBF49", "#EAE2B7"]
-    assert f'"range": {json.dumps(expected)}' in spec
+    rendered = {}
+    for metric, gradient in expected.items():
+        spec = execution_heatmap(execution, metric).to_dict()
+        color = spec["layer"][0]["encoding"]["color"]
+        rendered[metric] = color["scale"]["range"]
+        assert rendered[metric] == gradient
+        assert len(rendered[metric]) == 2
+        assert len(color["legend"]["values"]) == 3
+        assert color["legend"]["gradientLength"] == 240
+
+    assert len({tuple(gradient) for gradient in rendered.values()}) == 3
