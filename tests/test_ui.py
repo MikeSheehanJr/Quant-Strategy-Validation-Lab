@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from src.ui import BACKGROUND_ASSET, background_data_uri, visual_css
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_visual_system_uses_a_local_reviewed_asset():
@@ -23,3 +28,16 @@ def test_glass_is_clearer_at_rest_and_blurs_on_hover():
     assert "--qsvl-glass-hover: rgba(0, 31, 46, 0.76)" in css
     assert "backdrop-filter: blur(8px) saturate(112%)" in css
     assert "backdrop-filter: blur(24px) saturate(138%)" in css
+
+
+def test_widget_mosaic_has_consistent_spacing_and_compact_status():
+    css = visual_css()
+    assert "--qsvl-space: clamp(0.78rem, 1.25vw, 1rem)" in css
+    assert ".qsvl-status-symbol" in css
+    assert ".st-key-app_footer" in css
+
+
+def test_theme_uses_the_reviewed_display_and_body_fonts():
+    config = (ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8")
+    assert 'font = "\'IBM Plex Sans\':' in config
+    assert 'headingFont = "\'Space Grotesk\':' in config

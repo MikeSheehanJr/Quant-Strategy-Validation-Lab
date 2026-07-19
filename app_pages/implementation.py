@@ -7,7 +7,6 @@ from pathlib import Path
 import streamlit as st
 
 from src.charts import pinescript_equity_curve
-from src.data import load_snapshot
 from src.pinescript import (
     BACKTEST_FILES,
     evidence_bytes,
@@ -17,10 +16,9 @@ from src.pinescript import (
     pinescript_source,
     pinescript_versions_frame,
 )
-from src.ui import render_page_header, render_research_boundary
+from src.ui import render_page_header
 
 
-snapshot = load_snapshot()
 pine_manifest = load_pinescript_manifest()
 pine_backtests = load_pinescript_backtests()
 pine_monthly = pine_backtests["monthly"]
@@ -37,7 +35,6 @@ render_page_header(
     "Inspect how the companion TradingView implementation changed from a research baseline "
     "to a symbol-locked paper-control build.",
 )
-render_research_boundary(snapshot["meta"])
 
 st.info(
     "This is a related **15-minute symmetric ORB implementation track**, not the exact "
@@ -46,7 +43,7 @@ st.info(
     icon=":material/info:",
 )
 
-with st.container(horizontal=True):
+with st.container(horizontal=True, gap="small"):
     st.metric("Versioned source files", f"{len(pine_versions)}", border=True)
     st.metric("Current build", current_version["version"], border=True)
     st.metric("Reviewed MNQ trades", f"{int(full_export['trades']):,}", border=True)
@@ -54,7 +51,7 @@ with st.container(horizontal=True):
 
 with st.container(border=True):
     st.subheader("What the script does")
-    process_col, controls_col = st.columns(2, gap="large")
+    process_col, controls_col = st.columns([1.1, 1], gap="small")
     with process_col:
         st.markdown("**Signal and exit sequence**")
         st.markdown(
@@ -74,35 +71,39 @@ with st.container(border=True):
             "- Observation-only alerts; no broker or execution connection"
         )
 
-st.subheader("Version-by-version research ledger")
-st.caption(
-    "Historical source headers are preserved as research records. Later corrections and the "
-    "manifest status take precedence over superseded estimates in older comments."
-)
-st.dataframe(
-    pinescript_versions_frame(pine_manifest),
-    hide_index=True,
-    column_config={
-        "version": st.column_config.TextColumn("Version", pinned=True),
-        "research_date": st.column_config.DateColumn("Research date", format="MMM DD, YYYY"),
-        "title": st.column_config.TextColumn("Build"),
-        "change": st.column_config.TextColumn("Primary change", width="large"),
-        "evidence_status": st.column_config.TextColumn("Evidence state", width="large"),
-    },
-)
+with st.container(border=True, key="version_ledger"):
+    st.subheader("Version-by-version research ledger")
+    st.caption(
+        "Historical source headers are preserved as research records. Later corrections and "
+        "the manifest status take precedence over superseded estimates in older comments."
+    )
+    st.dataframe(
+        pinescript_versions_frame(pine_manifest),
+        hide_index=True,
+        column_config={
+            "version": st.column_config.TextColumn("Version", pinned=True),
+            "research_date": st.column_config.DateColumn(
+                "Research date", format="MMM DD, YYYY"
+            ),
+            "title": st.column_config.TextColumn("Build"),
+            "change": st.column_config.TextColumn("Primary change", width="large"),
+            "evidence_status": st.column_config.TextColumn("Evidence state", width="large"),
+        },
+    )
 
-selected_version_id = st.selectbox(
-    "Inspect a version",
-    [version["version"] for version in pine_versions],
-    index=len(pine_versions) - 1,
-    key="pinescript_version",
-)
+with st.container(border=True, key="version_picker"):
+    selected_version_id = st.selectbox(
+        "Inspect a version",
+        [version["version"] for version in pine_versions],
+        index=len(pine_versions) - 1,
+        key="pinescript_version",
+    )
 selected_version = next(
     version for version in pine_versions if version["version"] == selected_version_id
 )
-detail_col, rationale_col = st.columns(2, gap="large")
+detail_col, rationale_col = st.columns([1.05, 1], gap="small")
 with detail_col:
-    with st.container(border=True):
+    with st.container(border=True, height="stretch"):
         st.markdown(f"**{selected_version['version']} · {selected_version['title']}**")
         st.write(selected_version["change"])
         st.caption(f"Evidence: {selected_version['evidence_status']}")
@@ -111,7 +112,7 @@ with detail_col:
             f"`{selected_version['sha256'][:16]}…`"
         )
 with rationale_col:
-    with st.container(border=True):
+    with st.container(border=True, height="stretch"):
         st.markdown("**Research rationale**")
         st.write(selected_version["why"])
         st.markdown("**Known limitation**")
@@ -129,17 +130,24 @@ with st.expander("Representative source and download", icon=":material/code:"):
         on_click="ignore",
     )
 
-st.subheader("Reviewed v4.1 MNQ backtest evidence")
-st.caption(
-    "Aggregate derivatives of the July 16, 2026 TradingView List of Trades export. The "
-    "source trade list is hash-pinned but not published; timestamps, prices, quantities, "
-    "and individual outcomes remain outside the public boundary."
-)
-with st.container(horizontal=True):
-    st.metric("Full-export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
-    st.metric("Full-export profit factor", f"{full_export['profit_factor']:.3f}", border=True)
-    st.metric("Full-export max drawdown", f"${full_export['max_drawdown_usd']:,.0f}", border=True)
-    st.metric("2026 YTD net P&L", f"${ytd_2026['net_pnl_usd']:,.0f}", border=True)
+with st.container(border=True, key="pine_evidence_summary"):
+    st.subheader("Reviewed v4.1 MNQ backtest evidence")
+    st.caption(
+        "Aggregate derivatives of the July 16, 2026 TradingView List of Trades export. The "
+        "source trade list is hash-pinned but not published; timestamps, prices, quantities, "
+        "and individual outcomes remain outside the public boundary."
+    )
+    with st.container(horizontal=True, gap="small"):
+        st.metric("Full-export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
+        st.metric(
+            "Full-export profit factor", f"{full_export['profit_factor']:.3f}", border=True
+        )
+        st.metric(
+            "Full-export max drawdown",
+            f"${full_export['max_drawdown_usd']:,.0f}",
+            border=True,
+        )
+        st.metric("2026 YTD net P&L", f"${ytd_2026['net_pnl_usd']:,.0f}", border=True)
 
 with st.container(border=True):
     st.subheader("TradingView aggregate path")
@@ -149,26 +157,29 @@ with st.container(border=True):
     )
     st.altair_chart(pinescript_equity_curve(pine_monthly))
 
-st.subheader("Backtest windows")
-st.dataframe(
-    pine_windows,
-    hide_index=True,
-    column_config={
-        "window": st.column_config.TextColumn("Window", pinned=True),
-        "start_month": st.column_config.TextColumn("Start"),
-        "end_month": st.column_config.TextColumn("End"),
-        "trades": st.column_config.NumberColumn("Trades", format="%d"),
-        "net_pnl_usd": st.column_config.NumberColumn("Net P&L", format="$%.2f"),
-        "mean_trade_usd": st.column_config.NumberColumn("Mean/trade", format="$%.2f"),
-        "win_rate_pct": st.column_config.NumberColumn("Win rate", format="%.2f%%"),
-        "profit_factor": st.column_config.NumberColumn("Profit factor", format="%.3f"),
-        "max_drawdown_usd": st.column_config.NumberColumn("Max drawdown", format="$%.2f"),
-    },
-)
-st.caption(
-    "The negative 2026 YTD row is intentionally retained. Last-250 and date-window rows are "
-    "descriptive diagnostics, not independent out-of-sample tests."
-)
+with st.container(border=True, key="backtest_windows"):
+    st.subheader("Backtest windows")
+    st.dataframe(
+        pine_windows,
+        hide_index=True,
+        column_config={
+            "window": st.column_config.TextColumn("Window", pinned=True),
+            "start_month": st.column_config.TextColumn("Start"),
+            "end_month": st.column_config.TextColumn("End"),
+            "trades": st.column_config.NumberColumn("Trades", format="%d"),
+            "net_pnl_usd": st.column_config.NumberColumn("Net P&L", format="$%.2f"),
+            "mean_trade_usd": st.column_config.NumberColumn("Mean/trade", format="$%.2f"),
+            "win_rate_pct": st.column_config.NumberColumn("Win rate", format="%.2f%%"),
+            "profit_factor": st.column_config.NumberColumn("Profit factor", format="%.3f"),
+            "max_drawdown_usd": st.column_config.NumberColumn(
+                "Max drawdown", format="$%.2f"
+            ),
+        },
+    )
+    st.caption(
+        "The negative 2026 YTD row is intentionally retained. Last-250 and date-window rows "
+        "are descriptive diagnostics, not independent out-of-sample tests."
+    )
 
 with st.expander("Export QA and provenance", icon=":material/fact_check:"):
     st.dataframe(
@@ -182,26 +193,27 @@ with st.expander("Export QA and provenance", icon=":material/fact_check:"):
         },
     )
 
-st.markdown("**Download aggregate evidence**")
-with st.container(horizontal=True):
-    for key, label in (
-        ("monthly", "Monthly backtest CSV"),
-        ("windows", "Window summary CSV"),
-        ("qa", "QA and provenance CSV"),
-    ):
-        st.download_button(
-            label,
-            data=evidence_bytes(key),
-            file_name=BACKTEST_FILES[key].name,
-            mime="text/csv",
-            key=f"download_pine_{key}",
-            icon=":material/download:",
-            on_click="ignore",
-        )
+with st.container(border=True, key="aggregate_downloads"):
+    st.subheader("Download aggregate evidence")
+    with st.container(horizontal=True, gap="small"):
+        for key, label in (
+            ("monthly", "Monthly backtest CSV"),
+            ("windows", "Window summary CSV"),
+            ("qa", "QA and provenance CSV"),
+        ):
+            st.download_button(
+                label,
+                data=evidence_bytes(key),
+                file_name=BACKTEST_FILES[key].name,
+                mime="text/csv",
+                key=f"download_pine_{key}",
+                icon=":material/download:",
+                on_click="ignore",
+            )
 
-next_col, boundary_col = st.columns(2, gap="large")
+next_col, boundary_col = st.columns([1.05, 1], gap="small")
 with next_col:
-    with st.container(border=True):
+    with st.container(border=True, height="stretch"):
         st.subheader("Open acceptance checks")
         st.markdown(
             "1. Verify the wrong-symbol lock on a non-MNQ chart.\n"
@@ -211,7 +223,7 @@ with next_col:
             "5. Register the forward-test decision rule before collection begins."
         )
 with boundary_col:
-    with st.container(border=True):
+    with st.container(border=True, height="stretch"):
         st.subheader("What remains private")
         st.markdown(
             "- Licensed intraday OHLCV bars\n"

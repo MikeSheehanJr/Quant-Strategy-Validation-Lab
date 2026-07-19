@@ -5,7 +5,7 @@ from __future__ import annotations
 import streamlit as st
 
 from src.data import load_snapshot
-from src.ui import inject_visual_system
+from src.ui import inject_visual_system, render_app_footer
 
 
 st.set_page_config(
@@ -47,7 +47,4 @@ page = st.navigation(
 page.run()
 
 meta = load_snapshot()["meta"]
-st.caption(
-    f"Aggregate public evidence · schema {meta['schema_version']} · "
-    f"generated {meta['snapshot_date']} · no raw market data included"
-)
+render_app_footer(meta)
