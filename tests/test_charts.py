@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 from src.charts import (
     annual_pnl,
     cutoff_sensitivity_chart,
@@ -61,3 +63,23 @@ def test_chart_specs_compile():
     for chart in charts:
         spec = chart.to_dict()
         assert "$schema" in spec
+
+
+def test_equity_curve_uses_semantic_palette_and_focused_scale():
+    snapshot = load_snapshot()
+    chart_spec = equity_curve(monthly_frame(snapshot)).to_dict()
+    spec = json.dumps(chart_spec)
+
+    for color in ("#D62828", "#F77F00", "#FCBF49", "#EAE2B7"):
+        assert color in spec
+    assert chart_spec["layer"][0]["encoding"]["y"]["scale"]["domain"][0] == -500.0
+
+
+def test_quantitative_heatmap_runs_through_the_reviewed_palette():
+    snapshot = load_snapshot()
+    spec = json.dumps(
+        execution_heatmap(execution_frame(snapshot), "profit_factor").to_dict()
+    )
+
+    expected = ["#003049", "#D62828", "#F77F00", "#FCBF49", "#EAE2B7"]
+    assert f'"range": {json.dumps(expected)}' in spec

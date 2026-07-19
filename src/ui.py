@@ -45,6 +45,18 @@ def visual_css() -> str:
     --qsvl-border: rgba(234, 226, 183, 0.12);
     --qsvl-border-hover: rgba(234, 226, 183, 0.24);
     --qsvl-shadow: 0 8px 24px rgba(0, 8, 14, 0.18);
+    --qsvl-gradient-warm: linear-gradient(
+        90deg,
+        var(--qsvl-red),
+        var(--qsvl-orange),
+        var(--qsvl-gold),
+        var(--qsvl-cream)
+    );
+    --qsvl-gradient-cool: linear-gradient(
+        145deg,
+        rgba(0, 48, 73, 0.60),
+        rgba(234, 226, 183, 0.04)
+    );
 }
 
 html,
@@ -235,6 +247,15 @@ h3 {
     margin: 0;
 }
 
+.st-key-research_context {
+    min-height: 0;
+    padding: 0.68rem 0.95rem !important;
+}
+
+.st-key-research_context [data-testid="stMarkdownContainer"] p {
+    line-height: 1.35;
+}
+
 .st-key-app_footer {
     margin-top: 0.15rem;
 }
@@ -261,6 +282,69 @@ h3 {
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
     padding: clamp(0.95rem, 1.4vw, 1.2rem) !important;
     border-radius: var(--qsvl-radius) !important;
+}
+
+.st-key-brief_path_chart,
+.st-key-brief_year_chart {
+    position: relative;
+    overflow: hidden;
+}
+
+.st-key-brief_path_chart::before,
+.st-key-brief_year_chart::before {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--qsvl-gradient-warm);
+    content: "";
+    opacity: 0.64;
+    pointer-events: none;
+}
+
+.st-key-brief_path_chart,
+.st-key-brief_year_chart {
+    gap: 0.42rem !important;
+    padding: 0.9rem 1rem 0.95rem !important;
+    background:
+        var(--qsvl-gradient-cool),
+        var(--qsvl-glass) !important;
+}
+
+.st-key-brief_path_chart h3,
+.st-key-brief_year_chart h3 {
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+}
+
+.st-key-brief_path_chart [data-testid="stMarkdownContainer"]:has(
+    > [data-testid="stHeadingWithActionElements"]
+),
+.st-key-brief_year_chart [data-testid="stMarkdownContainer"]:has(
+    > [data-testid="stHeadingWithActionElements"]
+) {
+    margin: 0 !important;
+}
+
+.st-key-brief_path_chart [data-testid="stCaptionContainer"],
+.st-key-brief_year_chart [data-testid="stCaptionContainer"] {
+    min-height: 2.65rem;
+    margin: 0 !important;
+    padding-right: 6.75rem;
+}
+
+.st-key-brief_path_chart [data-testid="stCaptionContainer"] p,
+.st-key-brief_year_chart [data-testid="stCaptionContainer"] p {
+    color: rgba(234, 226, 183, 0.64);
+    line-height: 1.35;
+}
+
+.st-key-brief_path_chart [data-testid="stVegaLiteChart"],
+.st-key-brief_year_chart [data-testid="stVegaLiteChart"] {
+    margin-top: 0.15rem;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"]:hover {
@@ -501,6 +585,16 @@ h3 {
     [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
         padding: 1rem !important;
         border-radius: var(--qsvl-radius) !important;
+    }
+
+    .st-key-research_context {
+        padding: 0.64rem 0.8rem !important;
+    }
+
+    .st-key-brief_path_chart [data-testid="stCaptionContainer"],
+    .st-key-brief_year_chart [data-testid="stCaptionContainer"] {
+        min-height: 0;
+        padding-right: 0;
     }
 
     [data-testid="stMetric"] {
