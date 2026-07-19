@@ -23,7 +23,6 @@ render_page_header(
     "Quant strategy validation lab",
     "**Research question:** Can a deliberately simple intraday strategy survive costs, "
     "out-of-sample testing, parameter perturbation, and adversarial review?",
-    status_style="full",
 )
 render_research_boundary(meta)
 

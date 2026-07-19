@@ -35,8 +35,15 @@ def test_widget_mosaic_has_consistent_spacing_and_compact_status():
     assert "--qsvl-space: clamp(0.78rem, 1.25vw, 1rem)" in css
     assert "--qsvl-radius: 0.4rem" in css
     assert "border-radius: var(--qsvl-radius) !important" in css
-    assert ".qsvl-status-symbol" in css
+    assert ".st-key-page_status" in css
+    assert "font-size: 1.85rem" in css
     assert ".st-key-app_footer" in css
+
+
+def test_work_status_uses_material_symbol_without_emoji():
+    ui_source = (ROOT / "src" / "ui.py").read_text(encoding="utf-8")
+    assert 'st.markdown(":material/handyman:"' in ui_source
+    assert "\U0001F6E0" not in ui_source
 
 
 def test_theme_uses_the_reviewed_display_and_body_fonts():
