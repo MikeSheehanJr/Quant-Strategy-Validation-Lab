@@ -11,7 +11,7 @@ import streamlit as st
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-BACKGROUND_ASSET = PROJECT_ROOT / "assets" / "research-glass-grain.png"
+BACKGROUND_ASSET = PROJECT_ROOT / "assets" / "research-glass-grain-v2.png"
 
 
 @lru_cache(maxsize=1)
@@ -32,13 +32,15 @@ def visual_css() -> str:
     --qsvl-navy: #003049;
     --qsvl-navy-deep: #001722;
     --qsvl-red: #D62828;
+    --qsvl-orange: #F77F00;
     --qsvl-gold: #FCBF49;
     --qsvl-cream: #EAE2B7;
-    --qsvl-glass: rgba(0, 40, 58, 0.58);
-    --qsvl-glass-strong: rgba(0, 32, 47, 0.76);
-    --qsvl-border: rgba(234, 226, 183, 0.18);
-    --qsvl-border-hover: rgba(252, 191, 73, 0.34);
-    --qsvl-shadow: 0 18px 50px rgba(0, 8, 14, 0.28);
+    --qsvl-glass: rgba(0, 36, 52, 0.30);
+    --qsvl-glass-hover: rgba(0, 31, 46, 0.76);
+    --qsvl-glass-strong: rgba(0, 32, 47, 0.78);
+    --qsvl-border: rgba(234, 226, 183, 0.12);
+    --qsvl-border-hover: rgba(252, 191, 73, 0.30);
+    --qsvl-shadow: 0 16px 44px rgba(0, 8, 14, 0.22);
 }
 
 html,
@@ -50,8 +52,8 @@ body,
 [data-testid="stAppViewContainer"] {
     background-color: var(--qsvl-navy-deep);
     background-image:
-        linear-gradient(180deg, rgba(0, 12, 19, 0.22), rgba(0, 16, 25, 0.70)),
-        linear-gradient(90deg, rgba(0, 48, 73, 0.28), rgba(0, 16, 25, 0.16)),
+        linear-gradient(180deg, rgba(0, 12, 19, 0.10), rgba(0, 16, 25, 0.50)),
+        linear-gradient(90deg, rgba(0, 48, 73, 0.14), rgba(0, 16, 25, 0.08)),
         url("__BACKGROUND_DATA_URI__");
     background-position: center, center, center top;
     background-repeat: no-repeat;
@@ -118,7 +120,8 @@ header[data-testid="stHeader"] {
     color: var(--qsvl-cream);
     background: linear-gradient(
         135deg,
-        rgba(252, 191, 73, 0.18),
+        rgba(252, 191, 73, 0.14),
+        rgba(247, 127, 0, 0.07),
         rgba(234, 226, 183, 0.07)
     );
     border-color: rgba(252, 191, 73, 0.30);
@@ -154,6 +157,7 @@ header[data-testid="stHeader"] {
         90deg,
         transparent,
         rgba(252, 191, 73, 0.62),
+        rgba(247, 127, 0, 0.42),
         rgba(234, 226, 183, 0.28),
         transparent
     );
@@ -181,13 +185,15 @@ header[data-testid="stHeader"] {
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.055),
         var(--qsvl-shadow);
-    -webkit-backdrop-filter: blur(18px) saturate(128%);
-    backdrop-filter: blur(18px) saturate(128%);
+    -webkit-backdrop-filter: blur(8px) saturate(112%);
+    backdrop-filter: blur(8px) saturate(112%);
     transition:
-        transform 190ms cubic-bezier(0.2, 0.72, 0.2, 1),
-        border-color 190ms ease,
-        box-shadow 190ms ease,
-        background-color 190ms ease;
+        transform 220ms cubic-bezier(0.2, 0.72, 0.2, 1),
+        border-color 220ms ease,
+        box-shadow 220ms ease,
+        background 240ms ease,
+        -webkit-backdrop-filter 240ms ease,
+        backdrop-filter 240ms ease;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
@@ -198,10 +204,15 @@ header[data-testid="stHeader"] {
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"]:hover {
     z-index: 2;
     border-color: var(--qsvl-border-hover) !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 46%),
+        var(--qsvl-glass-hover) !important;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.075),
         0 22px 58px rgba(0, 8, 14, 0.34);
-    transform: translateY(-2px) scale(1.005);
+    -webkit-backdrop-filter: blur(24px) saturate(138%);
+    backdrop-filter: blur(24px) saturate(138%);
+    transform: translateY(-2px) scale(1.004);
 }
 
 [data-testid="stMetric"] {
@@ -214,10 +225,15 @@ header[data-testid="stHeader"] {
 [data-testid="stMetric"]:hover {
     z-index: 3;
     border-color: var(--qsvl-border-hover) !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 46%),
+        var(--qsvl-glass-hover) !important;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         0 18px 44px rgba(0, 8, 14, 0.34);
-    transform: translateY(-2px) scale(1.012);
+    -webkit-backdrop-filter: blur(24px) saturate(138%);
+    backdrop-filter: blur(24px) saturate(138%);
+    transform: translateY(-2px) scale(1.008);
 }
 
 [data-testid="stMetricLabel"] p {
@@ -250,9 +266,28 @@ header[data-testid="stHeader"] {
 [data-testid="stExpander"],
 [data-testid="stSegmentedControl"],
 [data-testid="stSelectbox"] > div {
+    border: 1px solid rgba(234, 226, 183, 0.10);
     border-radius: 1rem;
-    -webkit-backdrop-filter: blur(14px) saturate(120%);
-    backdrop-filter: blur(14px) saturate(120%);
+    background: rgba(0, 36, 52, 0.26);
+    -webkit-backdrop-filter: blur(6px) saturate(110%);
+    backdrop-filter: blur(6px) saturate(110%);
+    transition:
+        border-color 220ms ease,
+        background 240ms ease,
+        -webkit-backdrop-filter 240ms ease,
+        backdrop-filter 240ms ease;
+}
+
+[data-testid="stDataFrame"]:hover,
+[data-testid="stTable"]:hover,
+[data-testid="stAlert"]:hover,
+[data-testid="stExpander"]:hover,
+[data-testid="stSegmentedControl"]:hover,
+[data-testid="stSelectbox"] > div:hover {
+    border-color: rgba(252, 191, 73, 0.24);
+    background: rgba(0, 31, 46, 0.70);
+    -webkit-backdrop-filter: blur(18px) saturate(132%);
+    backdrop-filter: blur(18px) saturate(132%);
 }
 
 [data-testid="stAlert"] {
@@ -329,7 +364,7 @@ header[data-testid="stHeader"] {
         color: var(--qsvl-cream);
         border: 1px solid rgba(234, 226, 183, 0.14);
         border-radius: 999px;
-        background: rgba(0, 40, 58, 0.58);
+        background: rgba(0, 36, 52, 0.44);
     }
 
     [data-testid="stExpandSidebarButton"]::after {

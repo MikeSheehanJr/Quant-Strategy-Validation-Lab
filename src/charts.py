@@ -12,6 +12,7 @@ NAVY_MID = "#5E8390"
 CREAM = "#EAE2B7"
 GOLD = "#FCBF49"
 RED = "#D62828"
+ORANGE = "#F77F00"
 INK = CREAM
 DARK_INK = "#001722"
 MUTED = "#A6A18A"
@@ -385,7 +386,7 @@ def gate_sensitivity_chart(gates: pd.DataFrame, metric: str) -> alt.Chart:
             color=alt.Color(
                 "gate_kind:N",
                 title="Gate",
-                scale=alt.Scale(domain=["SMA", "EMA"], range=[CREAM, GOLD]),
+                scale=alt.Scale(domain=["SMA", "EMA"], range=[CREAM, ORANGE]),
             ),
             strokeDash=alt.StrokeDash(
                 "gate_kind:N",
