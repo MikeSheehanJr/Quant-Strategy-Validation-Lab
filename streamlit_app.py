@@ -1,4 +1,4 @@
-"""Public entry point for the Quant strategy validation lab."""
+"""Entry point for the Quant strategy validation lab."""
 
 from __future__ import annotations
 
