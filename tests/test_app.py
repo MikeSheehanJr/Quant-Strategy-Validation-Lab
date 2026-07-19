@@ -18,6 +18,7 @@ def test_default_research_brief_renders():
     assert app.title[0].value == "Quant strategy validation lab"
     assert any(item.value == "Strategy in plain English" for item in app.subheader)
     assert any(metric.label == "Cost-adjusted trades" for metric in app.metric)
+    assert sum("Work in progress" in item.value for item in app.markdown) == 1
 
 
 def test_robustness_views_render():
@@ -51,4 +52,6 @@ def test_forward_page_states_that_evidence_has_not_started():
     assert not app.exception
     assert app.title[0].value == "Forward validation"
     assert any(metric.label == "Public observations" and metric.value == "0" for metric in app.metric)
+    assert any(metric.label == "Publication cadence" for metric in app.metric)
+    assert not any(metric.label == "Evidence state" for metric in app.metric)
     assert any(item.value == "Next required gate" for item in app.subheader)

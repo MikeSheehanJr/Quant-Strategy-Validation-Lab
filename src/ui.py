@@ -35,6 +35,9 @@ def visual_css() -> str:
     --qsvl-orange: #F77F00;
     --qsvl-gold: #FCBF49;
     --qsvl-cream: #EAE2B7;
+    --qsvl-text-bright: #F4EED6;
+    --qsvl-text-muted: #B8C6C4;
+    --qsvl-space: clamp(0.78rem, 1.25vw, 1rem);
     --qsvl-glass: rgba(0, 36, 52, 0.30);
     --qsvl-glass-hover: rgba(0, 31, 46, 0.76);
     --qsvl-glass-strong: rgba(0, 32, 47, 0.78);
@@ -131,11 +134,19 @@ header[data-testid="stHeader"] {
 }
 
 [data-testid="stMainBlockContainer"] {
-    max-width: 88rem;
+    max-width: 96rem;
     padding-top: 6.4rem;
-    padding-right: clamp(1.1rem, 3vw, 3rem);
+    padding-right: clamp(1rem, 2.6vw, 2.75rem);
     padding-bottom: 4.5rem;
-    padding-left: clamp(1.1rem, 3vw, 3rem);
+    padding-left: clamp(1rem, 2.6vw, 2.75rem);
+}
+
+[data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] {
+    gap: var(--qsvl-space);
+}
+
+[data-testid="stHorizontalBlock"] {
+    gap: var(--qsvl-space);
 }
 
 .st-key-page_header {
@@ -166,6 +177,7 @@ header[data-testid="stHeader"] {
 
 .st-key-page_header h1 {
     max-width: 16ch;
+    color: var(--qsvl-text-bright);
     letter-spacing: -0.035em;
     line-height: 1.04;
     text-wrap: balance;
@@ -174,6 +186,39 @@ header[data-testid="stHeader"] {
 .st-key-page_header [data-testid="stCaptionContainer"] p {
     letter-spacing: 0.14em;
     color: rgba(234, 226, 183, 0.68);
+}
+
+[data-testid="stCaptionContainer"] p {
+    color: var(--qsvl-text-muted);
+}
+
+h2,
+h3 {
+    color: var(--qsvl-text-bright);
+    letter-spacing: -0.018em;
+}
+
+.qsvl-status-symbol {
+    display: grid;
+    width: 2.35rem;
+    height: 2.35rem;
+    place-items: center;
+    color: var(--qsvl-gold);
+    border: 1px solid rgba(252, 191, 73, 0.28);
+    border-radius: 999px;
+    background: rgba(252, 191, 73, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.st-key-research_context [data-testid="stMarkdownContainer"] p,
+.st-key-app_footer [data-testid="stCaptionContainer"] p {
+    margin: 0;
+}
+
+.st-key-app_footer {
+    margin-top: 0.15rem;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"],
@@ -197,7 +242,7 @@ header[data-testid="stHeader"] {
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
-    padding: 1.2rem !important;
+    padding: clamp(0.95rem, 1.4vw, 1.2rem) !important;
     border-radius: 1.25rem !important;
 }
 
@@ -380,6 +425,11 @@ header[data-testid="stHeader"] {
         padding-left: 1rem;
     }
 
+    [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"],
+    [data-testid="stHorizontalBlock"] {
+        gap: 0.75rem;
+    }
+
     [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
         padding: 1rem !important;
         border-radius: 1.05rem !important;
@@ -424,9 +474,12 @@ def render_page_header(
     title: str,
     description: str,
     *,
-    work_in_progress: bool = True,
+    status_style: str = "symbol",
 ) -> None:
-    """Render a consistent, prominent page heading."""
+    """Render a prominent page heading with one full status label site-wide."""
+
+    if status_style not in {"full", "symbol"}:
+        raise ValueError("status_style must be 'full' or 'symbol'")
 
     with st.container(key="page_header", gap="xsmall"):
         st.caption(eyebrow.upper())
@@ -436,19 +489,44 @@ def render_page_header(
             vertical_alignment="center",
         ):
             st.title(title)
-            if work_in_progress:
+            if status_style == "full":
                 st.badge(
                     "Work in progress",
-                    icon=":material/construction:",
+                    icon=":material/handyman:",
                     color="yellow",
+                )
+            else:
+                st.html(
+                    '<span class="qsvl-status-symbol" role="img" '
+                    'aria-label="Work in progress" title="Work in progress">🛠</span>'
                 )
         st.markdown(description)
 
 
 def render_research_boundary(meta: dict[str, Any]) -> None:
-    """Show the public evidence boundary without occupying a sidebar."""
+    """Show the full research context once, on the canonical brief."""
 
-    st.caption(
-        f"{meta['instrument']} · {meta['research_window']} · snapshot "
-        f"{meta['snapshot_date']} · reviewed aggregates only"
-    )
+    with st.container(border=True, key="research_context", gap="xxsmall"):
+        st.markdown(
+            f":material/candlestick_chart: **{meta['instrument']}** · "
+            f"{meta['research_window']} · snapshot {meta['snapshot_date']} · "
+            "reviewed aggregates only"
+        )
+
+
+def render_section_header(title: str, description: str, *, key: str) -> None:
+    """Render section copy inside a compact glass tile instead of floating text."""
+
+    with st.container(border=True, key=f"section_{key}", gap="xxsmall"):
+        st.subheader(title)
+        st.caption(description)
+
+
+def render_app_footer(meta: dict[str, Any]) -> None:
+    """Render a concise global artifact footer in its own glass tile."""
+
+    with st.container(border=True, key="app_footer", gap="xxsmall"):
+        st.caption(
+            f"Public aggregate artifact · schema {meta['schema_version']} · "
+            "raw market data excluded"
+        )

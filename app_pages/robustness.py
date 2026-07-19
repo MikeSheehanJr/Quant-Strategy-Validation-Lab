@@ -27,7 +27,7 @@ from src.data import (
 )
 from src.metrics import execution_range, max_drawdown_from_monthly, quant_summary
 from src.simulations import monthly_block_bootstrap
-from src.ui import render_page_header, render_research_boundary
+from src.ui import render_page_header, render_section_header
 
 
 @st.cache_data(show_spinner=False, max_entries=24)
@@ -49,7 +49,6 @@ def run_public_monte_carlo(
 
 
 snapshot = load_snapshot()
-meta = snapshot["meta"]
 monthly = monthly_frame(snapshot)
 execution = execution_frame(snapshot)
 rr = rr_frame(snapshot)
@@ -62,26 +61,27 @@ render_page_header(
     "Stress the historical result from four angles. These views test fragility; they do not "
     "turn the sample into a forecast.",
 )
-render_research_boundary(meta)
 
-view = st.segmented_control(
-    "Robustness view",
-    ["Historical risk", "Monte Carlo", "Parameters", "Validation"],
-    default="Historical risk",
-    key="robustness_view",
-)
+with st.container(border=True, key="robustness_switcher"):
+    view = st.segmented_control(
+        "Robustness view",
+        ["Historical risk", "Monte Carlo", "Parameters", "Validation"],
+        default="Historical risk",
+        key="robustness_view",
+    )
 
 
 if view == "Historical risk":
     risk = quant_summary(monthly)
     max_monthly_dd = max_drawdown_from_monthly(monthly)
 
-    st.subheader("Historical risk snapshot")
-    st.caption(
+    render_section_header(
+        "Historical risk snapshot",
         f"Dollar-based diagnostics across {risk['sample_months']} complete months. "
-        "Partial edge months are excluded."
+        "Partial edge months are excluded.",
+        key="historical_risk",
     )
-    with st.container(horizontal=True):
+    with st.container(horizontal=True, gap="small"):
         st.metric(
             "Positive complete months",
             f"{risk['positive_month_rate_pct']:.1f}%",
@@ -95,7 +95,7 @@ if view == "Historical risk":
         )
         st.metric("Monthly Sortino", f"{risk['monthly_sortino']:.2f}", border=True)
 
-    distribution_col, tail_col = st.columns([1.45, 1], gap="large")
+    distribution_col, tail_col = st.columns([1.5, 1], gap="small")
     with distribution_col:
         with st.container(border=True):
             st.subheader("Complete-month P&L distribution")
@@ -142,7 +142,7 @@ if view == "Historical risk":
                 },
             )
 
-    with st.container(horizontal=True):
+    with st.container(horizontal=True, gap="small"):
         st.metric(
             "Monthly-aggregate max drawdown",
             f"${max_monthly_dd:,.0f}",
@@ -151,41 +151,43 @@ if view == "Historical risk":
         st.metric("CPCV OOS-positive splits", "45/45", border=True)
         st.metric("PSR vs zero", "3.30σ", border=True)
 
-    st.caption(
-        "VaR and CVaR are empirical monthly diagnostics. They are not capital requirements "
-        "and do not capture intramonth execution paths."
-    )
+    with st.container(border=True, key="risk_caveat", gap="xxsmall"):
+        st.caption(
+            "VaR and CVaR are empirical monthly diagnostics. They are not capital requirements "
+            "and do not capture intramonth execution paths."
+        )
 
 
 elif view == "Monte Carlo":
-    st.subheader("Aggregate monthly Monte Carlo")
-    st.caption(
-        "Moving-block bootstrap of complete monthly P&L. Contiguous blocks preserve limited "
-        "month-to-month dependence; the output is a stress distribution, not a forecast."
-    )
-
-    control_left, control_mid, control_right = st.columns(3, gap="large")
-    with control_left:
-        horizon_label = st.segmented_control(
-            "Projection horizon",
-            ["12 mo", "24 mo", "36 mo"],
-            default="24 mo",
-            key="mc_horizon",
+    with st.container(border=True, key="monte_carlo_controls"):
+        st.subheader("Aggregate monthly Monte Carlo")
+        st.caption(
+            "Moving-block bootstrap of complete monthly P&L. Contiguous blocks preserve "
+            "limited month-to-month dependence; the output is a stress distribution, not a "
+            "forecast."
         )
-    with control_mid:
-        block_label = st.segmented_control(
-            "Bootstrap block",
-            ["1 month", "3 months", "6 months"],
-            default="3 months",
-            key="mc_block",
-        )
-    with control_right:
-        paths = st.selectbox(
-            "Simulation paths",
-            [1_000, 2_500, 5_000],
-            index=1,
-            key="mc_paths",
-        )
+        control_left, control_mid, control_right = st.columns(3, gap="small")
+        with control_left:
+            horizon_label = st.segmented_control(
+                "Projection horizon",
+                ["12 mo", "24 mo", "36 mo"],
+                default="24 mo",
+                key="mc_horizon",
+            )
+        with control_mid:
+            block_label = st.segmented_control(
+                "Bootstrap block",
+                ["1 month", "3 months", "6 months"],
+                default="3 months",
+                key="mc_block",
+            )
+        with control_right:
+            paths = st.selectbox(
+                "Simulation paths",
+                [1_000, 2_500, 5_000],
+                index=1,
+                key="mc_paths",
+            )
 
     horizon_months = int(horizon_label.split()[0])
     block_months = int(block_label.split()[0])
@@ -196,7 +198,7 @@ elif view == "Monte Carlo":
         block_months,
     )
 
-    with st.container(horizontal=True):
+    with st.container(horizontal=True, gap="small"):
         st.metric(
             "Terminal P&L above zero",
             f"{simulation['probability_terminal_positive_pct']:.1f}%",
@@ -222,7 +224,7 @@ elif view == "Monte Carlo":
         )
         st.altair_chart(monte_carlo_fan(fan))
 
-    terminal_col, drawdown_col = st.columns(2, gap="large")
+    terminal_col, drawdown_col = st.columns([1.05, 1], gap="small")
     with terminal_col:
         with st.container(border=True):
             st.subheader("Terminal P&L distribution")
@@ -234,9 +236,9 @@ elif view == "Monte Carlo":
             st.caption("Drawdown magnitude is calculated within each cumulative path.")
             st.altair_chart(drawdown_distribution(simulated_paths))
 
-    interpretation_left, interpretation_right = st.columns(2, gap="large")
+    interpretation_left, interpretation_right = st.columns(2, gap="small")
     with interpretation_left:
-        with st.container(border=True):
+        with st.container(border=True, height="stretch"):
             st.markdown("**What changes**")
             st.markdown(
                 "- Observed complete-month P&L is reordered in contiguous blocks\n"
@@ -244,7 +246,7 @@ elif view == "Monte Carlo":
                 "- Horizon and dependence assumptions can be varied"
             )
     with interpretation_right:
-        with st.container(border=True):
+        with st.container(border=True, height="stretch"):
             st.markdown("**What remains unknown**")
             st.markdown(
                 "- Regimes absent from the historical sample\n"
@@ -283,14 +285,15 @@ elif view == "Parameters":
         "Net P&L": "net_pnl_usd",
     }
 
-    st.subheader("Reviewed parameter atlas")
-    st.caption(
+    render_section_header(
+        "Reviewed parameter atlas",
         "Five-minute execution audit around the frozen specification. This is stability "
-        "analysis—not permission to adopt the best full-sample cell."
+        "analysis—not permission to adopt the best full-sample cell.",
+        key="parameter_atlas",
     )
-    frozen_left, frozen_right = st.columns([1.1, 2], gap="large")
+    frozen_left, frozen_right = st.columns([1.1, 2], gap="small")
     with frozen_left:
-        with st.container(border=True):
+        with st.container(border=True, height="stretch"):
             st.markdown("**Frozen specification**")
             st.markdown(
                 "- Opening range: **30 minutes**\n"
@@ -300,26 +303,27 @@ elif view == "Parameters":
                 "- Short trend gate: **SMA50**"
             )
     with frozen_right:
-        with st.container(horizontal=True):
+        with st.container(horizontal=True, gap="small"):
             st.metric("Reviewed 2D cells", "81", border=True)
             st.metric("Reward:risk settings", "9", border=True)
             st.metric("Gate variants", "17", border=True)
             st.metric("Entry cutoffs", "7", border=True)
 
-    control_left, control_right = st.columns(2, gap="large")
-    with control_left:
-        surface_name = st.selectbox(
-            "Parameter surface",
-            list(surface_options),
-            key="parameter_surface",
-        )
-    with control_right:
-        metric_name = st.segmented_control(
-            "Surface metric",
-            list(metric_options),
-            default="Daily Sharpe",
-            key="parameter_metric",
-        )
+    with st.container(border=True, key="parameter_controls"):
+        control_left, control_right = st.columns([1.1, 1], gap="small")
+        with control_left:
+            surface_name = st.selectbox(
+                "Parameter surface",
+                list(surface_options),
+                key="parameter_surface",
+            )
+        with control_right:
+            metric_name = st.segmented_control(
+                "Surface metric",
+                list(metric_options),
+                default="Daily Sharpe",
+                key="parameter_metric",
+            )
 
     surface_spec = surface_options[surface_name]
     surface = parameter_surface_frame(snapshot, surface_spec["key"])
@@ -341,7 +345,7 @@ elif view == "Parameters":
             )
         )
 
-    rr_col, gate_col = st.columns(2, gap="large")
+    rr_col, gate_col = st.columns([1, 1.05], gap="small")
     with rr_col:
         with st.container(border=True):
             st.subheader("Reward:risk sensitivity")
@@ -368,8 +372,12 @@ else:
     pf_min, pf_max = execution_range(execution, "profit_factor")
     sharpe_min, sharpe_max = execution_range(execution, "daily_sharpe")
 
-    st.subheader("Validation and rejected ideas")
-    with st.container(horizontal=True):
+    render_section_header(
+        "Validation and rejected ideas",
+        "Keep successful stress tests and discarded hypotheses in the same review surface.",
+        key="validation_ledger",
+    )
+    with st.container(horizontal=True, gap="small"):
         st.metric("Displayed execution cells", f"{len(execution)}/12", border=True)
         st.metric("Profit-factor range", f"{pf_min:.3f}–{pf_max:.3f}", border=True)
         st.metric("Daily-Sharpe range", f"{sharpe_min:.2f}–{sharpe_max:.2f}", border=True)
@@ -391,30 +399,36 @@ else:
         st.caption("Fill resolution × modeled slippage; $1.20 round-turn commission.")
         st.altair_chart(execution_heatmap(execution, metric_field))
 
-    st.subheader("Validation ledger")
     validation = pd.DataFrame(snapshot["validation"])[
         ["test", "status", "evidence", "why_it_matters"]
     ]
-    st.dataframe(
-        validation,
-        hide_index=True,
-        column_config={
-            "test": st.column_config.TextColumn("Test", pinned=True),
-            "status": st.column_config.TextColumn("Status"),
-            "evidence": st.column_config.TextColumn("Evidence", width="large"),
-            "why_it_matters": st.column_config.TextColumn("Why it matters", width="large"),
-        },
-    )
+    with st.container(border=True, key="validation_table"):
+        st.subheader("Validation ledger")
+        st.dataframe(
+            validation,
+            hide_index=True,
+            column_config={
+                "test": st.column_config.TextColumn("Test", pinned=True),
+                "status": st.column_config.TextColumn("Status"),
+                "evidence": st.column_config.TextColumn("Evidence", width="large"),
+                "why_it_matters": st.column_config.TextColumn(
+                    "Why it matters", width="large"
+                ),
+            },
+        )
 
-    st.subheader("Failure journal")
-    st.caption("Rejected ideas remain visible instead of disappearing from the research record.")
     failed = pd.DataFrame(snapshot["failed_ideas"])
-    st.dataframe(
-        failed,
-        hide_index=True,
-        column_config={
-            "idea": st.column_config.TextColumn("Hypothesis", pinned=True),
-            "result": st.column_config.TextColumn("Observed result", width="large"),
-            "decision": st.column_config.TextColumn("Decision"),
-        },
-    )
+    with st.container(border=True, key="failure_table"):
+        st.subheader("Failure journal")
+        st.caption(
+            "Rejected ideas remain visible instead of disappearing from the research record."
+        )
+        st.dataframe(
+            failed,
+            hide_index=True,
+            column_config={
+                "idea": st.column_config.TextColumn("Hypothesis", pinned=True),
+                "result": st.column_config.TextColumn("Observed result", width="large"),
+                "decision": st.column_config.TextColumn("Decision"),
+            },
+        )
