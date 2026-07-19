@@ -20,7 +20,8 @@ def test_default_research_brief_renders():
     app = AppTest.from_file(str(APP), default_timeout=30).run()
     assert not app.exception
     assert app.title[0].value == "Quant strategy validation lab"
-    assert any(item.value == "Strategy in plain English" for item in app.subheader)
+    assert any(item.value == "How I’m testing the idea" for item in app.subheader)
+    assert any(item.value == "Historical research path" for item in app.subheader)
     assert any(metric.label == "Cost-adjusted trades" for metric in app.metric)
     assert has_material_work_status(app)
 
@@ -59,7 +60,7 @@ def test_forward_page_states_that_evidence_has_not_started():
     assert app.title[0].value == "Forward validation"
     assert has_material_work_status(app)
     assert any(
-        metric.label == "Public observations" and metric.value == "0"
+        metric.label == "Forward observations" and metric.value == "0"
         for metric in app.metric
     )
     assert any(item.value == "Forward-test contract" for item in app.subheader)

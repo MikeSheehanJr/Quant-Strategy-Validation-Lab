@@ -1,4 +1,4 @@
-"""Shared Streamlit presentation helpers and the public visual system."""
+"""Shared Streamlit presentation helpers and the research visual system."""
 
 from __future__ import annotations
 
@@ -84,6 +84,12 @@ header[data-testid="stHeader"] {
     padding-inline: clamp(0.8rem, 2.4vw, 2.25rem);
 }
 
+header button[data-testid="stBaseButton-header"]:has(
+    [data-testid="stToolbarActionButtonLabel"]
+) {
+    display: none;
+}
+
 [data-testid="stTopNavLinkContainer"] {
     padding-block: 0.72rem;
 }
@@ -129,7 +135,7 @@ header[data-testid="stHeader"] {
 
 [data-testid="stMainBlockContainer"] {
     max-width: 96rem;
-    padding-top: 6.4rem;
+    padding-top: 5.8rem;
     padding-right: clamp(1rem, 2.6vw, 2.75rem);
     padding-bottom: 4.5rem;
     padding-left: clamp(1rem, 2.6vw, 2.75rem);
@@ -147,6 +153,7 @@ header[data-testid="stHeader"] {
     position: relative;
     overflow: hidden;
     margin-bottom: 0.3rem;
+    padding-right: 4.25rem;
     border-radius: var(--qsvl-radius);
 }
 
@@ -170,7 +177,7 @@ header[data-testid="stHeader"] {
 }
 
 .st-key-page_header h1 {
-    max-width: 16ch;
+    max-width: 20ch;
     color: var(--qsvl-text-bright);
     letter-spacing: -0.035em;
     line-height: 1.04;
@@ -180,6 +187,10 @@ header[data-testid="stHeader"] {
 .st-key-page_header [data-testid="stCaptionContainer"] p {
     letter-spacing: 0.14em;
     color: rgba(234, 226, 183, 0.68);
+}
+
+.st-key-page_header > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"]:last-child {
+    max-width: 76ch;
 }
 
 [data-testid="stCaptionContainer"] p {
@@ -193,17 +204,18 @@ h3 {
 }
 
 .st-key-page_status {
+    position: absolute;
+    z-index: 3;
+    top: 1rem;
+    right: 1rem;
     display: grid;
-    min-width: 4rem;
-    height: 4rem;
+    width: 2.75rem !important;
+    min-width: 2.75rem;
+    height: 2.75rem;
     place-items: center;
-    align-self: center;
-    border: 1px solid rgba(252, 191, 73, 0.32);
-    border-radius: var(--qsvl-radius);
-    background: rgba(252, 191, 73, 0.17);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 6px 16px rgba(0, 8, 14, 0.16);
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 .st-key-page_status [data-testid="stVerticalBlock"] {
@@ -286,18 +298,29 @@ h3 {
 
 .st-key-page_header .st-key-page_status,
 .st-key-page_header .st-key-page_status:hover {
-    border-color: rgba(252, 191, 73, 0.34) !important;
-    background: rgba(111, 96, 52, 0.62) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 6px 16px rgba(0, 8, 14, 0.16) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(112%);
-    backdrop-filter: blur(12px) saturate(112%);
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 .st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
-    color: var(--qsvl-cream);
-    font-size: 1.85rem !important;
+    color: var(--qsvl-gold);
+    font-size: 2rem !important;
+}
+
+.st-key-brief_metrics > [data-testid="stVerticalBlock"] {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.st-key-brief_metrics [data-testid="stMetric"] {
+    min-width: min(100%, 13rem);
 }
 
 [data-testid="stMetricLabel"] p {
@@ -426,19 +449,25 @@ h3 {
         gap: 0.75rem !important;
     }
 
+    .st-key-page_header {
+        padding-right: 3.25rem;
+    }
+
     .st-key-page_header h1 {
         max-width: 13ch;
         font-size: 2.1rem;
     }
 
     .st-key-page_status {
-        width: 3rem !important;
-        min-width: 3rem;
-        height: 3rem;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 2.25rem !important;
+        min-width: 2.25rem;
+        height: 2.25rem;
     }
 
     .st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
-        font-size: 1.45rem !important;
+        font-size: 1.6rem !important;
     }
 
     [data-testid="stExpandSidebarButton"] {
@@ -516,23 +545,18 @@ def render_page_header(
     """Render a prominent page heading with a consistent Material status tile."""
 
     with st.container(key="page_header", gap="xsmall"):
-        st.caption(eyebrow.upper())
         with st.container(
-            horizontal=True,
-            horizontal_alignment="left",
+            border=False,
+            key="page_status",
+            width="content",
+            height="content",
+            horizontal_alignment="center",
             vertical_alignment="center",
-            gap="medium",
+            gap=None,
         ):
-            st.title(title, width="content")
-            with st.container(
-                border=False,
-                key="page_status",
-                width=64,
-                height=64,
-                horizontal_alignment="center",
-                vertical_alignment="center",
-            ):
-                st.markdown(":material/handyman:", width="content")
+            st.markdown(":material/handyman:", width="content")
+        st.caption(eyebrow.upper())
+        st.title(title, width="content")
         st.markdown(description)
 
 
@@ -560,6 +584,6 @@ def render_app_footer(meta: dict[str, Any]) -> None:
 
     with st.container(border=True, key="app_footer", gap="xxsmall"):
         st.caption(
-            f"Public aggregate artifact · schema {meta['schema_version']} · "
-            "raw market data excluded"
+            f"Research snapshot · schema {meta['schema_version']} · "
+            "aggregate evidence only · raw market data excluded"
         )

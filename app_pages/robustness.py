@@ -31,13 +31,13 @@ from src.ui import render_page_header, render_section_header
 
 
 @st.cache_data(show_spinner=False, max_entries=24)
-def run_public_monte_carlo(
+def run_research_monte_carlo(
     monthly: pd.DataFrame,
     horizon_months: int,
     paths: int,
     block_months: int,
 ):
-    """Return deterministic aggregate resamples for the public dashboard."""
+    """Return deterministic aggregate resamples for the research dashboard."""
 
     return monthly_block_bootstrap(
         monthly,
@@ -58,8 +58,8 @@ cutoffs = entry_cutoff_frame(snapshot)
 render_page_header(
     "Historical research diagnostics",
     "Robustness",
-    "Stress the historical result from four angles. These views test fragility; they do not "
-    "turn the sample into a forecast.",
+    "I use four different lenses to look for fragility in the historical result. The goal is "
+    "to find where the strategy breaks—not to turn the sample into a forecast.",
 )
 
 with st.container(border=True, key="robustness_switcher"):
@@ -191,7 +191,7 @@ elif view == "Monte Carlo":
 
     horizon_months = int(horizon_label.split()[0])
     block_months = int(block_label.split()[0])
-    fan, simulated_paths, simulation = run_public_monte_carlo(
+    fan, simulated_paths, simulation = run_research_monte_carlo(
         monthly,
         horizon_months,
         paths,

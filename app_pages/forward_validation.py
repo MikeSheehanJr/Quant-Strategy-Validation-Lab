@@ -17,19 +17,17 @@ evidence = status["evidence"]
 render_page_header(
     "Prospective research protocol",
     "Forward validation",
-    "A small, version-locked paper-validation track for the current Pine companion build. "
-    "This page reports the evidence state before it reports performance.",
+    "This is the version-locked paper-validation protocol I’ll use for the current Pine "
+    "companion build. Evidence state comes first; performance comes only after observation.",
 )
 
 with st.container(border=True, key="forward_status", gap="xsmall"):
     st.subheader(":material/schedule: Forward collection has not started")
-    st.write(
-        "There are no public forward observations and no forward-performance conclusion."
-    )
+    st.write("There are no forward observations and no forward-performance conclusion.")
 
 with st.container(horizontal=True, gap="small"):
     st.metric("Candidate", candidate["version"], border=True)
-    st.metric("Public observations", f"{evidence['public_observation_count']}", border=True)
+    st.metric("Forward observations", f"{evidence['public_observation_count']}", border=True)
     st.metric("Complete months", f"{evidence['complete_months']}", border=True)
 
 protocol_contract = pd.DataFrame(
@@ -40,15 +38,15 @@ protocol_contract = pd.DataFrame(
             "Commitment": f"{candidate['version']} · {candidate['freeze_date']}",
         },
         {"Control": "Source SHA-256", "Commitment": candidate["source_sha256"]},
-        {"Control": "Publication cadence", "Commitment": reporting["cadence"]},
+        {"Control": "Reporting cadence", "Commitment": reporting["cadence"]},
         {"Control": "Minimum delay", "Commitment": reporting["minimum_delay"]},
-        {"Control": "Published grain", "Commitment": reporting["granularity"]},
+        {"Control": "Reported grain", "Commitment": reporting["granularity"]},
         {"Control": "Live signals / trade records", "Commitment": "Excluded"},
     ]
 )
 with st.container(border=True, key="forward_contract"):
     st.subheader("Forward-test contract")
-    st.caption("Version lock and public boundary shown as one auditable specification.")
+    st.caption("Version lock and reporting boundary shown as one auditable specification.")
     st.dataframe(
         protocol_contract,
         hide_index=True,
@@ -60,7 +58,7 @@ with st.container(border=True, key="forward_contract"):
 
 render_section_header(
     "Protocol",
-    "The frozen build, private reconciliation, and delayed aggregate publication form one chain.",
+    "The frozen build, private reconciliation, and delayed aggregate reporting form one chain.",
     key="forward_protocol",
 )
 protocol_col, correction_col, report_col = st.columns(3, gap="small")
@@ -76,7 +74,7 @@ with correction_col:
         st.write("Missed, late, duplicate, and corrected records stay private.")
 with report_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
-        st.caption("03 / PUBLISH")
+        st.caption("03 / REPORT")
         st.subheader("Closed months only")
         st.write("Aggregate risk units after the minimum delay.")
 
@@ -92,7 +90,7 @@ schema = pd.DataFrame(
     ]
 )
 with st.container(border=True, key="forward_schema"):
-    st.subheader("Planned monthly public record")
+    st.subheader("Planned monthly research record")
     st.caption(
         "This is the intended aggregate schema—not observed data. No performance row is "
         "created until a complete month has been reconciled."

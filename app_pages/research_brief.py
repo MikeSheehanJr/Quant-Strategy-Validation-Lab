@@ -7,7 +7,6 @@ import streamlit as st
 
 from src.charts import annual_pnl, equity_curve
 from src.data import load_snapshot, monthly_frame, snapshot_sha256, yearly_frame
-from src.metrics import profitable_year_count
 from src.ui import render_page_header, render_research_boundary, render_section_header
 
 
@@ -16,96 +15,83 @@ headline = snapshot["headline"]
 meta = snapshot["meta"]
 monthly = monthly_frame(snapshot)
 yearly = yearly_frame(snapshot)
-profitable, periods = profitable_year_count(yearly)
+complete_years = yearly.loc[yearly["period_status"] == "Complete"]
+positive_complete_years = int((complete_years["pnl_usd"] > 0).sum())
 
 render_page_header(
-    "Public quant research · portfolio build",
+    "MNQ strategy research · iterative validation",
     "Quant strategy validation lab",
-    "**Research question:** Can a deliberately simple intraday strategy survive costs, "
-    "out-of-sample testing, parameter perturbation, and adversarial review?",
+    "**What I’m testing:** Whether a deliberately simple opening-range breakout can hold "
+    "up after costs, out-of-sample checks, parameter changes, and deliberately hostile review.",
 )
 render_research_boundary(meta)
 
-conclusion_col, metrics_col = st.columns([1.35, 1], gap="small")
-with conclusion_col:
-    with st.container(
-        border=True,
-        height="stretch",
-        gap="small",
-        vertical_alignment="distribute",
-    ):
-        st.subheader("Research decision")
-        st.badge(
-            "Advance to paper validation",
-            icon=":material/arrow_forward:",
-            color="blue",
+with st.container(border=True, key="brief_research_read", gap="xxsmall"):
+    st.caption("MY CURRENT READ")
+    read_col, gate_col = st.columns([1.55, 1], gap="medium", vertical_alignment="center")
+    with read_col:
+        st.subheader("The strategy has earned a paper-forward test—not a deployment claim.")
+        st.write(
+            "I’m encouraged that the simple rule set remains positive after costs and the "
+            "stress tests shown here. Now it has to prove itself prospectively, without "
+            "hindsight."
         )
+    with gate_col:
         st.markdown(
-            ":material/check_circle: **Historical gate** · :blue-badge[Reviewed positive]  \n"
-            ":material/schedule: **Forward gate** · :gray-badge[Not started]  \n"
-            ":material/block: **Deployment claim** · :gray-badge[None]"
+            ":material/check_circle: **Reviewed** · Historical evidence  \n"
+            ":material/arrow_forward: **Now** · Paper-validation setup  \n"
+            ":material/block: **Not claimed** · Live or forward performance"
         )
+
+path_col, year_col = st.columns([1.7, 1], gap="small")
+with path_col:
+    with st.container(border=True, height="stretch", gap="xxsmall"):
+        st.subheader("Historical research path")
         st.caption(
-            "The result supports continued testing—not a live or forward-performance claim."
+            "Monthly cumulative P&L for one MNQ contract after $1.20 round-turn commission "
+            "and 0.5-tick modeled slippage · Jun 2021–Jun 2026."
         )
-with metrics_col:
-    metric_row_one = st.columns(2, gap="small")
-    metric_row_one[0].metric(
-        "Cost-adjusted trades", f"{headline['trade_count']:,}", border=True, height="stretch"
-    )
-    metric_row_one[1].metric(
-        "Win rate", f"{headline['win_rate_pct']:.1f}%", border=True, height="stretch"
-    )
-    metric_row_two = st.columns(2, gap="small")
-    metric_row_two[0].metric(
-        "Profit factor", f"{headline['profit_factor']:.3f}", border=True, height="stretch"
-    )
-    metric_row_two[1].metric(
-        "Calendar-honest Sharpe",
-        f"{headline['daily_sharpe']:.2f}",
+        st.altair_chart(equity_curve(monthly))
+with year_col:
+    with st.container(border=True, height="stretch", gap="xxsmall"):
+        st.subheader("Calendar-year outcomes")
+        st.caption(
+            f"{positive_complete_years}/{len(complete_years)} complete calendar years are "
+            "positive. 2021 and 2026 are partial edge periods."
+        )
+        st.altair_chart(annual_pnl(yearly))
+
+with st.container(horizontal=True, key="brief_metrics", gap="small"):
+    st.metric(
+        "Net P&L / contract",
+        f"${headline['net_pnl_per_contract_usd']:,.0f}",
         border=True,
-        height="stretch",
     )
+    st.metric("Cost-adjusted trades", f"{headline['trade_count']:,}", border=True)
+    st.metric("Win rate", f"{headline['win_rate_pct']:.1f}%", border=True)
+    st.metric("Profit factor", f"{headline['profit_factor']:.3f}", border=True)
 
 render_section_header(
-    "Strategy in plain English",
-    "A low-dimensional MNQ opening-range breakout designed for transparent stress testing.",
+    "How I’m testing the idea",
+    "The rule set stays intentionally small so each assumption can be challenged directly.",
     key="strategy_sequence",
 )
 market_col, signal_col, risk_col = st.columns(3, gap="small")
 with market_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("01 / REFERENCE")
-        st.subheader("30-minute range")
-        st.write("09:30–10:00 ET session high and low")
+        st.subheader("Define the morning range")
+        st.write("Use only the 09:30–10:00 ET session high and low.")
 with signal_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("02 / ENTRY")
-        st.subheader("Completed-bar break")
-        st.write("Prior information only · one trade per session")
+        st.subheader("Wait for confirmation")
+        st.write("Enter only after a completed-bar break, with one decision per session.")
 with risk_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("03 / EXECUTION")
-        st.subheader("1R stop · 1R target")
-        st.write("$1.20 round turn · 0.5-tick modeled slippage")
-
-path_col, year_col = st.columns([1.65, 1], gap="small")
-with path_col:
-    with st.container(border=True):
-        st.subheader("Historical research path")
-        st.caption(
-            "Monthly aggregates, one MNQ contract, after $1.20 round-turn commission and "
-            "0.5-tick modeled slippage."
-        )
-        st.altair_chart(equity_curve(monthly))
-with year_col:
-    with st.container(border=True):
-        st.subheader("Calendar-year outcomes")
-        st.caption(
-            f"{profitable}/{periods} displayed periods are positive. 2021 begins in June; "
-            "2026 ends in June and is partial."
-        )
-        st.altair_chart(annual_pnl(yearly))
+        st.subheader("Model friction explicitly")
+        st.write("Apply a 1R stop, 1R target, commission, and 0.5-tick slippage.")
 
 evidence_register = pd.DataFrame(
     [
@@ -142,8 +128,8 @@ evidence_register = pd.DataFrame(
     ]
 )
 with st.container(border=True, key="brief_evidence_register"):
-    st.subheader("Evidence register")
-    st.caption("Reviewed support and unresolved limits in one decision surface.")
+    st.subheader("What has—and hasn’t—been established")
+    st.caption("The reviewed support and unresolved limits I use to govern the next step.")
     st.dataframe(
         evidence_register,
         hide_index=True,
