@@ -17,13 +17,13 @@ evidence = status["evidence"]
 render_page_header(
     "Prospective research protocol",
     "Forward validation",
-    "This is the version-locked paper-validation protocol I’ll use for the current Pine "
+    "This is the version-locked paper-forward protocol I’ll use for the current Pine "
     "companion build. Evidence state comes first; performance comes only after observation.",
 )
 
 with st.container(border=True, key="forward_status", gap="xsmall"):
     st.subheader(":material/schedule: Forward collection has not started")
-    st.write("There are no forward observations and no forward-performance conclusion.")
+    st.write("There are no forward observations and no conclusion about forward performance.")
 
 with st.container(horizontal=True, gap="small"):
     st.metric("Candidate", candidate["version"], border=True)
@@ -46,7 +46,7 @@ protocol_contract = pd.DataFrame(
 )
 with st.container(border=True, key="forward_contract"):
     st.subheader("Forward-test contract")
-    st.caption("Version lock and reporting boundary shown as one auditable specification.")
+    st.caption("The version lock and reporting boundary form one auditable specification.")
     st.dataframe(
         protocol_contract,
         hide_index=True,
@@ -71,12 +71,12 @@ with correction_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("02 / RECONCILE")
         st.subheader("Resolve tracking errors")
-        st.write("Missed, late, duplicate, and corrected records stay private.")
+        st.write("Private reconciliation covers missed, late, duplicate, and corrected records.")
 with report_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("03 / REPORT")
         st.subheader("Closed months only")
-        st.write("Aggregate risk units after the minimum delay.")
+        st.write("Report aggregate risk units only after the minimum delay.")
 
 schema = pd.DataFrame(
     [

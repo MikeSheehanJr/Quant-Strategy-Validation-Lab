@@ -1,10 +1,15 @@
 # Quant strategy validation lab
 
-> **Work in progress:** a robustness-first quant research and software-engineering portfolio project.
+> **Work in progress:** an AI-assisted passion project in quantitative research and Python engineering.
+
+I started this project because I wanted to understand how a promising backtest behaves when
+the research process is designed to challenge it. AI has been a development partner for code
+iteration, documentation, and interface refinement; I remain responsible for the research
+framing, modeling choices, validation criteria, evidence boundaries, and every public claim.
 
 This project asks a deliberately narrow question:
 
-> Can a simple intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and adversarial review?
+> Can a simple intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and skeptical review?
 
 The headline case study is a 30-minute opening-range breakout on MNQ. A separate Pine Script evidence track preserves the real `v1`–`v4.1` evolution of a related 15-minute symmetric ORB and its reviewed aggregate TradingView results. The tracks are labeled separately and their metrics are never combined. The project contains no raw market data, credentials, brokerage information, live signals, or trade-level records.
 
@@ -24,7 +29,7 @@ These are historical research results, not expected returns. The sample begins i
 
 - Bias-aware backtest design and independent lookahead checks
 - Transaction-cost and execution-resolution modeling
-- Combinatorial purged cross-validation
+- Combinatorial purged cross-validation (CPCV)
 - Permutation and multiple-testing controls
 - Parameter and regime stability analysis
 - Aggregate monthly moving-block Monte Carlo with terminal and drawdown distributions
@@ -90,13 +95,11 @@ The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed.
 
 ## Work-in-progress roadmap
 
-The current MVP and safety boundary are complete. Remaining launch work includes:
+The public build and safety boundary are complete. The remaining research work includes:
 
-1. GitHub and Streamlit deployment after the automated gate passes.
-2. Logged-out verification of the two public URLs.
-3. Register the forward-test sample, integrity checks, and decision rule before collection begins.
-4. Complete and reconcile the paper forward-test.
-5. Add pre-2021 MNQ/NQ validation under an appropriate data license.
+1. Register the forward-test sample, integrity checks, and decision rule before collection begins.
+2. Complete and reconcile the paper forward-test.
+3. Add pre-2021 MNQ/NQ validation under an appropriate data license.
 
 See [PLAN.md](PLAN.md) for the full build plan, [docs/GITHUB_LAUNCH_COPY.md](docs/GITHUB_LAUNCH_COPY.md) for plain-English GitHub copy, and [docs/PUBLISHING_GUIDE.md](docs/PUBLISHING_GUIDE.md) for safe launch instructions.
 
