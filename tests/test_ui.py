@@ -52,6 +52,13 @@ def test_work_status_uses_material_symbol_without_emoji():
     assert "\U0001F6E0" not in ui_source
 
 
+def test_research_context_is_centered_with_native_text_alignment():
+    ui_source = (ROOT / "src" / "ui.py").read_text(encoding="utf-8")
+    boundary_source = ui_source.split("def render_research_boundary", maxsplit=1)[1]
+    boundary_source = boundary_source.split("def render_section_header", maxsplit=1)[0]
+    assert 'text_alignment="center"' in boundary_source
+
+
 def test_theme_uses_the_reviewed_display_and_body_fonts():
     config = (ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8")
     assert 'font = "\'IBM Plex Sans\':' in config
