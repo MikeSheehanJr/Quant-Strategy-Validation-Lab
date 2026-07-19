@@ -236,23 +236,38 @@ elif view == "Monte Carlo":
             st.caption("Drawdown magnitude is calculated within each cumulative path.")
             st.altair_chart(drawdown_distribution(simulated_paths))
 
-    interpretation_left, interpretation_right = st.columns(2, gap="small")
-    with interpretation_left:
-        with st.container(border=True, height="stretch"):
-            st.markdown("**What changes**")
-            st.markdown(
-                "- Observed complete-month P&L is reordered in contiguous blocks\n"
-                "- Terminal and path-dependent drawdown uncertainty becomes visible\n"
-                "- Horizon and dependence assumptions can be varied"
-            )
-    with interpretation_right:
-        with st.container(border=True, height="stretch"):
-            st.markdown("**What remains unknown**")
-            st.markdown(
-                "- Regimes absent from the historical sample\n"
-                "- Intramonth drawdown and execution-path risk\n"
-                "- Whether the historical distribution remains relevant"
-            )
+    simulation_scope = pd.DataFrame(
+        [
+            {
+                "Question": "Sequence uncertainty",
+                "Treatment": "Reorder complete-month P&L in contiguous blocks",
+                "Boundary": "Observed monthly distribution only",
+            },
+            {
+                "Question": "Path and terminal dispersion",
+                "Treatment": "Display percentile paths and maximum drawdown",
+                "Boundary": "No intramonth execution path",
+            },
+            {
+                "Question": "Assumption sensitivity",
+                "Treatment": "Vary horizon, path count, and block length",
+                "Boundary": "Cannot create unseen regimes",
+            },
+        ]
+    )
+    with st.container(border=True, key="simulation_scope"):
+        st.subheader("Simulation scope")
+        st.dataframe(
+            simulation_scope,
+            hide_index=True,
+            column_config={
+                "Question": st.column_config.TextColumn(
+                    "Question", pinned=True, width="medium"
+                ),
+                "Treatment": st.column_config.TextColumn("What changes", width="large"),
+                "Boundary": st.column_config.TextColumn("What remains unknown", width="large"),
+            },
+        )
 
 
 elif view == "Parameters":
@@ -291,16 +306,26 @@ elif view == "Parameters":
         "analysis—not permission to adopt the best full-sample cell.",
         key="parameter_atlas",
     )
+    frozen_specification = pd.DataFrame(
+        [
+            {"Parameter": "Opening range", "Frozen value": "30 minutes"},
+            {"Parameter": "Reward:risk", "Frozen value": "1.0"},
+            {"Parameter": "Widest ranges excluded", "Frozen value": "10%"},
+            {"Parameter": "Filter lookback", "Frozen value": "60 sessions"},
+            {"Parameter": "Short trend gate", "Frozen value": "SMA50"},
+        ]
+    )
     frozen_left, frozen_right = st.columns([1.1, 2], gap="small")
     with frozen_left:
         with st.container(border=True, height="stretch"):
-            st.markdown("**Frozen specification**")
-            st.markdown(
-                "- Opening range: **30 minutes**\n"
-                "- Reward:risk: **1.0**\n"
-                "- Widest ranges excluded: **10%**\n"
-                "- Filter lookback: **60 sessions**\n"
-                "- Short trend gate: **SMA50**"
+            st.subheader("Frozen specification")
+            st.dataframe(
+                frozen_specification,
+                hide_index=True,
+                column_config={
+                    "Parameter": st.column_config.TextColumn("Parameter", pinned=True),
+                    "Frozen value": st.column_config.TextColumn("Frozen value"),
+                },
             )
     with frozen_right:
         with st.container(horizontal=True, gap="small"):

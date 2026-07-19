@@ -51,7 +51,10 @@ def test_forward_page_states_that_evidence_has_not_started():
     app = AppTest.from_file(str(FORWARD_VALIDATION), default_timeout=30).run()
     assert not app.exception
     assert app.title[0].value == "Forward validation"
-    assert any(metric.label == "Public observations" and metric.value == "0" for metric in app.metric)
-    assert any(metric.label == "Publication cadence" for metric in app.metric)
+    assert any(
+        metric.label == "Public observations" and metric.value == "0"
+        for metric in app.metric
+    )
+    assert any(item.value == "Forward-test contract" for item in app.subheader)
     assert not any(metric.label == "Evidence state" for metric in app.metric)
     assert any(item.value == "Next required gate" for item in app.subheader)
