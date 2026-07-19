@@ -657,12 +657,17 @@ def render_page_header(
 def render_research_boundary(meta: dict[str, Any]) -> None:
     """Show the full research context once, on the canonical brief."""
 
-    with st.container(border=True, key="research_context", gap="xxsmall"):
+    with st.container(
+        border=True,
+        key="research_context",
+        vertical_alignment="center",
+        gap="xxsmall",
+    ):
         st.markdown(
             f":material/candlestick_chart: **{meta['instrument']}** · "
             f"{meta['research_window']} · snapshot {meta['snapshot_date']} · "
             "reviewed aggregates only",
-            text_alignment="center",
+            text_alignment="left",
         )
 
 
