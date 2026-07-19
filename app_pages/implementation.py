@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pandas as pd
 import streamlit as st
 
 from src.charts import pinescript_equity_curve
@@ -36,12 +37,32 @@ render_page_header(
     "to a symbol-locked paper-control build.",
 )
 
-st.info(
-    "This is a related **15-minute symmetric ORB implementation track**, not the exact "
-    "30-minute filtered Python engine behind the 729-trade headline snapshot. The code, "
-    "hashes, and TradingView aggregates below are kept separate from the headline metrics.",
-    icon=":material/info:",
+lineage = pd.DataFrame(
+    [
+        {
+            "Track": "Pine companion",
+            "Specification": "15-minute symmetric ORB",
+            "Evidence role": "Implementation and TradingView traceability",
+        },
+        {
+            "Track": "Headline Python engine",
+            "Specification": "30-minute filtered ORB",
+            "Evidence role": "729-trade public research snapshot",
+        },
+    ]
 )
+with st.container(border=True, key="implementation_lineage"):
+    st.subheader("Research lineage")
+    st.badge("Separate evidence tracks", icon=":material/call_split:", color="blue")
+    st.dataframe(
+        lineage,
+        hide_index=True,
+        column_config={
+            "Track": st.column_config.TextColumn("Track", pinned=True),
+            "Specification": st.column_config.TextColumn("Frozen specification"),
+            "Evidence role": st.column_config.TextColumn("Evidence role", width="large"),
+        },
+    )
 
 with st.container(horizontal=True, gap="small"):
     st.metric("Versioned source files", f"{len(pine_versions)}", border=True)
@@ -49,27 +70,47 @@ with st.container(horizontal=True, gap="small"):
     st.metric("Reviewed MNQ trades", f"{int(full_export['trades']):,}", border=True)
     st.metric("Structural QA checks", f"{len(pine_qa)}/{len(pine_qa)}", border=True)
 
-with st.container(border=True):
-    st.subheader("What the script does")
-    process_col, controls_col = st.columns([1.1, 1], gap="small")
-    with process_col:
-        st.markdown("**Signal and exit sequence**")
-        st.markdown(
-            "1. Build the 09:30–10:00 ET opening range on a 15-minute chart.\n"
-            "2. Accept the first completed close beyond either boundary.\n"
-            "3. Lock the session after the first decision, including a risk skip.\n"
-            "4. Place the stop at the opposite range boundary and target 1R.\n"
-            "5. Flatten at the normal or registered early session close."
-        )
-    with controls_col:
-        st.markdown("**Engineering controls**")
-        st.markdown(
-            "- Bar-close decisions and `lookahead_off`-compatible state logic\n"
-            "- Dollar-risk sizing with a hard contract cap\n"
-            "- MNQ symbol and 15-minute timeframe lock in v4.1\n"
-            "- User-maintained early-close calendar\n"
-            "- Observation-only alerts; no broker or execution connection"
-        )
+script_flow = pd.DataFrame(
+    [
+        {
+            "Stage": "Range",
+            "Decision rule": "09:30–10:00 ET high / low",
+            "Guardrail": "MNQ · 15-minute lock",
+        },
+        {
+            "Stage": "Trigger",
+            "Decision rule": "First completed close beyond range",
+            "Guardrail": "Bar-close state logic",
+        },
+        {
+            "Stage": "Risk",
+            "Decision rule": "Opposite boundary stop · 1R target",
+            "Guardrail": "Dollar cap + contract cap",
+        },
+        {
+            "Stage": "Session",
+            "Decision rule": "One decision, including risk skip",
+            "Guardrail": "Normal / early-close flatten",
+        },
+        {
+            "Stage": "Alert",
+            "Decision rule": "Observation-only event",
+            "Guardrail": "No broker connection",
+        },
+    ]
+)
+with st.container(border=True, key="script_flow"):
+    st.subheader("Execution state machine")
+    st.caption("Five stages connect the research rule to explicit engineering controls.")
+    st.dataframe(
+        script_flow,
+        hide_index=True,
+        column_config={
+            "Stage": st.column_config.TextColumn("Stage", pinned=True, width="small"),
+            "Decision rule": st.column_config.TextColumn("Decision rule", width="large"),
+            "Guardrail": st.column_config.TextColumn("Engineering guardrail", width="large"),
+        },
+    )
 
 with st.container(border=True, key="version_ledger"):
     st.subheader("Version-by-version research ledger")
@@ -101,22 +142,32 @@ with st.container(border=True, key="version_picker"):
 selected_version = next(
     version for version in pine_versions if version["version"] == selected_version_id
 )
-detail_col, rationale_col = st.columns([1.05, 1], gap="small")
-with detail_col:
-    with st.container(border=True, height="stretch"):
-        st.markdown(f"**{selected_version['version']} · {selected_version['title']}**")
-        st.write(selected_version["change"])
-        st.caption(f"Evidence: {selected_version['evidence_status']}")
-        st.caption(
-            f"{selected_version['line_count']:,} lines · SHA-256 "
-            f"`{selected_version['sha256'][:16]}…`"
-        )
-with rationale_col:
-    with st.container(border=True, height="stretch"):
-        st.markdown("**Research rationale**")
-        st.write(selected_version["why"])
-        st.markdown("**Known limitation**")
-        st.write(selected_version["known_limitations"])
+version_review = pd.DataFrame(
+    [
+        {"Field": "Build", "Review record": selected_version["title"]},
+        {"Field": "Primary change", "Review record": selected_version["change"]},
+        {"Field": "Research rationale", "Review record": selected_version["why"]},
+        {"Field": "Known limitation", "Review record": selected_version["known_limitations"]},
+        {"Field": "Evidence state", "Review record": selected_version["evidence_status"]},
+        {
+            "Field": "Source identity",
+            "Review record": (
+                f"{selected_version['line_count']:,} lines · SHA-256 "
+                f"{selected_version['sha256'][:16]}…"
+            ),
+        },
+    ]
+)
+with st.container(border=True, key="version_review"):
+    st.subheader(f"{selected_version['version']} review record")
+    st.dataframe(
+        version_review,
+        hide_index=True,
+        column_config={
+            "Field": st.column_config.TextColumn("Field", pinned=True, width="small"),
+            "Review record": st.column_config.TextColumn("Review record", width="large"),
+        },
+    )
 
 with st.expander("Representative source and download", icon=":material/code:"):
     st.code(pinescript_excerpt(selected_version), language="javascript", line_numbers=True)
@@ -211,27 +262,59 @@ with st.container(border=True, key="aggregate_downloads"):
                 on_click="ignore",
             )
 
-next_col, boundary_col = st.columns([1.05, 1], gap="small")
-with next_col:
-    with st.container(border=True, height="stretch"):
-        st.subheader("Open acceptance checks")
-        st.markdown(
-            "1. Verify the wrong-symbol lock on a non-MNQ chart.\n"
-            "2. Inspect one normal-session replay for markers and fixed TP/SL segments.\n"
-            "3. Replay a known half-day in the split v4.1 script.\n"
-            "4. Confirm one observation-only alert per eligible signal.\n"
-            "5. Register the forward-test decision rule before collection begins."
-        )
-with boundary_col:
-    with st.container(border=True, height="stretch"):
-        st.subheader("What remains private")
-        st.markdown(
-            "- Licensed intraday OHLCV bars\n"
-            "- Full TradingView trade-list exports\n"
-            "- Exact signal timestamps, prices, and quantities\n"
-            "- Broker, account, and execution data\n"
-            "- Credentials or automation connections"
-        )
-        st.caption(
-            "This is evidence and code-review material—not a signal service or execution interface."
-        )
+review_boundary = pd.DataFrame(
+    [
+        {
+            "Area": "Acceptance",
+            "Item": "Wrong-symbol and timeframe lock",
+            "State": ":gray-badge[Open]",
+        },
+        {
+            "Area": "Acceptance",
+            "Item": "Normal-session replay and fixed TP / SL markers",
+            "State": ":gray-badge[Open]",
+        },
+        {
+            "Area": "Acceptance",
+            "Item": "Registered half-day replay",
+            "State": ":gray-badge[Open]",
+        },
+        {
+            "Area": "Acceptance",
+            "Item": "One observation alert per eligible signal",
+            "State": ":gray-badge[Open]",
+        },
+        {
+            "Area": "Acceptance",
+            "Item": "Forward decision rule registered before collection",
+            "State": ":gray-badge[Open]",
+        },
+        {
+            "Area": "Public boundary",
+            "Item": "Licensed intraday bars and full trade exports",
+            "State": ":blue-badge[Private]",
+        },
+        {
+            "Area": "Public boundary",
+            "Item": "Signal timestamps, prices, and quantities",
+            "State": ":blue-badge[Private]",
+        },
+        {
+            "Area": "Public boundary",
+            "Item": "Broker, account, execution, and credentials",
+            "State": ":blue-badge[Excluded]",
+        },
+    ]
+)
+with st.container(border=True, key="implementation_review_boundary"):
+    st.subheader("Acceptance and publication boundary")
+    st.caption("Open engineering checks remain visible beside deliberately excluded data.")
+    st.dataframe(
+        review_boundary,
+        hide_index=True,
+        column_config={
+            "Area": st.column_config.TextColumn("Area", pinned=True, width="small"),
+            "Item": st.column_config.TextColumn("Control or boundary", width="large"),
+            "State": st.column_config.MarkdownColumn("State", width="small"),
+        },
+    )

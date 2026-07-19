@@ -31,26 +31,32 @@ with st.container(horizontal=True, gap="small"):
     st.metric("Candidate", candidate["version"], border=True)
     st.metric("Public observations", f"{evidence['public_observation_count']}", border=True)
     st.metric("Complete months", f"{evidence['complete_months']}", border=True)
-    st.metric("Publication cadence", reporting["cadence"], border=True)
 
-lock_col, boundary_col = st.columns([1.2, 1], gap="small")
-with lock_col:
-    with st.container(border=True, height="stretch"):
-        st.subheader("Version lock")
-        st.markdown(f"**Track:** {candidate['track']}")
-        st.markdown(f"**Frozen build:** {candidate['version']} · {candidate['freeze_date']}")
-        st.markdown(f"**Source SHA-256:** `{candidate['source_sha256']}`")
-        st.caption(candidate["relationship_to_headline"])
-with boundary_col:
-    with st.container(border=True, height="stretch"):
-        st.subheader("Public boundary")
-        st.markdown(
-            f"- Reporting cadence: **{reporting['cadence']}**\n"
-            f"- Publication delay: **{reporting['minimum_delay']}**\n"
-            f"- Published grain: **{reporting['granularity']}**\n"
-            "- Live signals: **excluded**\n"
-            "- Trade-level records: **excluded**"
-        )
+protocol_contract = pd.DataFrame(
+    [
+        {"Control": "Candidate track", "Commitment": candidate["track"]},
+        {
+            "Control": "Frozen source",
+            "Commitment": f"{candidate['version']} · {candidate['freeze_date']}",
+        },
+        {"Control": "Source SHA-256", "Commitment": candidate["source_sha256"]},
+        {"Control": "Publication cadence", "Commitment": reporting["cadence"]},
+        {"Control": "Minimum delay", "Commitment": reporting["minimum_delay"]},
+        {"Control": "Published grain", "Commitment": reporting["granularity"]},
+        {"Control": "Live signals / trade records", "Commitment": "Excluded"},
+    ]
+)
+with st.container(border=True, key="forward_contract"):
+    st.subheader("Forward-test contract")
+    st.caption("Version lock and public boundary shown as one auditable specification.")
+    st.dataframe(
+        protocol_contract,
+        hide_index=True,
+        column_config={
+            "Control": st.column_config.TextColumn("Control", pinned=True, width="medium"),
+            "Commitment": st.column_config.TextColumn("Commitment", width="large"),
+        },
+    )
 
 render_section_header(
     "Protocol",
@@ -59,26 +65,20 @@ render_section_header(
 )
 protocol_col, correction_col, report_col = st.columns(3, gap="small")
 with protocol_col:
-    with st.container(border=True, height="stretch"):
-        st.markdown("**1 · Freeze before observing**")
-        st.write(
-            "The candidate source and hash are fixed. A rule change creates a new version; "
-            "it does not rewrite the current record."
-        )
+    with st.container(border=True, height="stretch", gap="xxsmall"):
+        st.caption("01 / FREEZE")
+        st.subheader("Hash before observation")
+        st.write("Rule changes create a new version.")
 with correction_col:
-    with st.container(border=True, height="stretch"):
-        st.markdown("**2 · Reconcile privately**")
-        st.write(
-            "Observation-only alerts, missed events, late records, and corrections are logged "
-            "before any public aggregate is produced."
-        )
+    with st.container(border=True, height="stretch", gap="xxsmall"):
+        st.caption("02 / RECONCILE")
+        st.subheader("Resolve tracking errors")
+        st.write("Missed, late, duplicate, and corrected records stay private.")
 with report_col:
-    with st.container(border=True, height="stretch"):
-        st.markdown("**3 · Publish after the period**")
-        st.write(
-            "Only completed monthly aggregates are published. Exact signals, timestamps, "
-            "prices, quantities, and broker information remain private."
-        )
+    with st.container(border=True, height="stretch", gap="xxsmall"):
+        st.caption("03 / PUBLISH")
+        st.subheader("Closed months only")
+        st.write("Aggregate risk units after the minimum delay.")
 
 schema = pd.DataFrame(
     [
@@ -108,8 +108,6 @@ with st.container(border=True, key="forward_schema"):
 
 with st.container(border=True):
     st.subheader("Next required gate")
+    st.badge("Protocol only", icon=":material/lock:", color="gray")
     st.write(status["next_gate"])
-    st.caption(
-        "Until that gate is committed, this page is protocol-only and must not be cited as "
-        "forward evidence. No chart is shown because there are no observations to plot."
-    )
+    st.caption("No chart is shown because no forward observations exist.")

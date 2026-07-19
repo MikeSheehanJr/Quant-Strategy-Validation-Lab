@@ -38,12 +38,13 @@ def visual_css() -> str:
     --qsvl-text-bright: #F4EED6;
     --qsvl-text-muted: #B8C6C4;
     --qsvl-space: clamp(0.78rem, 1.25vw, 1rem);
-    --qsvl-glass: rgba(0, 36, 52, 0.30);
-    --qsvl-glass-hover: rgba(0, 31, 46, 0.76);
+    --qsvl-radius: 0.4rem;
+    --qsvl-glass: rgba(0, 31, 46, 0.44);
+    --qsvl-glass-hover: rgba(0, 31, 46, 0.62);
     --qsvl-glass-strong: rgba(0, 32, 47, 0.78);
     --qsvl-border: rgba(234, 226, 183, 0.12);
-    --qsvl-border-hover: rgba(252, 191, 73, 0.30);
-    --qsvl-shadow: 0 16px 44px rgba(0, 8, 14, 0.22);
+    --qsvl-border-hover: rgba(234, 226, 183, 0.24);
+    --qsvl-shadow: 0 8px 24px rgba(0, 8, 14, 0.18);
 }
 
 html,
@@ -55,8 +56,8 @@ body,
 [data-testid="stAppViewContainer"] {
     background-color: var(--qsvl-navy-deep);
     background-image:
-        linear-gradient(180deg, rgba(0, 12, 19, 0.10), rgba(0, 16, 25, 0.50)),
-        linear-gradient(90deg, rgba(0, 48, 73, 0.14), rgba(0, 16, 25, 0.08)),
+        linear-gradient(180deg, rgba(0, 12, 19, 0.30), rgba(0, 16, 25, 0.66)),
+        linear-gradient(90deg, rgba(0, 48, 73, 0.12), rgba(0, 16, 25, 0.18)),
         url("__BACKGROUND_DATA_URI__");
     background-position: center, center, center top;
     background-repeat: no-repeat;
@@ -92,10 +93,9 @@ header[data-testid="stHeader"] {
     padding: 0.62rem 0.95rem;
     gap: 0.48rem;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: var(--qsvl-radius);
     color: rgba(234, 226, 183, 0.78);
     transition:
-        transform 180ms ease,
         color 180ms ease,
         background-color 180ms ease,
         border-color 180ms ease,
@@ -116,21 +116,15 @@ header[data-testid="stHeader"] {
     color: var(--qsvl-cream);
     background: rgba(234, 226, 183, 0.07);
     border-color: rgba(234, 226, 183, 0.15);
-    transform: translateY(-1px);
 }
 
 [data-testid="stTopNavLink"][aria-current="page"] {
     color: var(--qsvl-cream);
-    background: linear-gradient(
-        135deg,
-        rgba(252, 191, 73, 0.14),
-        rgba(247, 127, 0, 0.07),
-        rgba(234, 226, 183, 0.07)
-    );
-    border-color: rgba(252, 191, 73, 0.30);
+    background: rgba(234, 226, 183, 0.08);
+    border-color: rgba(234, 226, 183, 0.26);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        0 8px 22px rgba(0, 8, 14, 0.20);
+        0 4px 14px rgba(0, 8, 14, 0.18);
 }
 
 [data-testid="stMainBlockContainer"] {
@@ -153,7 +147,7 @@ header[data-testid="stHeader"] {
     position: relative;
     overflow: hidden;
     margin-bottom: 0.3rem;
-    border-radius: 1.5rem;
+    border-radius: var(--qsvl-radius);
 }
 
 .st-key-page_header::before {
@@ -205,7 +199,7 @@ h3 {
     place-items: center;
     color: var(--qsvl-gold);
     border: 1px solid rgba(252, 191, 73, 0.28);
-    border-radius: 999px;
+    border-radius: var(--qsvl-radius);
     background: rgba(252, 191, 73, 0.08);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     font-size: 1rem;
@@ -230,20 +224,19 @@ h3 {
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.055),
         var(--qsvl-shadow);
-    -webkit-backdrop-filter: blur(8px) saturate(112%);
-    backdrop-filter: blur(8px) saturate(112%);
+    -webkit-backdrop-filter: blur(10px) saturate(108%);
+    backdrop-filter: blur(10px) saturate(108%);
     transition:
-        transform 220ms cubic-bezier(0.2, 0.72, 0.2, 1),
-        border-color 220ms ease,
-        box-shadow 220ms ease,
-        background 240ms ease,
-        -webkit-backdrop-filter 240ms ease,
-        backdrop-filter 240ms ease;
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        background 160ms ease,
+        -webkit-backdrop-filter 160ms ease,
+        backdrop-filter 160ms ease;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
     padding: clamp(0.95rem, 1.4vw, 1.2rem) !important;
-    border-radius: 1.25rem !important;
+    border-radius: var(--qsvl-radius) !important;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"]:hover {
@@ -254,17 +247,16 @@ h3 {
         var(--qsvl-glass-hover) !important;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.075),
-        0 22px 58px rgba(0, 8, 14, 0.34);
-    -webkit-backdrop-filter: blur(24px) saturate(138%);
-    backdrop-filter: blur(24px) saturate(138%);
-    transform: translateY(-2px) scale(1.004);
+        0 10px 28px rgba(0, 8, 14, 0.24);
+    -webkit-backdrop-filter: blur(16px) saturate(118%);
+    backdrop-filter: blur(16px) saturate(118%);
 }
 
 [data-testid="stMetric"] {
     min-height: 7.1rem;
     justify-content: center;
     padding: 1.05rem 1.15rem;
-    border-radius: 1.15rem !important;
+    border-radius: var(--qsvl-radius) !important;
 }
 
 [data-testid="stMetric"]:hover {
@@ -275,10 +267,9 @@ h3 {
         var(--qsvl-glass-hover) !important;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 18px 44px rgba(0, 8, 14, 0.34);
-    -webkit-backdrop-filter: blur(24px) saturate(138%);
-    backdrop-filter: blur(24px) saturate(138%);
-    transform: translateY(-2px) scale(1.008);
+        0 10px 28px rgba(0, 8, 14, 0.24);
+    -webkit-backdrop-filter: blur(16px) saturate(118%);
+    backdrop-filter: blur(16px) saturate(118%);
 }
 
 [data-testid="stMetricLabel"] p {
@@ -295,14 +286,13 @@ h3 {
 }
 
 [data-testid="stVegaLiteChart"] {
-    border-radius: 0.9rem;
-    animation: qsvl-chart-arrive 560ms cubic-bezier(0.2, 0.72, 0.2, 1) both;
-    transition: filter 200ms ease, transform 200ms ease;
+    border-radius: var(--qsvl-radius);
+    animation: qsvl-chart-arrive 240ms ease-out both;
+    transition: filter 160ms ease;
 }
 
 [data-testid="stVegaLiteChart"]:hover {
     filter: drop-shadow(0 10px 22px rgba(252, 191, 73, 0.08));
-    transform: translateY(-1px);
 }
 
 [data-testid="stDataFrame"],
@@ -312,7 +302,7 @@ h3 {
 [data-testid="stSegmentedControl"],
 [data-testid="stSelectbox"] > div {
     border: 1px solid rgba(234, 226, 183, 0.10);
-    border-radius: 1rem;
+    border-radius: var(--qsvl-radius);
     background: rgba(0, 36, 52, 0.26);
     -webkit-backdrop-filter: blur(6px) saturate(110%);
     backdrop-filter: blur(6px) saturate(110%);
@@ -340,11 +330,17 @@ h3 {
     background: rgba(0, 38, 55, 0.62);
 }
 
+[data-testid="stDataFrame"],
+[data-testid="stTable"],
+[data-testid="stAlert"] {
+    overflow: hidden;
+}
+
 [data-testid^="stBaseButton"],
 [data-testid="stDownloadButton"] button {
+    border-radius: var(--qsvl-radius) !important;
     transition:
-        transform 170ms ease,
-        border-color 170ms ease,
+        border-color 150ms ease,
         box-shadow 170ms ease,
         background-color 170ms ease;
 }
@@ -352,33 +348,28 @@ h3 {
 [data-testid^="stBaseButton"]:hover,
 [data-testid="stDownloadButton"] button:hover {
     border-color: rgba(252, 191, 73, 0.36);
-    box-shadow: 0 10px 24px rgba(0, 8, 14, 0.25);
-    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 6px 18px rgba(0, 8, 14, 0.22);
 }
 
 [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] {
-    animation: qsvl-page-arrive 390ms ease-out both;
+    animation: qsvl-page-arrive 180ms ease-out both;
 }
 
 @keyframes qsvl-page-arrive {
     from {
         opacity: 0;
-        transform: translateY(7px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
 @keyframes qsvl-chart-arrive {
     from {
         opacity: 0;
-        transform: translateY(5px) scale(0.995);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
     }
 }
 
@@ -408,7 +399,7 @@ h3 {
         gap: 0.3rem;
         color: var(--qsvl-cream);
         border: 1px solid rgba(234, 226, 183, 0.14);
-        border-radius: 999px;
+        border-radius: var(--qsvl-radius);
         background: rgba(0, 36, 52, 0.44);
     }
 
@@ -432,7 +423,7 @@ h3 {
 
     [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
         padding: 1rem !important;
-        border-radius: 1.05rem !important;
+        border-radius: var(--qsvl-radius) !important;
     }
 
     [data-testid="stMetric"] {
