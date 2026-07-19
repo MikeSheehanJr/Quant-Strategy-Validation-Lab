@@ -327,7 +327,7 @@ elif view == "Parameters":
     with st.container(border=True):
         st.subheader(surface_name)
         st.caption(
-            "Brighter blue indicates a higher selected metric. The white diamond marks the "
+            "Lighter cells indicate a higher selected metric. The cream diamond marks the "
             "frozen cell; tooltips retain trade count and win rate."
         )
         st.altair_chart(
