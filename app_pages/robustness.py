@@ -381,7 +381,9 @@ elif view == "Parameters":
     with gate_col:
         with st.container(border=True):
             st.subheader("Trend-gate sensitivity")
-            st.caption("SMA and EMA variants share the same audit lens; the diamond marks SMA50.")
+            st.caption(
+                "SMA and EMA variants share the same audit lens; the vertical rule marks SMA50."
+            )
             st.altair_chart(gate_sensitivity_chart(gates, metric_field))
 
     with st.container(border=True):

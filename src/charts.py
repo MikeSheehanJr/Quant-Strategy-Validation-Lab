@@ -21,6 +21,19 @@ MUTED = "#A6A18A"
 GRID = "#355965"
 WHITE = CREAM
 HEATMAP_PALETTE = [NAVY_DARK, RED, ORANGE, GOLD, CREAM]
+LINE_GRADIENT = alt.LinearGradient(
+    gradient="linear",
+    x1=0,
+    y1=0,
+    x2=1,
+    y2=0,
+    stops=[
+        alt.GradientStop(color=RED, offset=0.0),
+        alt.GradientStop(color=ORANGE, offset=0.28),
+        alt.GradientStop(color=GOLD, offset=0.68),
+        alt.GradientStop(color=CREAM, offset=1.0),
+    ],
+)
 
 
 def _focused_currency_domain(values: pd.Series) -> list[float]:
@@ -52,15 +65,10 @@ def _base(chart: alt.Chart, *, height: int = 300) -> alt.Chart:
 def equity_curve(monthly: pd.DataFrame) -> alt.Chart:
     """Monthly cumulative research P&L with explicit zero baseline."""
 
-    frame = monthly.assign(
-        month_direction=monthly["pnl_usd"].ge(0).map(
-            {True: "Up month", False: "Down month"}
-        )
-    )
-    domain = _focused_currency_domain(frame["cumulative_pnl_usd"])
+    domain = _focused_currency_domain(monthly["cumulative_pnl_usd"])
     line = (
-        alt.Chart(frame)
-        .mark_line(color=ORANGE, strokeWidth=2.8)
+        alt.Chart(monthly)
+        .mark_line(color=LINE_GRADIENT, strokeWidth=3.0)
         .encode(
             x=alt.X("month:T", title="Month", axis=alt.Axis(format="%b %Y", labelAngle=0)),
             y=alt.Y(
@@ -79,36 +87,12 @@ def equity_curve(monthly: pd.DataFrame) -> alt.Chart:
             ],
         )
     )
-    points = (
-        alt.Chart(frame)
-        .mark_point(filled=True, size=44, stroke=CREAM, strokeWidth=0.55)
-        .encode(
-            x="month:T",
-            y=alt.Y("cumulative_pnl_usd:Q", scale=alt.Scale(domain=domain)),
-            color=alt.Color(
-                "month_direction:N",
-                title="Monthly result",
-                scale=alt.Scale(
-                    domain=["Up month", "Down month"],
-                    range=[GOLD, RED],
-                ),
-            ),
-            shape=alt.Shape(
-                "month_direction:N",
-                scale=alt.Scale(
-                    domain=["Up month", "Down month"],
-                    range=["circle", "triangle-down"],
-                ),
-                legend=None,
-            ),
-        )
-    )
     zero = (
         alt.Chart(pd.DataFrame({"y": [0]}))
         .mark_rule(color=CREAM, opacity=0.58, strokeWidth=1.2)
         .encode(y="y:Q")
     )
-    return _base(line + points + zero, height=320)
+    return _base(line + zero, height=320)
 
 
 def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
@@ -116,7 +100,7 @@ def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
 
     line = (
         alt.Chart(monthly)
-        .mark_line(color=ORANGE, strokeWidth=2.6, point=alt.OverlayMarkDef(size=30))
+        .mark_line(color=LINE_GRADIENT, strokeWidth=2.8)
         .encode(
             x=alt.X("month:T", title="Exit month", axis=alt.Axis(format="%b %Y")),
             y=alt.Y(
@@ -243,17 +227,7 @@ def rr_sensitivity(rr: pd.DataFrame) -> alt.Chart:
 
     curve = (
         alt.Chart(rr)
-        .mark_line(
-            color=ORANGE,
-            strokeWidth=2.5,
-            point=alt.OverlayMarkDef(
-                size=70,
-                filled=True,
-                fill=GOLD,
-                stroke=CREAM,
-                strokeWidth=0.6,
-            ),
-        )
+        .mark_line(color=LINE_GRADIENT, strokeWidth=2.8)
         .encode(
             x=alt.X("reward_risk:Q", title="Reward:risk target", scale=alt.Scale(zero=False)),
             y=alt.Y("daily_sharpe:Q", title="Daily Sharpe", scale=alt.Scale(zero=True)),
@@ -299,7 +273,7 @@ def monte_carlo_fan(fan: pd.DataFrame) -> alt.Chart:
     )
     median = (
         alt.Chart(fan)
-        .mark_line(color=GOLD, strokeWidth=2.6)
+        .mark_line(color=LINE_GRADIENT, strokeWidth=2.8)
         .encode(x="month:Q", y="p50:Q")
     )
     zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=CREAM, opacity=0.62).encode(y="y:Q")
@@ -445,7 +419,7 @@ def gate_sensitivity_chart(gates: pd.DataFrame, metric: str) -> alt.Chart:
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
     lines = (
         alt.Chart(frame)
-        .mark_line(strokeWidth=2.3, point=alt.OverlayMarkDef(size=58, filled=True))
+        .mark_line(strokeWidth=2.5)
         .encode(
             x=alt.X("gate_length:Q", title="Trend-gate length (sessions)", scale=alt.Scale(zero=False)),
             y=alt.Y(f"{metric}:Q", title=label, scale=alt.Scale(zero=False)),
@@ -469,8 +443,8 @@ def gate_sensitivity_chart(gates: pd.DataFrame, metric: str) -> alt.Chart:
     )
     frozen = (
         alt.Chart(frame.loc[frame["is_frozen"]])
-        .mark_point(shape="diamond", size=170, color=WHITE, filled=True)
-        .encode(x="gate_length:Q", y=f"{metric}:Q")
+        .mark_rule(color=CREAM, strokeDash=[5, 4], strokeWidth=1.5)
+        .encode(x="gate_length:Q")
     )
     return _base(lines + frozen, height=300)
 
