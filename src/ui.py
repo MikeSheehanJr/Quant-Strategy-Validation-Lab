@@ -192,17 +192,29 @@ h3 {
     letter-spacing: -0.018em;
 }
 
-.qsvl-status-symbol {
+.st-key-page_status {
     display: grid;
-    width: 2.35rem;
-    height: 2.35rem;
+    min-width: 4rem;
+    height: 4rem;
     place-items: center;
-    color: var(--qsvl-gold);
-    border: 1px solid rgba(252, 191, 73, 0.28);
+    align-self: center;
+    border: 1px solid rgba(252, 191, 73, 0.32);
     border-radius: var(--qsvl-radius);
-    background: rgba(252, 191, 73, 0.08);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    font-size: 1rem;
+    background: rgba(252, 191, 73, 0.17);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 6px 16px rgba(0, 8, 14, 0.16);
+}
+
+.st-key-page_status [data-testid="stVerticalBlock"] {
+    display: grid;
+    height: 100%;
+    place-items: center;
+    gap: 0 !important;
+}
+
+.st-key-page_status [data-testid="stMarkdownContainer"] p {
+    margin: 0;
     line-height: 1;
 }
 
@@ -270,6 +282,22 @@ h3 {
         0 10px 28px rgba(0, 8, 14, 0.24);
     -webkit-backdrop-filter: blur(16px) saturate(118%);
     backdrop-filter: blur(16px) saturate(118%);
+}
+
+.st-key-page_header .st-key-page_status,
+.st-key-page_header .st-key-page_status:hover {
+    border-color: rgba(252, 191, 73, 0.34) !important;
+    background: rgba(111, 96, 52, 0.62) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 6px 16px rgba(0, 8, 14, 0.16) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(112%);
+    backdrop-filter: blur(12px) saturate(112%);
+}
+
+.st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
+    color: var(--qsvl-cream);
+    font-size: 1.85rem !important;
 }
 
 [data-testid="stMetricLabel"] p {
@@ -393,6 +421,26 @@ h3 {
         font-size: 0.84rem;
     }
 
+    .st-key-page_header [data-testid="stHorizontalBlock"] {
+        flex-wrap: nowrap;
+        gap: 0.75rem !important;
+    }
+
+    .st-key-page_header h1 {
+        max-width: 13ch;
+        font-size: 2.1rem;
+    }
+
+    .st-key-page_status {
+        width: 3rem !important;
+        min-width: 3rem;
+        height: 3rem;
+    }
+
+    .st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
+        font-size: 1.45rem !important;
+    }
+
     [data-testid="stExpandSidebarButton"] {
         width: auto;
         min-width: 4.75rem;
@@ -464,33 +512,27 @@ def render_page_header(
     eyebrow: str,
     title: str,
     description: str,
-    *,
-    status_style: str = "symbol",
 ) -> None:
-    """Render a prominent page heading with one full status label site-wide."""
-
-    if status_style not in {"full", "symbol"}:
-        raise ValueError("status_style must be 'full' or 'symbol'")
+    """Render a prominent page heading with a consistent Material status tile."""
 
     with st.container(key="page_header", gap="xsmall"):
         st.caption(eyebrow.upper())
         with st.container(
             horizontal=True,
-            horizontal_alignment="distribute",
+            horizontal_alignment="left",
             vertical_alignment="center",
+            gap="medium",
         ):
-            st.title(title)
-            if status_style == "full":
-                st.badge(
-                    "Work in progress",
-                    icon=":material/handyman:",
-                    color="yellow",
-                )
-            else:
-                st.html(
-                    '<span class="qsvl-status-symbol" role="img" '
-                    'aria-label="Work in progress" title="Work in progress">🛠</span>'
-                )
+            st.title(title, width="content")
+            with st.container(
+                border=False,
+                key="page_status",
+                width=64,
+                height=64,
+                horizontal_alignment="center",
+                vertical_alignment="center",
+            ):
+                st.markdown(":material/handyman:", width="content")
         st.markdown(description)
 
 
