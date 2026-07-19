@@ -34,25 +34,23 @@ violetColor = "#9C6D78"
 grayColor = "#A6A18A"
 
 chartCategoricalColors = [
-    "#5E8390",
-    "#EAE2B7",
-    "#FCBF49",
+    "#003049",
     "#D62828",
     "#F77F00",
-    "#9C6D78",
-    "#A6A18A",
+    "#FCBF49",
+    "#EAE2B7",
 ]
 
 chartSequentialColors = [
-    "#001722",
-    "#002231",
     "#003049",
-    "#164759",
-    "#315F6B",
-    "#5E7271",
-    "#8E866E",
-    "#B5A76E",
-    "#D8C978",
+    "#542C3E",
+    "#D62828",
+    "#E64F15",
+    "#F77F00",
+    "#F99F24",
+    "#FCBF49",
+    "#F5CE75",
+    "#EFDA9C",
     "#EAE2B7",
 ]
 

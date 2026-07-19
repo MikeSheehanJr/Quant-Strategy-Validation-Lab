@@ -45,19 +45,29 @@ with st.container(border=True, key="brief_research_read", gap="xxsmall"):
 
 path_col, year_col = st.columns([1.7, 1], gap="small")
 with path_col:
-    with st.container(border=True, height="stretch", gap="xxsmall"):
+    with st.container(
+        border=True,
+        height="stretch",
+        key="brief_path_chart",
+        gap="xxsmall",
+    ):
         st.subheader("Historical research path")
         st.caption(
-            "Monthly cumulative P&L for one MNQ contract after $1.20 round-turn commission "
-            "and 0.5-tick modeled slippage · Jun 2021–Jun 2026."
+            "One MNQ contract · net of $1.20 round-turn commission and 0.5-tick modeled "
+            "slippage · Jun 2021–Jun 2026."
         )
         st.altair_chart(equity_curve(monthly))
 with year_col:
-    with st.container(border=True, height="stretch", gap="xxsmall"):
+    with st.container(
+        border=True,
+        height="stretch",
+        key="brief_year_chart",
+        gap="xxsmall",
+    ):
         st.subheader("Calendar-year outcomes")
         st.caption(
-            f"{positive_complete_years}/{len(complete_years)} complete calendar years are "
-            "positive. 2021 and 2026 are partial edge periods."
+            f"Complete years: {positive_complete_years}/{len(complete_years)} positive. "
+            "2021 and 2026 are partial edge periods."
         )
         st.altair_chart(annual_pnl(yearly))
 
