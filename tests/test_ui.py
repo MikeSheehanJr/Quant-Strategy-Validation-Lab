@@ -52,11 +52,12 @@ def test_work_status_uses_material_symbol_without_emoji():
     assert "\U0001F6E0" not in ui_source
 
 
-def test_research_context_is_centered_with_native_text_alignment():
+def test_research_context_is_left_aligned_and_vertically_centered():
     ui_source = (ROOT / "src" / "ui.py").read_text(encoding="utf-8")
     boundary_source = ui_source.split("def render_research_boundary", maxsplit=1)[1]
     boundary_source = boundary_source.split("def render_section_header", maxsplit=1)[0]
-    assert 'text_alignment="center"' in boundary_source
+    assert 'text_alignment="left"' in boundary_source
+    assert 'vertical_alignment="center"' in boundary_source
 
 
 def test_theme_uses_the_reviewed_display_and_body_fonts():
