@@ -41,7 +41,10 @@ def test_widget_mosaic_has_consistent_spacing_and_compact_status():
     assert "stToolbarActionButtonLabel" in css
     assert ".st-key-app_footer" in css
     assert ".st-key-research_context {" in css
-    assert "padding: 0.68rem 0.95rem !important" in css
+    assert "min-height: 3.25rem" in css
+    assert "padding: 0 0.95rem !important" in css
+    assert "justify-content: center !important" in css
+    assert "transform: translateY(-0.35rem)" in css
     assert ".st-key-brief_path_chart::before" in css
     assert "background: var(--qsvl-gradient-warm)" in css
 
