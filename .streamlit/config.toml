@@ -1,5 +1,4 @@
-# Deep-navy research theme using the reviewed red, muted-gold, and cream accents.
-# The orange palette swatch is intentionally excluded.
+# Deep-navy research theme with restrained semantic use of the full reviewed palette.
 
 [theme]
 base = "dark"
@@ -29,16 +28,17 @@ linkUnderline = false
 greenColor = "#A39457"
 redColor = "#D62828"
 yellowColor = "#FCBF49"
-orangeColor = "#FCBF49"
+orangeColor = "#F77F00"
 blueColor = "#5E8390"
 violetColor = "#9C6D78"
 grayColor = "#A6A18A"
 
 chartCategoricalColors = [
+    "#5E8390",
     "#EAE2B7",
     "#FCBF49",
     "#D62828",
-    "#5E8390",
+    "#F77F00",
     "#9C6D78",
     "#A6A18A",
 ]
