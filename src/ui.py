@@ -248,12 +248,19 @@ h3 {
 }
 
 .st-key-research_context {
-    min-height: 0;
-    padding: 0.68rem 0.95rem !important;
+    min-height: 3.25rem;
+    padding: 0 0.95rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
 }
 
 .st-key-research_context [data-testid="stMarkdownContainer"] p {
     line-height: 1.35;
+}
+
+.st-key-research_context [data-testid="stMarkdownContainer"] {
+    transform: translateY(-0.35rem);
 }
 
 .st-key-app_footer {
@@ -588,7 +595,8 @@ h3 {
     }
 
     .st-key-research_context {
-        padding: 0.64rem 0.8rem !important;
+        min-height: 3.5rem;
+        padding: 0.22rem 0.8rem !important;
     }
 
     .st-key-brief_path_chart [data-testid="stCaptionContainer"],
