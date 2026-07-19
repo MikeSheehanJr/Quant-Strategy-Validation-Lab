@@ -33,8 +33,8 @@ ytd_2026 = pine_windows.loc[pine_windows["window"] == "2026 YTD"].iloc[0]
 render_page_header(
     "Versioned implementation evidence",
     "Pine Script implementation",
-    "I keep the TradingView companion separate from the headline Python engine so its rule "
-    "changes, safeguards, and evidence trail can be reviewed on their own.",
+    "I keep the TradingView companion separate from the headline Python engine so I can "
+    "review its rule changes, safeguards, and evidence trail on their own terms.",
 )
 
 lineage = pd.DataFrame(
@@ -90,7 +90,7 @@ script_flow = pd.DataFrame(
         {
             "Stage": "Session",
             "Decision rule": "One decision, including risk skip",
-            "Guardrail": "Normal / early-close flatten",
+            "Guardrail": "Normal and early-close flattening",
         },
         {
             "Stage": "Alert",
@@ -184,9 +184,9 @@ with st.expander("Representative source and download", icon=":material/code:"):
 with st.container(border=True, key="pine_evidence_summary"):
     st.subheader("Reviewed v4.1 MNQ backtest evidence")
     st.caption(
-        "Aggregate derivatives of the July 16, 2026 TradingView List of Trades export. The "
-        "source trade list is hash-pinned but not published; timestamps, prices, quantities, "
-        "and individual outcomes remain outside the release boundary."
+        "These aggregates derive from the July 16, 2026 TradingView List of Trades export. "
+        "The source trade list is hash-pinned but not published; timestamps, prices, "
+        "quantities, and individual outcomes remain outside the release boundary."
     )
     with st.container(horizontal=True, gap="small"):
         st.metric("Full-export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
@@ -204,7 +204,8 @@ with st.container(border=True):
     st.subheader("TradingView aggregate path")
     st.caption(
         "Monthly sums from 1,269 completed v4.1 MNQ trades using dynamic sizing and the "
-        "reviewed TradingView fee configuration. This is not the one-contract headline series."
+        "reviewed TradingView fee configuration. I report this separately from the "
+        "one-contract headline series."
     )
     st.altair_chart(pinescript_equity_curve(pine_monthly))
 
@@ -228,8 +229,8 @@ with st.container(border=True, key="backtest_windows"):
         },
     )
     st.caption(
-        "The negative 2026 YTD row is intentionally retained. Last-250 and date-window rows "
-        "are descriptive diagnostics, not independent out-of-sample tests."
+        "The negative 2026 YTD row is intentionally retained. The last-250 and date-window "
+        "rows are descriptive diagnostics, not independent out-of-sample tests."
     )
 
 with st.expander("Export QA and provenance", icon=":material/fact_check:"):
@@ -308,7 +309,7 @@ review_boundary = pd.DataFrame(
 )
 with st.container(border=True, key="implementation_review_boundary"):
     st.subheader("Acceptance and release boundary")
-    st.caption("Open engineering checks remain visible beside deliberately excluded data.")
+    st.caption("I keep open engineering checks visible beside deliberately excluded data.")
     st.dataframe(
         review_boundary,
         hide_index=True,

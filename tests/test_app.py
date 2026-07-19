@@ -23,6 +23,7 @@ def test_default_research_brief_renders():
     assert any(item.value == "How I’m testing the idea" for item in app.subheader)
     assert any(item.value == "Historical research path" for item in app.subheader)
     assert any(metric.label == "Cost-adjusted trades" for metric in app.metric)
+    assert any("AI-assisted passion project" in item.value for item in app.caption)
     assert has_material_work_status(app)
 
 
@@ -42,7 +43,7 @@ def test_robustness_views_render():
 
     app.segmented_control[0].set_value("Validation").run()
     assert not app.exception
-    assert any(metric.label == "Displayed execution cells" for metric in app.metric)
+    assert any(metric.label == "Profitable cost-stress cells" for metric in app.metric)
 
 
 def test_implementation_page_renders():

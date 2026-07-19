@@ -19,10 +19,11 @@ complete_years = yearly.loc[yearly["period_status"] == "Complete"]
 positive_complete_years = int((complete_years["pnl_usd"] > 0).sum())
 
 render_page_header(
-    "MNQ strategy research · iterative validation",
+    "AI-assisted passion project · iterative validation",
     "Quant strategy validation lab",
-    "**What I’m testing:** Whether a deliberately simple opening-range breakout can hold "
-    "up after costs, out-of-sample checks, parameter changes, and deliberately hostile review.",
+    "I built this research lab to test whether a deliberately simple opening-range breakout "
+    "can withstand costs, out-of-sample checks, parameter changes, and deliberately skeptical "
+    "review.",
 )
 render_research_boundary(meta)
 
@@ -39,7 +40,7 @@ with st.container(border=True, key="brief_research_read", gap="xxsmall"):
     with gate_col:
         st.markdown(
             ":material/check_circle: **Reviewed** · Historical evidence  \n"
-            ":material/arrow_forward: **Now** · Paper-validation setup  \n"
+            ":material/arrow_forward: **Now** · Paper-forward setup  \n"
             ":material/block: **Not claimed** · Live or forward performance"
         )
 
@@ -73,7 +74,7 @@ with year_col:
 
 with st.container(horizontal=True, key="brief_metrics", gap="small"):
     st.metric(
-        "Net P&L / contract",
+        "Net P&L per contract",
         f"${headline['net_pnl_per_contract_usd']:,.0f}",
         border=True,
     )
@@ -126,7 +127,7 @@ evidence_register = pd.DataFrame(
             "Interpretation": "No prospective performance conclusion",
         },
         {
-            "Review": "Pre-2021 and broader provider coverage",
+            "Review": "Pre-2021 and broader data-provider coverage",
             "State": ":gray-badge[Missing]",
             "Interpretation": "Time and source coverage remain bounded",
         },
@@ -154,6 +155,9 @@ with st.container(border=True, key="brief_evidence_register"):
 
 with st.container(border=True, key="research_disclosure", gap="xxsmall"):
     st.caption(
+        "Built as an AI-assisted passion project: I set the research question, modeling "
+        "choices, and publication standards; AI accelerated coding, documentation, and "
+        "interface iteration. Every public claim remains tied to reviewed aggregate evidence. "
         "Historical research only—not a trading recommendation or signal service. "
         f"Snapshot digest: `{snapshot_sha256()}`"
     )

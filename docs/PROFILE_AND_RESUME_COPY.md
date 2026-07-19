@@ -6,15 +6,17 @@ For a plain-English GitHub announcement, repository description, profile-pin cop
 
 ## LinkedIn launch post
 
-I’m building a robustness-first quant research lab—and I’m sharing it while it is still a work in progress.
+I’m sharing an AI-assisted passion project that brings together two subjects I enjoy: quantitative research and software engineering.
 
-The question is deliberately simple:
+It is called **Quant Strategy Validation Lab**, and it is still a work in progress.
 
-**Can an intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and adversarial review—not just produce a good-looking equity curve?**
+I started with a deliberately simple question:
 
-The current case study evaluates a 30-minute opening-range breakout on MNQ. In the historical June 2021–June 2026 research sample, the frozen specification produced 729 cost-adjusted trades, a 58.8% win rate, and a 1.315 profit factor.
+**Can an intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and skeptical review—not just produce a good-looking equity curve?**
 
-The more important work was trying to break it:
+The current case study evaluates a 30-minute opening-range breakout on MNQ. In the historical June 2021–June 2026 research sample, the frozen specification produced 729 cost-adjusted trades, a 58.8% win rate, and a 1.315 profit factor. Those are research-sample results, not expected returns.
+
+The part I found most valuable was trying to break the result:
 
 - Independent lookahead reconstruction
 - Combinatorial purged cross-validation
@@ -23,18 +25,21 @@ The more important work was trying to break it:
 - Parameter and regime stability checks
 - A failure journal for ideas that did not survive
 
-I also built a public-safe Streamlit dashboard from monthly P&L and reviewed aggregate stress cells. It includes an aggregate moving-block Monte Carlo, terminal/drawdown distributions, high-level tail metrics, and three two-dimensional parameter surfaces. The public project excludes licensed raw market data, trade-level records, credentials, and account information, and includes automated release checks.
+I built a public-safe Streamlit dashboard from monthly P&L and reviewed aggregate stress cells. It includes a moving-block Monte Carlo, terminal and drawdown distributions, high-level tail metrics, and three two-dimensional parameter surfaces. The public project excludes licensed raw market data, trade-level records, credentials, and account information, and it includes automated release checks.
+
+AI supported code iteration, documentation, and interface refinement. I remained responsible for the research question, modeling choices, validation criteria, evidence boundary, and every published claim.
 
 Still open: pre-2021 MNQ/NQ data and a completed paper forward-test. Historical simulations are hypothetical and do not establish future performance.
 
 Built with Python, pandas, Altair, Streamlit, pytest, and GitHub Actions.
 
-GitHub: [GITHUB_URL]  
-Live demo: [APP_URL]
+GitHub: https://github.com/MikeSheehanJr/Quant-Strategy-Validation-Lab
+
+Live demo: https://quant-strategy-validation-lab.streamlit.app/
 
 This is a research and engineering demonstration, not investment advice.
 
-#QuantitativeFinance #Python #SystematicTrading #DataVisualization
+#QuantitativeFinance #Python #SystematicTrading #AI
 
 ## Short LinkedIn update for a later release
 
@@ -53,7 +58,7 @@ Quant strategy validation lab — work in progress
 
 ### Description
 
-Building a robustness-first quantitative research and Python engineering portfolio project around a simple MNQ intraday strategy. The current dashboard presents 729 historical, cost-adjusted trades from June 2021 through June 2026 alongside lookahead audits, combinatorial purged cross-validation, permutation tests, multiple-testing controls, execution-cost stress tests, parameter stability, and a documented failure journal. Designed a public-safe aggregate data contract, Streamlit/Altair dashboard, pytest suite, GitHub Actions CI, and automated release scanner that excludes raw market data, trade-level records, secrets, and local paths. Work remains in progress: pre-2021 Nasdaq data and paper forward-testing are outstanding. Research demonstration only; not investment advice.
+Building an AI-assisted passion project around quantitative research and Python engineering, using a simple MNQ intraday strategy as the case study. The dashboard presents 729 historical, cost-adjusted trades from June 2021 through June 2026 alongside lookahead audits, combinatorial purged cross-validation, permutation tests, multiple-testing controls, execution-cost stress tests, parameter stability, and a documented failure journal. I designed a public-safe aggregate data contract, Streamlit/Altair dashboard, pytest suite, GitHub Actions CI, and automated release scanner that excludes raw market data, trade-level records, secrets, and local paths. Work remains in progress: pre-2021 Nasdaq data and paper forward-testing are outstanding. Research demonstration only; not investment advice.
 
 ### Skills to associate
 

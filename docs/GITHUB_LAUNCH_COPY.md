@@ -4,15 +4,15 @@ Replace the two bracketed URLs only after they work in a logged-out browser.
 
 ## Repository description
 
-Work-in-progress Python quant research dashboard focused on testing whether a simple strategy survives costs, bias checks, parameter changes, and out-of-sample validation.
+AI-assisted quant research passion project focused on whether a simple strategy survives costs, bias checks, parameter changes, and out-of-sample validation.
 
 ## GitHub profile pin description
 
-I built this project to show the research process behind a backtest—not just the final equity curve. It combines adversarial validation, an aggregate-only public data boundary, interactive Monte Carlo and parameter testing, automated tests, and release security checks.
+I built this AI-assisted passion project to show the research process behind a backtest—not just the final equity curve. It combines skeptical validation, an aggregate-only public data boundary, interactive Monte Carlo and parameter testing, automated tests, and release security checks.
 
 ## Launch post
 
-I’ve published a work-in-progress quantitative research project: **Quant Strategy Validation Lab**.
+I’ve published an AI-assisted passion project that brings together two subjects I enjoy: quantitative research and software engineering. It is called **Quant Strategy Validation Lab**, and it remains a work in progress.
 
 The project starts with a deliberately simple intraday futures strategy. The interesting part is not the strategy itself; it is the process used to test whether the result is fragile.
 
@@ -22,8 +22,11 @@ The historical June 2021–June 2026 sample contains 729 cost-adjusted trades wi
 
 The engineering side includes a modular Python/Altair/Streamlit architecture, deterministic simulations, pytest coverage, commit-pinned GitHub Actions, dependency auditing, CodeQL, Dependabot, and a fail-closed public-release scanner.
 
-Repository: [GITHUB_URL]  
-Live app: [APP_URL]
+I used AI as a development partner for code iteration, documentation, and interface refinement. I remained responsible for the research question, modeling choices, validation criteria, release boundary, and every published claim.
+
+Repository: https://github.com/MikeSheehanJr/Quant-Strategy-Validation-Lab
+
+Live app: https://quant-strategy-validation-lab.streamlit.app/
 
 This is a research and software-engineering demonstration, not investment advice or a live trading system.
 
@@ -41,7 +44,7 @@ This is a research and software-engineering demonstration, not investment advice
 
 ## Social-preview caption
 
-Quant Strategy Validation Lab — a work-in-progress Python research project about testing robustness, documenting failures, and publishing evidence safely.
+Quant Strategy Validation Lab — an AI-assisted passion project about testing robustness, documenting failures, and publishing evidence responsibly.
 
 ## Language guardrails
 

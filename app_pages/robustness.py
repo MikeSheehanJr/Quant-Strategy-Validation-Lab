@@ -58,8 +58,8 @@ cutoffs = entry_cutoff_frame(snapshot)
 render_page_header(
     "Historical research diagnostics",
     "Robustness",
-    "I use four different lenses to look for fragility in the historical result. The goal is "
-    "to find where the strategy breaks—not to turn the sample into a forecast.",
+    "I use four complementary lenses to look for fragility in the historical result. I’m "
+    "trying to learn where the strategy breaks—not turn the sample into a forecast.",
 )
 
 with st.container(border=True, key="robustness_switcher"):
@@ -77,7 +77,7 @@ if view == "Historical risk":
 
     render_section_header(
         "Historical risk snapshot",
-        f"Dollar-based diagnostics across {risk['sample_months']} complete months. "
+        f"These dollar-based diagnostics cover {risk['sample_months']} complete months. "
         "Partial edge months are excluded.",
         key="historical_risk",
     )
@@ -99,7 +99,9 @@ if view == "Historical risk":
     with distribution_col:
         with st.container(border=True):
             st.subheader("Complete-month P&L distribution")
-            st.caption("Histogram of 59 complete monthly aggregates; the rule marks zero.")
+            st.caption(
+                "This histogram covers 59 complete monthly aggregates; the rule marks zero."
+            )
             st.altair_chart(monthly_pnl_distribution(monthly))
     with tail_col:
         with st.container(border=True):
@@ -144,11 +146,11 @@ if view == "Historical risk":
 
     with st.container(horizontal=True, gap="small"):
         st.metric(
-            "Monthly-aggregate max drawdown",
+            "Aggregate monthly max drawdown",
             f"${max_monthly_dd:,.0f}",
             border=True,
         )
-        st.metric("CPCV OOS-positive splits", "45/45", border=True)
+        st.metric("CPCV positive OOS splits", "45/45", border=True)
         st.metric("PSR vs zero", "3.30σ", border=True)
 
     with st.container(border=True, key="risk_caveat", gap="xxsmall"):
@@ -162,14 +164,14 @@ elif view == "Monte Carlo":
     with st.container(border=True, key="monte_carlo_controls"):
         st.subheader("Aggregate monthly Monte Carlo")
         st.caption(
-            "Moving-block bootstrap of complete monthly P&L. Contiguous blocks preserve "
-            "limited month-to-month dependence; the output is a stress distribution, not a "
-            "forecast."
+            "This moving-block bootstrap resamples complete monthly P&L. Contiguous blocks "
+            "preserve limited month-to-month dependence; the output is a stress distribution, "
+            "not a forecast."
         )
         control_left, control_mid, control_right = st.columns(3, gap="small")
         with control_left:
             horizon_label = st.segmented_control(
-                "Projection horizon",
+                "Simulation horizon",
                 ["12 mo", "24 mo", "36 mo"],
                 default="24 mo",
                 key="mc_horizon",
@@ -228,7 +230,7 @@ elif view == "Monte Carlo":
     with terminal_col:
         with st.container(border=True):
             st.subheader("Terminal P&L distribution")
-            st.caption("Reference rules mark zero, the fifth percentile, and the median.")
+            st.caption("Reference lines mark zero, the fifth percentile, and the median.")
             st.altair_chart(terminal_distribution(simulated_paths, simulation))
     with drawdown_col:
         with st.container(border=True):
@@ -302,7 +304,7 @@ elif view == "Parameters":
 
     render_section_header(
         "Reviewed parameter atlas",
-        "Five-minute execution audit around the frozen specification. This is stability "
+        "A five-minute execution audit around the frozen specification. This is stability "
         "analysis—not permission to adopt the best full-sample cell.",
         key="parameter_atlas",
     )
@@ -375,7 +377,8 @@ elif view == "Parameters":
         with st.container(border=True):
             st.subheader("Reward:risk sensitivity")
             st.caption(
-                "The 1.0 setting remains frozen; higher full-sample P&L settings were not adopted."
+                "The 1.0 setting remains frozen; I did not adopt higher-P&L settings from the "
+                "full sample."
             )
             st.altair_chart(rr_sensitivity(rr))
     with gate_col:
@@ -401,14 +404,14 @@ else:
 
     render_section_header(
         "Validation and rejected ideas",
-        "Keep successful stress tests and discarded hypotheses in the same review surface.",
+        "Successful stress tests and rejected hypotheses share the same review surface.",
         key="validation_ledger",
     )
     with st.container(horizontal=True, gap="small"):
         st.metric("Displayed execution cells", f"{len(execution)}/12", border=True)
         st.metric("Profit-factor range", f"{pf_min:.3f}–{pf_max:.3f}", border=True)
-        st.metric("Daily-Sharpe range", f"{sharpe_min:.2f}–{sharpe_max:.2f}", border=True)
-        st.metric("Full cost battery profitable", "24/24", border=True)
+        st.metric("Daily Sharpe range", f"{sharpe_min:.2f}–{sharpe_max:.2f}", border=True)
+        st.metric("Profitable cost-stress cells", "24/24", border=True)
 
     with st.container(border=True):
         st.subheader("Execution stress matrix")
@@ -423,7 +426,10 @@ else:
             "Daily Sharpe": "daily_sharpe",
             "Net P&L": "net_pnl_usd",
         }[metric]
-        st.caption("Fill resolution × modeled slippage; $1.20 round-turn commission.")
+        st.caption(
+            "The matrix crosses fill resolution with modeled slippage under a $1.20 "
+            "round-turn commission."
+        )
         st.altair_chart(execution_heatmap(execution, metric_field))
 
     validation = pd.DataFrame(snapshot["validation"])[
@@ -448,7 +454,8 @@ else:
     with st.container(border=True, key="failure_table"):
         st.subheader("Failure journal")
         st.caption(
-            "Rejected ideas remain visible instead of disappearing from the research record."
+            "I keep rejected ideas visible instead of letting them disappear from the "
+            "research record."
         )
         st.dataframe(
             failed,
