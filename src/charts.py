@@ -21,6 +21,11 @@ MUTED = "#A6A18A"
 GRID = "#355965"
 WHITE = CREAM
 HEATMAP_PALETTE = [NAVY_DARK, RED, ORANGE, GOLD, CREAM]
+EXECUTION_HEATMAP_GRADIENTS = {
+    "profit_factor": [NAVY_DARK, "#8ECAE6"],
+    "daily_sharpe": ["#7A1C23", "#F4A6A0"],
+    "net_pnl_usd": ["#8A4300", GOLD],
+}
 ANNUAL_BAR_PALETTE = [RED, "#E64A17", ORANGE, "#FAA327", GOLD, CREAM]
 LINE_GRADIENT = alt.LinearGradient(
     gradient="linear",
@@ -219,8 +224,11 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
         "daily_sharpe": "Daily Sharpe",
         "net_pnl_usd": "Net P&L (USD)",
     }[metric]
+    gradient = EXECUTION_HEATMAP_GRADIENTS[metric]
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
-    midpoint = float(execution[metric].min() + execution[metric].max()) / 2
+    minimum = float(execution[metric].min())
+    maximum = float(execution[metric].max())
+    midpoint = (minimum + maximum) / 2
     heatmap = (
         alt.Chart(execution)
         .mark_rect(cornerRadius=4)
@@ -230,7 +238,12 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
             color=alt.Color(
                 f"{metric}:Q",
                 title=label,
-                scale=alt.Scale(range=HEATMAP_PALETTE),
+                scale=alt.Scale(range=gradient),
+                legend=alt.Legend(
+                    format=fmt,
+                    values=[minimum, midpoint, maximum],
+                    gradientLength=240,
+                ),
             ),
             tooltip=[
                 alt.Tooltip("fill_minutes:O", title="Fill resolution (min)"),
