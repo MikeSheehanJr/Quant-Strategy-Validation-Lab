@@ -5,6 +5,7 @@ from __future__ import annotations
 import streamlit as st
 
 from src.data import load_snapshot
+from src.ui import inject_visual_system
 
 
 st.set_page_config(
@@ -13,6 +14,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+inject_visual_system()
 
 
 page = st.navigation(
