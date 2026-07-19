@@ -661,7 +661,8 @@ def render_research_boundary(meta: dict[str, Any]) -> None:
         st.markdown(
             f":material/candlestick_chart: **{meta['instrument']}** · "
             f"{meta['research_window']} · snapshot {meta['snapshot_date']} · "
-            "reviewed aggregates only"
+            "reviewed aggregates only",
+            text_alignment="center",
         )
 
 
