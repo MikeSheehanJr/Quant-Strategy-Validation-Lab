@@ -65,11 +65,11 @@ def test_chart_specs_compile():
         assert "$schema" in spec
 
 
-def test_equity_curve_uses_solid_gold_line_and_focused_scale():
+def test_equity_curve_uses_solid_navy_line_and_focused_scale():
     snapshot = load_snapshot()
     chart_spec = equity_curve(monthly_frame(snapshot)).to_dict()
     assert chart_spec["layer"][0]["encoding"]["y"]["scale"]["domain"][0] == -500.0
-    assert chart_spec["layer"][0]["mark"]["color"] == "#D4AF37"
+    assert chart_spec["layer"][0]["mark"]["color"] == "#0A3D62"
     assert all(layer["mark"]["type"] != "point" for layer in chart_spec["layer"])
     assert "gradient" not in json.dumps(chart_spec).lower()
 
@@ -82,17 +82,17 @@ def test_annual_bars_use_full_ordered_palette_and_label_headroom():
     assert bars["encoding"]["color"]["scale"]["range"] == [
         "#0A3D62",
         "#D4AF37",
-        "#F9F9F9",
+        "#2D3436",
+        "#A9BEC9",
         "#0A3D62",
         "#D4AF37",
-        "#F9F9F9",
     ]
     y_domain = bars["encoding"]["y"]["scale"]["domain"]
     assert y_domain[0] == 0.0
     assert y_domain[1] >= float(yearly["pnl_usd"].max()) * 1.15
     assert bars["encoding"]["opacity"]["legend"] is None
     assert labels["mark"]["clip"] is False
-    assert labels["mark"]["color"] == "#D4AF37"
+    assert labels["mark"]["color"] == "#2D3436"
 
 
 def test_single_series_lines_use_solid_strokes_without_nodes():
@@ -115,7 +115,7 @@ def test_single_series_lines_use_solid_strokes_without_nodes():
             if layer["mark"]["type"] == "line"
         ]
         assert line_marks
-        assert all(mark["color"] == "#D4AF37" for mark in line_marks)
+        assert all(mark["color"] == "#0A3D62" for mark in line_marks)
         assert all("point" not in mark for mark in line_marks)
         assert "gradient" not in json.dumps(spec).lower()
 
@@ -132,7 +132,7 @@ def test_gate_sensitivity_lines_have_no_point_nodes():
 def test_execution_heatmaps_use_four_flat_color_bands():
     snapshot = load_snapshot()
     execution = execution_frame(snapshot)
-    expected = ["#2D3436", "#0A3D62", "#D4AF37", "#F9F9F9"]
+    expected = ["#E6EEF2", "#A9BEC9", "#D4AF37", "#0A3D62"]
 
     for metric in ("profit_factor", "daily_sharpe", "net_pnl_usd"):
         spec = execution_heatmap(execution, metric).to_dict()
@@ -156,5 +156,5 @@ def test_parameter_surface_uses_the_same_flat_band_language():
     ).to_dict()
     color = spec["layer"][0]["encoding"]["color"]
     assert color["field"] == "metric_band"
-    assert color["scale"]["range"] == ["#2D3436", "#0A3D62", "#D4AF37", "#F9F9F9"]
+    assert color["scale"]["range"] == ["#E6EEF2", "#A9BEC9", "#D4AF37", "#0A3D62"]
     assert "gradient" not in json.dumps(spec).lower()
