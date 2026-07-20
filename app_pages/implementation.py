@@ -41,13 +41,13 @@ lineage = pd.DataFrame(
     [
         {
             "Track": "Pine companion",
-            "Specification": "15-minute symmetric ORB",
+            "Specification": "15 minute symmetric ORB",
             "Evidence role": "Implementation and TradingView traceability",
         },
         {
             "Track": "Headline Python engine",
-            "Specification": "30-minute filtered ORB",
-            "Evidence role": "729-trade reviewed research snapshot",
+            "Specification": "30 minute filtered ORB",
+            "Evidence role": "Reviewed research snapshot with 729 trades",
         },
     ]
 )
@@ -75,12 +75,12 @@ script_flow = pd.DataFrame(
         {
             "Stage": "Range",
             "Decision rule": "09:30–10:00 ET high / low",
-            "Guardrail": "MNQ · 15-minute lock",
+            "Guardrail": "MNQ · 15 minute lock",
         },
         {
             "Stage": "Trigger",
             "Decision rule": "First completed close beyond range",
-            "Guardrail": "Bar-close state logic",
+            "Guardrail": "Bar close state logic",
         },
         {
             "Stage": "Risk",
@@ -90,11 +90,11 @@ script_flow = pd.DataFrame(
         {
             "Stage": "Session",
             "Decision rule": "One decision, including risk skip",
-            "Guardrail": "Normal and early-close flattening",
+            "Guardrail": "Normal and early close flattening",
         },
         {
             "Stage": "Alert",
-            "Decision rule": "Observation-only event",
+            "Decision rule": "Observation only event",
             "Guardrail": "No broker connection",
         },
     ]
@@ -113,7 +113,7 @@ with st.container(border=True, key="script_flow"):
     )
 
 with st.container(border=True, key="version_ledger"):
-    st.subheader("Version-by-version research ledger")
+    st.subheader("Research ledger by version")
     st.caption(
         "Historical source headers are preserved as research records. Later corrections and "
         "the manifest status take precedence over superseded estimates in older comments."
@@ -185,16 +185,16 @@ with st.container(border=True, key="pine_evidence_summary"):
     st.subheader("Reviewed v4.1 MNQ backtest evidence")
     st.caption(
         "These aggregates derive from the July 16, 2026 TradingView List of Trades export. "
-        "The source trade list is hash-pinned but not published; timestamps, prices, "
+        "The source trade list is pinned by hash but not published; timestamps, prices, "
         "quantities, and individual outcomes remain outside the release boundary."
     )
     with st.container(horizontal=True, gap="small"):
-        st.metric("Full-export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
+        st.metric("Full export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)
         st.metric(
-            "Full-export profit factor", f"{full_export['profit_factor']:.3f}", border=True
+            "Full export profit factor", f"{full_export['profit_factor']:.3f}", border=True
         )
         st.metric(
-            "Full-export max drawdown",
+            "Full export max drawdown",
             f"${full_export['max_drawdown_usd']:,.0f}",
             border=True,
         )
@@ -205,7 +205,7 @@ with st.container(border=True):
     st.caption(
         "Monthly sums from 1,269 completed v4.1 MNQ trades using dynamic sizing and the "
         "reviewed TradingView fee configuration. I report this separately from the "
-        "one-contract headline series."
+        "headline series for one contract."
     )
     st.altair_chart(pinescript_equity_curve(pine_monthly))
 
@@ -229,8 +229,8 @@ with st.container(border=True, key="backtest_windows"):
         },
     )
     st.caption(
-        "The negative 2026 YTD row is intentionally retained. The last-250 and date-window "
-        "rows are descriptive diagnostics, not independent out-of-sample tests."
+        "The negative 2026 YTD row is intentionally retained. The last 250 and date window "
+        "rows are descriptive diagnostics, not independent out of sample tests."
     )
 
 with st.expander("Export QA and provenance", icon=":material/fact_check:"):
@@ -267,17 +267,17 @@ review_boundary = pd.DataFrame(
     [
         {
             "Area": "Acceptance",
-            "Item": "Wrong-symbol and timeframe lock",
+            "Item": "Wrong symbol and timeframe lock",
             "State": ":gray-badge[Open]",
         },
         {
             "Area": "Acceptance",
-            "Item": "Normal-session replay and fixed TP / SL markers",
+            "Item": "Normal session replay and fixed TP / SL markers",
             "State": ":gray-badge[Open]",
         },
         {
             "Area": "Acceptance",
-            "Item": "Registered half-day replay",
+            "Item": "Registered half day replay",
             "State": ":gray-badge[Open]",
         },
         {

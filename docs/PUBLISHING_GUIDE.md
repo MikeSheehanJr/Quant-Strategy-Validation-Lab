@@ -14,7 +14,7 @@ The local safety sweep is automated. The remaining sequence is:
 
 ## 1. Final local safety audit
 
-Open a terminal in this project directory—not in the larger private research workspace.
+Open a terminal in this project directory, not in the larger private research workspace.
 
 ### Install and test with Python 3.12
 
@@ -167,7 +167,7 @@ Open the live app and verify:
 - Research brief loads before any click.
 - All four hero metrics display.
 - Monthly and yearly charts render.
-- Robustness → Monte Carlo renders the percentile fan plus terminal and drawdown distributions.
+- Robustness → Monte Carlo renders distinct simulation paths plus terminal and drawdown distributions.
 - Robustness → Parameters renders all three surfaces, reward:risk curve, gate chart, and cutoff chart.
 - Robustness → Validation renders the execution heatmap, validation table, and failure journal.
 - Implementation renders the Pine version ledger, aggregate path, tables, and downloads.
@@ -191,7 +191,7 @@ Use only screenshots from the completed app. Do not upload the original dashboar
 Recommended screenshots:
 
 1. Research brief at approximately 1440×900.
-2. Robustness → Monte Carlo showing the percentile fan and simulation caveat.
+2. Robustness → Monte Carlo showing distinct simulation paths and the simulation caveat.
 3. Robustness → Parameters showing a frozen-cell heatmap.
 4. Implementation showing the version ledger or reviewed aggregate path.
 5. Forward validation showing the not-started evidence state and source lock.
@@ -241,7 +241,7 @@ Copy the current draft from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY
 4. Set post visibility intentionally. Choose **Anyone** only when you want public search and off-network sharing.
 5. Keep the WIP and research-only sentences above the “see more” fold.
 6. After publishing, open the post from a logged-out/private window.
-7. Reply to early comments with methodology or limitations—not performance promises.
+7. Reply to early comments with methodology or limitations, not performance promises.
 
 ## 6A. Post the plain-English GitHub announcement
 
@@ -254,7 +254,7 @@ LinkedIn’s current path is:
 1. **Me → View Profile**.
 2. **Add profile section**.
 3. **Recommended → Projects**.
-4. Project name: **Quant strategy validation lab — work in progress**.
+4. Project name: **Quant strategy validation lab: work in progress**.
 5. Associate it with the most relevant education or experience entry only if that relationship is accurate.
 6. Add the description from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY.md).
 7. Use **Add media → Add a link** for the GitHub repository or live app.
