@@ -358,7 +358,7 @@ elif view == "Parameters":
     with st.container(border=True):
         st.subheader(surface_name)
         st.caption(
-            "Four flat color bands rank the selected metric from low to high. The ivory "
+            "Four flat color bands rank the selected metric from low to high. The outlined "
             "diamond marks the frozen cell; tooltips retain trade count and win rate."
         )
         st.altair_chart(

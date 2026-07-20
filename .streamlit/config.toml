@@ -1,15 +1,15 @@
-# Flat charcoal research theme with navy structure, gold accents, and ivory type.
+# Ivory-first research theme with navy data emphasis and restrained gold accents.
 
 [theme]
-base = "dark"
+base = "light"
 primaryColor = "#0A3D62"
-backgroundColor = "#2D3436"
-secondaryBackgroundColor = "#0A3D62"
-codeBackgroundColor = "#2D3436"
-textColor = "#F9F9F9"
-linkColor = "#D4AF37"
-borderColor = "#0A3D62"
-codeTextColor = "#F9F9F9"
+backgroundColor = "#F9F9F9"
+secondaryBackgroundColor = "#F0F3F4"
+codeBackgroundColor = "#EDF1F3"
+textColor = "#2D3436"
+linkColor = "#0A3D62"
+borderColor = "#D8DEE1"
+codeTextColor = "#0A3D62"
 showWidgetBorder = true
 showSidebarBorder = true
 baseRadius = "none"
@@ -26,29 +26,29 @@ headingFontWeights = [700, 600, 600, 600, 500, 500]
 linkUnderline = false
 
 greenColor = "#D4AF37"
-redColor = "#D4AF37"
+redColor = "#8C4A3F"
 yellowColor = "#D4AF37"
-orangeColor = "#D4AF37"
+orangeColor = "#A66F1F"
 blueColor = "#0A3D62"
-violetColor = "#0A3D62"
-grayColor = "#2D3436"
+violetColor = "#506A7C"
+grayColor = "#657179"
 
 chartCategoricalColors = [
     "#0A3D62",
     "#D4AF37",
-    "#F9F9F9",
     "#2D3436",
+    "#7E99AA",
 ]
 
-dataframeBorderColor = "#0A3D62"
-dataframeHeaderBackgroundColor = "#0A3D62"
+dataframeBorderColor = "#D8DEE1"
+dataframeHeaderBackgroundColor = "#E8EEF1"
 
 [theme.sidebar]
-backgroundColor = "#2D3436"
-secondaryBackgroundColor = "#0A3D62"
-codeBackgroundColor = "#2D3436"
-textColor = "#F9F9F9"
-borderColor = "#0A3D62"
+backgroundColor = "#F9F9F9"
+secondaryBackgroundColor = "#F0F3F4"
+codeBackgroundColor = "#EDF1F3"
+textColor = "#2D3436"
+borderColor = "#D8DEE1"
 primaryColor = "#0A3D62"
 
 [browser]
