@@ -1,5 +1,13 @@
 # LinkedIn, profile, resume, and application copy
 
+The current ready-to-publish package is split into three focused files:
+
+- [LinkedIn launch post](linkedin/LINKEDIN_POST.md)
+- [LinkedIn Project entry](linkedin/LINKEDIN_PROJECT.md)
+- [Resume project entry](linkedin/RESUME_ENTRY.md)
+
+Use those files for the final launch. The longer variants below remain available for future applications and role-specific tailoring.
+
 Replace bracketed URL placeholders only after both links work while logged out.
 
 For a plain-English GitHub announcement, repository description, profile-pin copy, and first-release notes, use [GITHUB_LAUNCH_COPY.md](GITHUB_LAUNCH_COPY.md).
