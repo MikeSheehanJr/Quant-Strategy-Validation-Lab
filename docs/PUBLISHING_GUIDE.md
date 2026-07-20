@@ -188,9 +188,9 @@ A public Streamlit Community Cloud app can be indexed by search engines. If you 
 
 Use only screenshots from the completed app. Do not upload the original dashboard reference images.
 
-Recommended screenshots:
+Recommended screenshots are prepared in [linkedin/SCREENSHOT_MANIFEST.md](linkedin/SCREENSHOT_MANIFEST.md):
 
-1. Research brief at approximately 1440×900.
+1. Research brief at 1280×720.
 2. Robustness → Monte Carlo showing distinct simulation paths and the simulation caveat.
 3. Robustness → Parameters showing a frozen-cell heatmap.
 4. Implementation showing the version ledger or reviewed aggregate path.
@@ -233,9 +233,9 @@ Avoid:
 
 ### Recommended launch post
 
-Copy the current draft from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY.md). Before posting:
+Copy the final draft from [linkedin/LINKEDIN_POST.md](linkedin/LINKEDIN_POST.md). Before posting:
 
-1. Replace the GitHub and app placeholders with the actual public URLs.
+1. Confirm the GitHub and app URLs match the public project.
 2. Open both links while logged out.
 3. Use one real screenshot from the live app.
 4. Set post visibility intentionally. Choose **Anyone** only when you want public search and off-network sharing.
@@ -254,9 +254,9 @@ LinkedIn’s current path is:
 1. **Me → View Profile**.
 2. **Add profile section**.
 3. **Recommended → Projects**.
-4. Project name: **Quant strategy validation lab: work in progress**.
+4. Project name: **Quant Strategy Validation Lab**.
 5. Associate it with the most relevant education or experience entry only if that relationship is accurate.
-6. Add the description from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY.md).
+6. Add the description and media fields from [linkedin/LINKEDIN_PROJECT.md](linkedin/LINKEDIN_PROJECT.md).
 7. Use **Add media → Add a link** for the GitHub repository or live app.
 8. Save.
 
@@ -311,7 +311,7 @@ GitHub: [repository] | Live demo: [app]
 - State the safety architecture if applying to engineering-oriented roles.
 - Keep the WIP status until forward validation is complete.
 
-Copy the role-specific bullet options from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY.md).
+Use the recommended entry from [linkedin/RESUME_ENTRY.md](linkedin/RESUME_ENTRY.md), or copy a role-specific variant from [PROFILE_AND_RESUME_COPY.md](PROFILE_AND_RESUME_COPY.md).
 
 ### Resume link QA
 
