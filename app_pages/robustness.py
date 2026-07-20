@@ -366,8 +366,9 @@ elif view == "Parameters":
     with st.container(border=True):
         st.subheader(surface_name)
         st.caption(
-            "Four flat color bands rank the selected metric from low to high. The outlined "
-            "diamond marks the frozen cell; tooltips retain trade count and win rate."
+            "Each metric uses one dedicated light to dark color scale. Daily Sharpe is gold, "
+            "profit factor is blue, and net P&L is charcoal. The outlined diamond marks the "
+            "frozen cell; tooltips retain trade count and win rate."
         )
         st.altair_chart(
             parameter_surface_heatmap(

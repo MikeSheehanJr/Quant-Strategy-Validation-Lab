@@ -141,32 +141,45 @@ def test_gate_sensitivity_lines_have_no_point_nodes():
     assert "point" not in spec["layer"][0]["mark"]
 
 
-def test_execution_heatmaps_use_four_flat_color_bands():
+def test_execution_heatmaps_use_distinct_metric_gradients():
     snapshot = load_snapshot()
     execution = execution_frame(snapshot)
-    expected = ["#E6EEF2", "#A9BEC9", "#D4AF37", "#0A3D62"]
+    expected = {
+        "profit_factor": ["#E6EEF2", "#0A3D62"],
+        "daily_sharpe": ["#FBF4D7", "#D4AF37"],
+        "net_pnl_usd": ["#F0F3F4", "#2D3436"],
+    }
 
-    for metric in ("profit_factor", "daily_sharpe", "net_pnl_usd"):
+    for metric, palette in expected.items():
         spec = execution_heatmap(execution, metric).to_dict()
         color = spec["layer"][0]["encoding"]["color"]
-        assert color["field"] == "metric_band"
-        assert color["type"] == "nominal"
-        assert color["scale"]["range"] == expected
-        assert "gradient" not in json.dumps(spec).lower()
+        assert color["field"] == metric
+        assert color["type"] == "quantitative"
+        assert color["scale"]["range"] == palette
+        assert color["legend"]["gradientLength"] == 220
+        assert color["legend"]["gradientThickness"] == 10
 
 
-def test_parameter_surface_uses_the_same_flat_band_language():
+def test_parameter_surface_uses_distinct_metric_gradients():
     snapshot = load_snapshot()
     frame = parameter_surface_frame(snapshot, "reward_risk_x_filter_drop")
-    spec = parameter_surface_heatmap(
-        frame,
-        x_field="filter_drop_pct",
-        y_field="reward_risk",
-        x_title="Filter drop (%)",
-        y_title="Reward:risk",
-        metric="daily_sharpe",
-    ).to_dict()
-    color = spec["layer"][0]["encoding"]["color"]
-    assert color["field"] == "metric_band"
-    assert color["scale"]["range"] == ["#E6EEF2", "#A9BEC9", "#D4AF37", "#0A3D62"]
-    assert "gradient" not in json.dumps(spec).lower()
+    expected = {
+        "profit_factor": (["#E6EEF2", "#0A3D62"], "#D4AF37"),
+        "daily_sharpe": (["#FBF4D7", "#D4AF37"], "#2D3436"),
+        "net_pnl_usd": (["#F0F3F4", "#2D3436"], "#D4AF37"),
+    }
+
+    for metric, (palette, marker_color) in expected.items():
+        spec = parameter_surface_heatmap(
+            frame,
+            x_field="filter_drop_pct",
+            y_field="reward_risk",
+            x_title="Filter drop (%)",
+            y_title="Reward:risk",
+            metric=metric,
+        ).to_dict()
+        color = spec["layer"][0]["encoding"]["color"]
+        assert color["field"] == metric
+        assert color["type"] == "quantitative"
+        assert color["scale"]["range"] == palette
+        assert spec["layer"][2]["mark"]["stroke"] == marker_color
