@@ -25,6 +25,7 @@ pine_backtests = load_pinescript_backtests()
 pine_monthly = pine_backtests["monthly"]
 pine_windows = pine_backtests["windows"]
 pine_qa = pine_backtests["qa"]
+pine_qa_display = pine_qa.loc[pine_qa["check"] != "source_sha256"].copy()
 pine_versions = pine_manifest["versions"]
 current_version = next(version for version in pine_versions if version["current"])
 full_export = pine_windows.loc[pine_windows["window"] == "Full export"].iloc[0]
@@ -53,7 +54,6 @@ lineage = pd.DataFrame(
 )
 with st.container(border=True, key="implementation_lineage"):
     st.subheader("Research lineage")
-    st.badge("Separate evidence tracks", icon=":material/call_split:", color="blue")
     st.dataframe(
         lineage,
         hide_index=True,
@@ -68,7 +68,11 @@ with st.container(horizontal=True, gap="small"):
     st.metric("Versioned source files", f"{len(pine_versions)}", border=True)
     st.metric("Current build", current_version["version"], border=True)
     st.metric("Reviewed MNQ trades", f"{int(full_export['trades']):,}", border=True)
-    st.metric("Structural QA checks", f"{len(pine_qa)}/{len(pine_qa)}", border=True)
+    st.metric(
+        "Structural QA checks",
+        f"{len(pine_qa_display)}/{len(pine_qa_display)}",
+        border=True,
+    )
 
 script_flow = pd.DataFrame(
     [
@@ -149,13 +153,6 @@ version_review = pd.DataFrame(
         {"Field": "Research rationale", "Review record": selected_version["why"]},
         {"Field": "Known limitation", "Review record": selected_version["known_limitations"]},
         {"Field": "Evidence state", "Review record": selected_version["evidence_status"]},
-        {
-            "Field": "Source identity",
-            "Review record": (
-                f"{selected_version['line_count']:,} lines · SHA-256 "
-                f"{selected_version['sha256'][:16]}…"
-            ),
-        },
     ]
 )
 with st.container(border=True, key="version_review"):
@@ -185,7 +182,7 @@ with st.container(border=True, key="pine_evidence_summary"):
     st.subheader("Reviewed v4.1 MNQ backtest evidence")
     st.caption(
         "These aggregates derive from the July 16, 2026 TradingView List of Trades export. "
-        "The source trade list is pinned by hash but not published; timestamps, prices, "
+        "The source trade list is retained privately; timestamps, prices, "
         "quantities, and individual outcomes remain outside the release boundary."
     )
     with st.container(horizontal=True, gap="small"):
@@ -233,9 +230,9 @@ with st.container(border=True, key="backtest_windows"):
         "rows are descriptive diagnostics, not independent out of sample tests."
     )
 
-with st.expander("Export QA and provenance", icon=":material/fact_check:"):
+with st.expander("Export QA", icon=":material/fact_check:"):
     st.dataframe(
-        pine_qa,
+        pine_qa_display,
         hide_index=True,
         column_config={
             "check": st.column_config.TextColumn("Check", pinned=True),
@@ -251,11 +248,16 @@ with st.container(border=True, key="aggregate_downloads"):
         for key, label in (
             ("monthly", "Monthly backtest CSV"),
             ("windows", "Window summary CSV"),
-            ("qa", "QA and provenance CSV"),
+            ("qa", "QA summary CSV"),
         ):
+            download_data = (
+                pine_qa_display.to_csv(index=False).encode("utf-8")
+                if key == "qa"
+                else evidence_bytes(key)
+            )
             st.download_button(
                 label,
-                data=evidence_bytes(key),
+                data=download_data,
                 file_name=BACKTEST_FILES[key].name,
                 mime="text/csv",
                 key=f"download_pine_{key}",
@@ -268,42 +270,42 @@ review_boundary = pd.DataFrame(
         {
             "Area": "Acceptance",
             "Item": "Wrong symbol and timeframe lock",
-            "State": ":gray-badge[Open]",
+            "State": "Open",
         },
         {
             "Area": "Acceptance",
             "Item": "Normal session replay and fixed TP / SL markers",
-            "State": ":gray-badge[Open]",
+            "State": "Open",
         },
         {
             "Area": "Acceptance",
             "Item": "Registered half day replay",
-            "State": ":gray-badge[Open]",
+            "State": "Open",
         },
         {
             "Area": "Acceptance",
             "Item": "One observation alert per eligible signal",
-            "State": ":gray-badge[Open]",
+            "State": "Open",
         },
         {
             "Area": "Acceptance",
             "Item": "Forward decision rule registered before collection",
-            "State": ":gray-badge[Open]",
+            "State": "Open",
         },
         {
             "Area": "Release boundary",
             "Item": "Licensed intraday bars and full trade exports",
-            "State": ":blue-badge[Private]",
+            "State": "Private",
         },
         {
             "Area": "Release boundary",
             "Item": "Signal timestamps, prices, and quantities",
-            "State": ":blue-badge[Private]",
+            "State": "Private",
         },
         {
             "Area": "Release boundary",
             "Item": "Broker, account, execution, and credentials",
-            "State": ":blue-badge[Excluded]",
+            "State": "Excluded",
         },
     ]
 )
@@ -316,6 +318,6 @@ with st.container(border=True, key="implementation_review_boundary"):
         column_config={
             "Area": st.column_config.TextColumn("Area", pinned=True, width="small"),
             "Item": st.column_config.TextColumn("Control or boundary", width="large"),
-            "State": st.column_config.MarkdownColumn("State", width="small"),
+            "State": st.column_config.TextColumn("State", width="small"),
         },
     )

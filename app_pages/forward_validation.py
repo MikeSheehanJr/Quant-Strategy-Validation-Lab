@@ -17,7 +17,7 @@ evidence = status["evidence"]
 render_page_header(
     "Prospective research protocol",
     "Forward validation",
-    "This is the version locked paper forward protocol I’ll use for the current Pine "
+    "This is the fixed paper forward protocol I’ll use for the current Pine "
     "companion build. Evidence state comes first; performance comes only after observation.",
 )
 
@@ -37,7 +37,6 @@ protocol_contract = pd.DataFrame(
             "Control": "Frozen source",
             "Commitment": f"{candidate['version']} · {candidate['freeze_date']}",
         },
-        {"Control": "Source SHA-256", "Commitment": candidate["source_sha256"]},
         {"Control": "Reporting cadence", "Commitment": reporting["cadence"]},
         {"Control": "Minimum delay", "Commitment": reporting["minimum_delay"]},
         {"Control": "Reported grain", "Commitment": reporting["granularity"]},
@@ -46,7 +45,7 @@ protocol_contract = pd.DataFrame(
 )
 with st.container(border=True, key="forward_contract"):
     st.subheader("Forward test contract")
-    st.caption("The version lock and reporting boundary form one auditable specification.")
+    st.caption("The fixed rules and reporting boundary form one clear specification.")
     st.dataframe(
         protocol_contract,
         hide_index=True,
@@ -58,14 +57,14 @@ with st.container(border=True, key="forward_contract"):
 
 render_section_header(
     "Protocol",
-    "The frozen build, private reconciliation, and delayed aggregate reporting form one chain.",
+    "The fixed build, private reconciliation, and delayed aggregate reporting form one chain.",
     key="forward_protocol",
 )
 protocol_col, correction_col, report_col = st.columns(3, gap="small")
 with protocol_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("01 / FREEZE")
-        st.subheader("Hash before observation")
+        st.subheader("Freeze rules before observation")
         st.write("Rule changes create a new version.")
 with correction_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
