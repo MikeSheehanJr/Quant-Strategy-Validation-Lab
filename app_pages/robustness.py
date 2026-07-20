@@ -11,7 +11,7 @@ from src.charts import (
     execution_heatmap,
     gate_sensitivity_chart,
     monthly_pnl_distribution,
-    monte_carlo_fan,
+    monte_carlo_paths,
     parameter_surface_heatmap,
     rr_sensitivity,
     terminal_distribution,
@@ -59,7 +59,7 @@ render_page_header(
     "Historical research diagnostics",
     "Robustness",
     "I use four complementary lenses to look for fragility in the historical result. I’m "
-    "trying to learn where the strategy breaks—not turn the sample into a forecast.",
+    "trying to learn where the strategy breaks. I am not turning the sample into a forecast.",
 )
 
 with st.container(border=True, key="robustness_switcher"):
@@ -77,7 +77,7 @@ if view == "Historical risk":
 
     render_section_header(
         "Historical risk snapshot",
-        f"These dollar-based diagnostics cover {risk['sample_months']} complete months. "
+        f"These dollar based diagnostics cover {risk['sample_months']} complete months. "
         "Partial edge months are excluded.",
         key="historical_risk",
     )
@@ -98,7 +98,7 @@ if view == "Historical risk":
     distribution_col, tail_col = st.columns([1.5, 1], gap="small")
     with distribution_col:
         with st.container(border=True):
-            st.subheader("Complete-month P&L distribution")
+            st.subheader("Complete month P&L distribution")
             st.caption(
                 "This histogram covers 59 complete monthly aggregates; the rule marks zero."
             )
@@ -164,8 +164,8 @@ elif view == "Monte Carlo":
     with st.container(border=True, key="monte_carlo_controls"):
         st.subheader("Aggregate monthly Monte Carlo")
         st.caption(
-            "This moving-block bootstrap resamples complete monthly P&L. Contiguous blocks "
-            "preserve limited month-to-month dependence; the output is a stress distribution, "
+            "This moving block bootstrap resamples complete monthly P&L. Contiguous blocks "
+            "preserve limited dependence between months; the output is a stress distribution, "
             "not a forecast."
         )
         control_left, control_mid, control_right = st.columns(3, gap="small")
@@ -219,12 +219,13 @@ elif view == "Monte Carlo":
         )
 
     with st.container(border=True):
-        st.subheader("Cumulative P&L percentile fan")
+        st.subheader("Cumulative P&L simulation paths")
         st.caption(
-            f"{paths:,} paths · {horizon_months}-month horizon · {block_months}-month "
-            "moving blocks · fixed seed 2026 · one contract."
+            f"{min(paths, 180):,} representative lines from {paths:,} simulations · "
+            f"{horizon_months}-month horizon · {block_months}-month moving blocks · "
+            "fixed seed 2026 · one contract. Every simulation informs the metrics above."
         )
-        st.altair_chart(monte_carlo_fan(fan))
+        st.altair_chart(monte_carlo_paths(simulated_paths, fan))
 
     terminal_col, drawdown_col = st.columns([1.05, 1], gap="small")
     with terminal_col:
@@ -242,12 +243,12 @@ elif view == "Monte Carlo":
         [
             {
                 "Question": "Sequence uncertainty",
-                "Treatment": "Reorder complete-month P&L in contiguous blocks",
+                "Treatment": "Reorder complete month P&L in contiguous blocks",
                 "Boundary": "Observed monthly distribution only",
             },
             {
                 "Question": "Path and terminal dispersion",
-                "Treatment": "Display percentile paths and maximum drawdown",
+                "Treatment": "Display distinct simulation paths and maximum drawdown",
                 "Boundary": "No intramonth execution path",
             },
             {
@@ -286,7 +287,7 @@ elif view == "Parameters":
             "x": "reward_risk",
             "y": "opening_range_minutes",
             "x_title": "Reward:risk target",
-            "y_title": "Opening-range length (minutes)",
+            "y_title": "Opening range length (minutes)",
         },
         "Filter strength × lookback": {
             "key": "filter_drop_x_lookback",
@@ -305,7 +306,7 @@ elif view == "Parameters":
     render_section_header(
         "Reviewed parameter atlas",
         "A five-minute execution audit around the frozen specification. This is stability "
-        "analysis—not permission to adopt the best full-sample cell.",
+        "analysis. It is not permission to adopt the best full-sample cell.",
         key="parameter_atlas",
     )
     frozen_specification = pd.DataFrame(
@@ -377,20 +378,20 @@ elif view == "Parameters":
         with st.container(border=True):
             st.subheader("Reward:risk sensitivity")
             st.caption(
-                "The 1.0 setting remains frozen; I did not adopt higher-P&L settings from the "
+                "The 1.0 setting remains frozen; I did not adopt settings with higher P&L from the "
                 "full sample."
             )
             st.altair_chart(rr_sensitivity(rr))
     with gate_col:
         with st.container(border=True):
-            st.subheader("Trend-gate sensitivity")
+            st.subheader("Trend gate sensitivity")
             st.caption(
                 "SMA and EMA variants share the same audit lens; the vertical rule marks SMA50."
             )
             st.altair_chart(gate_sensitivity_chart(gates, metric_field))
 
     with st.container(border=True):
-        st.subheader("Entry-window cutoff sensitivity")
+        st.subheader("Entry window cutoff sensitivity")
         st.caption(
             "Earlier cutoffs reduce opportunity count. The open session is the frozen "
             "specification and uses full opacity."
@@ -409,9 +410,9 @@ else:
     )
     with st.container(horizontal=True, gap="small"):
         st.metric("Displayed execution cells", f"{len(execution)}/12", border=True)
-        st.metric("Profit-factor range", f"{pf_min:.3f}–{pf_max:.3f}", border=True)
+        st.metric("Profit factor range", f"{pf_min:.3f}–{pf_max:.3f}", border=True)
         st.metric("Daily Sharpe range", f"{sharpe_min:.2f}–{sharpe_max:.2f}", border=True)
-        st.metric("Profitable cost-stress cells", "24/24", border=True)
+        st.metric("Profitable cost stress cells", "24/24", border=True)
 
     with st.container(border=True):
         st.subheader("Execution stress matrix")
@@ -428,7 +429,7 @@ else:
         }[metric]
         st.caption(
             "The matrix crosses fill resolution with modeled slippage under a $1.20 "
-            "round-turn commission."
+            "round turn commission."
         )
         st.altair_chart(execution_heatmap(execution, metric_field))
 

@@ -17,7 +17,7 @@ evidence = status["evidence"]
 render_page_header(
     "Prospective research protocol",
     "Forward validation",
-    "This is the version-locked paper-forward protocol I’ll use for the current Pine "
+    "This is the version locked paper forward protocol I’ll use for the current Pine "
     "companion build. Evidence state comes first; performance comes only after observation.",
 )
 
@@ -45,7 +45,7 @@ protocol_contract = pd.DataFrame(
     ]
 )
 with st.container(border=True, key="forward_contract"):
-    st.subheader("Forward-test contract")
+    st.subheader("Forward test contract")
     st.caption("The version lock and reporting boundary form one auditable specification.")
     st.dataframe(
         protocol_contract,
@@ -92,7 +92,7 @@ schema = pd.DataFrame(
 with st.container(border=True, key="forward_schema"):
     st.subheader("Planned monthly research record")
     st.caption(
-        "This is the intended aggregate schema—not observed data. No performance row is "
+        "This is the intended aggregate schema, not observed data. No performance row is "
         "created until a complete month has been reconciled."
     )
     st.dataframe(

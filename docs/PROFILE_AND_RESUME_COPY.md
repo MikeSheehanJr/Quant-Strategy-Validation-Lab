@@ -12,7 +12,7 @@ It is called **Quant Strategy Validation Lab**, and it is still a work in progre
 
 I started with a deliberately simple question:
 
-**Can an intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and skeptical review—not just produce a good-looking equity curve?**
+**Can an intraday strategy survive realistic costs, out of sample testing, parameter perturbation, and skeptical review, not just produce a good looking equity curve?**
 
 The current case study evaluates a 30-minute opening-range breakout on MNQ. In the historical June 2021–June 2026 research sample, the frozen specification produced 729 cost-adjusted trades, a 58.8% win rate, and a 1.315 profit factor. Those are research-sample results, not expected returns.
 
@@ -54,7 +54,7 @@ Demo: [APP_URL]
 
 ### Project name
 
-Quant strategy validation lab — work in progress
+Quant strategy validation lab: work in progress
 
 ### Description
 
@@ -80,7 +80,7 @@ Work-in-progress robustness-first quant research dashboard with aggregate-only d
 
 A work-in-progress research lab showing how a simple intraday strategy was tested for lookahead, multiple testing, out-of-sample stability, execution sensitivity, and failure modes.
 
-## Resume entry — balanced quant/research version
+## Resume entry: balanced quant and research version
 
 **Quant Strategy Validation Lab (Work in Progress)** | Python, pandas, Altair, Streamlit, pytest  
 [GITHUB_URL] | [APP_URL]
@@ -89,7 +89,7 @@ A work-in-progress research lab showing how a simple intraday strategy was teste
 - Applied lookahead reconstruction, combinatorial purged cross-validation, permutation tests, multiple-testing controls, and execution/parameter stress matrices; documented rejected hypotheses and unresolved limitations.
 - Developed a public-safe Streamlit dashboard and aggregate data contract with pytest, GitHub Actions, source hashes, and release checks that exclude licensed raw data, trade-level records, secrets, and local paths.
 
-## Resume entry — quant developer version
+## Resume entry: quant developer version
 
 **Quant Strategy Validation Lab (Work in Progress)** | Python, Streamlit, pandas, Altair, pytest, GitHub Actions  
 [GITHUB_URL] | [APP_URL]
@@ -98,7 +98,7 @@ A work-in-progress research lab showing how a simple intraday strategy was teste
 - Packaged reviewed backtest outputs into a versioned aggregate-only JSON artifact with source hashes and reconciliation tests, keeping licensed intraday and trade-level data outside the public boundary.
 - Implemented interactive execution-cost and parameter-sensitivity diagnostics for 729 historical trades, plus a fail-closed release scanner for secrets, local paths, oversized files, and prohibited market-data formats.
 
-## Resume entry — data science version
+## Resume entry: data science version
 
 **Quant Strategy Validation Lab (Work in Progress)** | Python, pandas, statistical validation, Altair, Streamlit  
 [GITHUB_URL] | [APP_URL]
@@ -121,13 +121,13 @@ WIP quant research dashboard: adversarial validation, aggregate-only data, teste
 
 ## Recruiter message
 
-Hi [NAME] — I’m building a work-in-progress quant research portfolio project focused on robustness rather than headline backtest performance. It includes purged cross-validation, permutation and execution stress testing, a public-safe Streamlit app, and a documented failure journal. I thought it might be relevant to the [ROLE] position: [GITHUB_URL]
+Hi [NAME], I’m building a quant research portfolio project that is still in progress and focuses on robustness rather than headline backtest performance. It includes purged cross validation, permutation and execution stress testing, a public safe Streamlit app, and a documented failure journal. I thought it might be relevant to the [ROLE] position: [GITHUB_URL]
 
-## Interview explanation — 30 seconds
+## Interview explanation: 30 seconds
 
 I used a simple intraday futures strategy as a case study, but the project is really about research discipline. I rebuilt the inputs to check lookahead, used purged combinatorial splits and permutation tests, stressed execution and parameter choices, and published only aggregate outputs through a tested Streamlit app. I also show what failed and what evidence is still missing.
 
-## Interview explanation — two minutes
+## Interview explanation: two minutes
 
 The strategy case study is a 30-minute MNQ opening-range breakout with one trade per session and explicit costs. The historical sample has 729 trades, but I did not treat the headline result as the conclusion. I built a validation battery around it: independent lookahead reconstruction, probabilistic and deflated Sharpe analysis, combinatorial purged cross-validation with an embargo, permutation tests, and execution/parameter stress surfaces. Several seemingly attractive improvements were rejected because they failed out of sample.
 

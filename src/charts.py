@@ -297,36 +297,82 @@ def rr_sensitivity(rr: pd.DataFrame) -> alt.Chart:
     return _base(curve + frozen, height=300)
 
 
-def monte_carlo_fan(fan: pd.DataFrame) -> alt.Chart:
-    """Nested percentile bands for cumulative block-bootstrap P&L."""
+def monte_carlo_paths(
+    paths: pd.DataFrame,
+    fan: pd.DataFrame,
+    *,
+    max_display_paths: int = 180,
+) -> alt.Chart:
+    """Show distinct cumulative bootstrap paths with the full sample median."""
 
-    outer = (
-        alt.Chart(fan)
-        .mark_area(color=NAVY, opacity=0.14)
+    required = {
+        "path_id",
+        "cumulative_pnl_path",
+    }
+    if missing := required.difference(paths.columns):
+        raise ValueError(f"Missing Monte Carlo path columns: {sorted(missing)}")
+    if max_display_paths < 1:
+        raise ValueError("max_display_paths must be positive")
+
+    path_count = len(paths)
+    display_count = min(path_count, max_display_paths)
+    if display_count == 1:
+        positions = [0]
+    else:
+        positions = sorted(
+            {
+                round(index * (path_count - 1) / (display_count - 1))
+                for index in range(display_count)
+            }
+        )
+
+    trajectory_rows: list[dict[str, float | int]] = []
+    for row in paths.iloc[positions].itertuples(index=False):
+        trajectory_rows.extend(
+            {
+                "path_id": int(row.path_id),
+                "month": month,
+                "cumulative_pnl_usd": float(value),
+            }
+            for month, value in enumerate(row.cumulative_pnl_path)
+        )
+    trajectories = pd.DataFrame(trajectory_rows)
+
+    individual_paths = (
+        alt.Chart(trajectories)
+        .mark_line(color=LIGHT_BLUE, opacity=0.28, strokeWidth=0.8)
         .encode(
             x=alt.X("month:Q", title="Simulated month", scale=alt.Scale(zero=True)),
-            y=alt.Y("p05:Q", title="Cumulative P&L per contract (USD)"),
-            y2="p95:Q",
+            y=alt.Y(
+                "cumulative_pnl_usd:Q",
+                title="Cumulative P&L per contract (USD)",
+            ),
+            detail=alt.Detail("path_id:N"),
             tooltip=[
+                alt.Tooltip("path_id:N", title="Simulation path"),
                 alt.Tooltip("month:Q", title="Month"),
-                alt.Tooltip("p05:Q", title="P05", format="$,.0f"),
-                alt.Tooltip("p50:Q", title="Median", format="$,.0f"),
-                alt.Tooltip("p95:Q", title="P95", format="$,.0f"),
+                alt.Tooltip(
+                    "cumulative_pnl_usd:Q",
+                    title="Cumulative P&L",
+                    format="$,.0f",
+                ),
             ],
         )
     )
-    inner = (
-        alt.Chart(fan)
-        .mark_area(color=GOLD, opacity=0.20)
-        .encode(x="month:Q", y="p25:Q", y2="p75:Q")
-    )
     median = (
         alt.Chart(fan)
-        .mark_line(color=NAVY, strokeWidth=2.8)
-        .encode(x="month:Q", y="p50:Q")
+        .mark_line(color=GOLD, strokeWidth=3.0)
+        .encode(
+            x="month:Q",
+            y="p50:Q",
+            tooltip=[
+                alt.Tooltip("month:Q", title="Month"),
+                alt.Tooltip("p50:Q", title="Median", format="$,.0f"),
+            ],
+        )
     )
     zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=CHARCOAL, opacity=0.42).encode(y="y:Q")
-    return _base(outer + inner + median + zero, height=360)
+    return _base(individual_paths + median + zero, height=390)
 
 
 def terminal_distribution(paths: pd.DataFrame, summary: dict[str, float | int]) -> alt.Chart:

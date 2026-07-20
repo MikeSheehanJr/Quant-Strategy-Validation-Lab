@@ -22,8 +22,8 @@ def test_default_research_brief_renders():
     assert app.title[0].value == "Quant strategy validation lab"
     assert any(item.value == "How I’m testing the idea" for item in app.subheader)
     assert any(item.value == "Historical research path" for item in app.subheader)
-    assert any(metric.label == "Cost-adjusted trades" for metric in app.metric)
-    assert any("AI-assisted passion project" in item.value for item in app.caption)
+    assert any(metric.label == "Cost adjusted trades" for metric in app.metric)
+    assert any("AI assisted passion project" in item.value for item in app.caption)
     assert has_material_work_status(app)
 
 
@@ -43,7 +43,7 @@ def test_robustness_views_render():
 
     app.segmented_control[0].set_value("Validation").run()
     assert not app.exception
-    assert any(metric.label == "Profitable cost-stress cells" for metric in app.metric)
+    assert any(metric.label == "Profitable cost stress cells" for metric in app.metric)
 
 
 def test_implementation_page_renders():
@@ -64,6 +64,6 @@ def test_forward_page_states_that_evidence_has_not_started():
         metric.label == "Forward observations" and metric.value == "0"
         for metric in app.metric
     )
-    assert any(item.value == "Forward-test contract" for item in app.subheader)
+    assert any(item.value == "Forward test contract" for item in app.subheader)
     assert not any(metric.label == "Evidence state" for metric in app.metric)
     assert any(item.value == "Next required gate" for item in app.subheader)

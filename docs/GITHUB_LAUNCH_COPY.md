@@ -8,7 +8,7 @@ AI-assisted quant research passion project focused on whether a simple strategy 
 
 ## GitHub profile pin description
 
-I built this AI-assisted passion project to show the research process behind a backtest—not just the final equity curve. It combines skeptical validation, an aggregate-only public data boundary, interactive Monte Carlo and parameter testing, automated tests, and release security checks.
+I built this AI assisted passion project to show the research process behind a backtest, not just the final equity curve. It combines skeptical validation, an aggregate only public data boundary, interactive Monte Carlo and parameter testing, automated tests, and release security checks.
 
 ## Launch post
 
@@ -32,7 +32,7 @@ This is a research and software-engineering demonstration, not investment advice
 
 ## First release notes
 
-### v0.1.0 — public work-in-progress release
+### v0.1.0: public work in progress release
 
 - Reorganized the app into four focused pages: research brief, robustness, implementation evidence, and forward validation
 - Added a hash-pinned forward-validation status that explicitly reports zero observations and no forward conclusion
@@ -44,7 +44,7 @@ This is a research and software-engineering demonstration, not investment advice
 
 ## Social-preview caption
 
-Quant Strategy Validation Lab — an AI-assisted passion project about testing robustness, documenting failures, and publishing evidence responsibly.
+Quant Strategy Validation Lab: an AI assisted passion project about testing robustness, documenting failures, and publishing evidence responsibly.
 
 ## Language guardrails
 

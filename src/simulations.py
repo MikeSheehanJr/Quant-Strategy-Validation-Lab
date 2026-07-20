@@ -66,6 +66,7 @@ def monthly_block_bootstrap(
             "path_id": np.arange(1, paths + 1),
             "terminal_pnl_usd": terminal,
             "max_drawdown_usd": max_drawdown,
+            "cumulative_pnl_path": cumulative.tolist(),
         }
     )
     terminal_p05 = float(np.quantile(terminal, 0.05))
