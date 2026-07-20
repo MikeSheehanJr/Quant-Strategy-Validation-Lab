@@ -2,79 +2,40 @@
 
 from __future__ import annotations
 
-import base64
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 import streamlit as st
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-BACKGROUND_ASSET = PROJECT_ROOT / "assets" / "research-glass-grain-v2.png"
-
-
-@lru_cache(maxsize=1)
-def background_data_uri() -> str:
-    """Return the reviewed local background as an inline, network-free asset."""
-
-    encoded = base64.b64encode(BACKGROUND_ASSET.read_bytes()).decode("ascii")
-    return f"data:image/png;base64,{encoded}"
-
-
 @lru_cache(maxsize=1)
 def visual_css() -> str:
-    """Build the static liquid-glass CSS used by every routed app page."""
+    """Build the flat, four-color visual system used by every routed app page."""
 
-    css = """
+    return """
 <style>
 :root {
-    --qsvl-navy: #003049;
-    --qsvl-navy-deep: #001722;
-    --qsvl-red: #D62828;
-    --qsvl-orange: #F77F00;
-    --qsvl-gold: #FCBF49;
-    --qsvl-cream: #EAE2B7;
-    --qsvl-text-bright: #F4EED6;
-    --qsvl-text-muted: #B8C6C4;
+    --qsvl-charcoal: #2D3436;
+    --qsvl-navy: #0A3D62;
+    --qsvl-gold: #D4AF37;
+    --qsvl-ivory: #F9F9F9;
     --qsvl-space: clamp(0.78rem, 1.25vw, 1rem);
-    --qsvl-radius: 0.4rem;
-    --qsvl-glass: rgba(0, 31, 46, 0.44);
-    --qsvl-glass-hover: rgba(0, 31, 46, 0.62);
-    --qsvl-glass-strong: rgba(0, 32, 47, 0.78);
-    --qsvl-border: rgba(234, 226, 183, 0.12);
-    --qsvl-border-hover: rgba(234, 226, 183, 0.24);
-    --qsvl-shadow: 0 8px 24px rgba(0, 8, 14, 0.18);
-    --qsvl-gradient-warm: linear-gradient(
-        90deg,
-        var(--qsvl-red),
-        var(--qsvl-orange),
-        var(--qsvl-gold),
-        var(--qsvl-cream)
-    );
-    --qsvl-gradient-cool: linear-gradient(
-        145deg,
-        rgba(0, 48, 73, 0.60),
-        rgba(234, 226, 183, 0.04)
-    );
+    --qsvl-glass: rgba(10, 61, 98, 0.26);
+    --qsvl-glass-strong: rgba(10, 61, 98, 0.44);
+    --qsvl-border: rgba(249, 249, 249, 0.15);
+    --qsvl-border-focus: rgba(212, 175, 55, 0.58);
+    --qsvl-muted: rgba(249, 249, 249, 0.66);
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 html,
 body,
-[data-testid="stApp"] {
-    background: var(--qsvl-navy-deep);
-}
-
+[data-testid="stApp"],
 [data-testid="stAppViewContainer"] {
-    background-color: var(--qsvl-navy-deep);
-    background-image:
-        linear-gradient(180deg, rgba(0, 12, 19, 0.30), rgba(0, 16, 25, 0.66)),
-        linear-gradient(90deg, rgba(0, 48, 73, 0.12), rgba(0, 16, 25, 0.18)),
-        url("__BACKGROUND_DATA_URI__");
-    background-position: center, center, center top;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
+    background: var(--qsvl-charcoal);
 }
 
 [data-testid="stMain"] {
@@ -84,11 +45,11 @@ body,
 header[data-testid="stHeader"] {
     min-height: 4.75rem;
     height: 4.75rem;
-    background: rgba(0, 20, 31, 0.72);
-    border-bottom: 1px solid rgba(234, 226, 183, 0.13);
-    box-shadow: 0 12px 34px rgba(0, 8, 14, 0.24);
-    -webkit-backdrop-filter: blur(24px) saturate(135%);
-    backdrop-filter: blur(24px) saturate(135%);
+    background: rgba(45, 52, 54, 0.90);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.42);
+    box-shadow: none;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
 }
 
 [data-testid="stToolbar"] {
@@ -111,13 +72,9 @@ header button[data-testid="stBaseButton-header"]:has(
     padding: 0.62rem 0.95rem;
     gap: 0.48rem;
     border: 1px solid transparent;
-    border-radius: var(--qsvl-radius);
-    color: rgba(234, 226, 183, 0.78);
-    transition:
-        color 180ms ease,
-        background-color 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease;
+    border-radius: 0;
+    color: rgba(249, 249, 249, 0.72);
+    transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
 }
 
 [data-testid="stTopNavLink"] p {
@@ -131,18 +88,15 @@ header button[data-testid="stBaseButton-header"]:has(
 }
 
 [data-testid="stTopNavLink"]:hover {
-    color: var(--qsvl-cream);
-    background: rgba(234, 226, 183, 0.07);
-    border-color: rgba(234, 226, 183, 0.15);
+    color: var(--qsvl-ivory);
+    background: rgba(10, 61, 98, 0.46);
+    border-color: rgba(249, 249, 249, 0.16);
 }
 
 [data-testid="stTopNavLink"][aria-current="page"] {
-    color: var(--qsvl-cream);
-    background: rgba(234, 226, 183, 0.08);
-    border-color: rgba(234, 226, 183, 0.26);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        0 4px 14px rgba(0, 8, 14, 0.18);
+    color: var(--qsvl-ivory);
+    background: var(--qsvl-navy);
+    border-color: var(--qsvl-gold);
 }
 
 [data-testid="stMainBlockContainer"] {
@@ -163,42 +117,42 @@ header button[data-testid="stBaseButton-header"]:has(
 
 .st-key-page_header {
     position: relative;
-    overflow: hidden;
-    margin-bottom: 0.3rem;
-    padding-right: 4.25rem;
-    border-radius: var(--qsvl-radius);
+    margin-bottom: 0.5rem;
+    padding: 1.1rem 4.25rem 1.15rem 1.25rem;
+    border: 0 !important;
+    border-left: 3px solid var(--qsvl-gold);
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
-.st-key-page_header::before {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    right: 1.5rem;
-    left: 1.5rem;
-    height: 1px;
-    content: "";
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(252, 191, 73, 0.62),
-        rgba(247, 127, 0, 0.42),
-        rgba(234, 226, 183, 0.28),
-        transparent
-    );
-    pointer-events: none;
+.st-key-page_header:hover {
+    border-color: transparent !important;
+    border-left-color: var(--qsvl-gold) !important;
+    background: transparent !important;
+}
+
+.st-key-page_header > [data-testid="stVerticalBlock"] {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 .st-key-page_header h1 {
     max-width: 20ch;
-    color: var(--qsvl-text-bright);
+    color: var(--qsvl-ivory);
     letter-spacing: -0.035em;
     line-height: 1.04;
     text-wrap: balance;
 }
 
 .st-key-page_header [data-testid="stCaptionContainer"] p {
+    color: var(--qsvl-gold);
     letter-spacing: 0.14em;
-    color: rgba(234, 226, 183, 0.68);
 }
 
 .st-key-page_header > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"]:last-child {
@@ -206,12 +160,12 @@ header button[data-testid="stBaseButton-header"]:has(
 }
 
 [data-testid="stCaptionContainer"] p {
-    color: var(--qsvl-text-muted);
+    color: var(--qsvl-muted);
 }
 
 h2,
 h3 {
-    color: var(--qsvl-text-bright);
+    color: var(--qsvl-ivory);
     letter-spacing: -0.018em;
 }
 
@@ -242,6 +196,11 @@ h3 {
     line-height: 1;
 }
 
+.st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
+    color: var(--qsvl-gold);
+    font-size: 2rem !important;
+}
+
 .st-key-research_context [data-testid="stMarkdownContainer"] p,
 .st-key-app_footer [data-testid="stCaptionContainer"] p {
     margin: 0;
@@ -249,142 +208,128 @@ h3 {
 
 .st-key-research_context {
     min-height: 3.25rem;
-    padding: 0 0.95rem !important;
     display: flex;
     flex-direction: column;
     justify-content: center !important;
+    border-left: 3px solid var(--qsvl-gold) !important;
+}
+
+.st-key-research_context [data-testid="stVerticalBlock"] {
+    padding: 0.75rem 1rem !important;
 }
 
 .st-key-research_context [data-testid="stMarkdownContainer"] p {
     line-height: 1.35;
 }
 
-.st-key-research_context [data-testid="stMarkdownContainer"] {
-    transform: translateY(-0.35rem);
+.st-key-app_footer {
+    margin-top: 0.3rem;
+    border-top: 1px solid rgba(249, 249, 249, 0.14);
 }
 
-.st-key-app_footer {
-    margin-top: 0.15rem;
+.st-key-app_footer > [data-testid="stVerticalBlock"] {
+    padding: 0.85rem 0 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+[class*="st-key-section_"] {
+    position: sticky;
+    z-index: 5;
+    top: 4.8rem;
+    margin-top: 0.6rem;
+    border-left: 3px solid var(--qsvl-gold);
+    background: rgba(45, 52, 54, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+[class*="st-key-section_"] > [data-testid="stVerticalBlock"] {
+    gap: 0.1rem !important;
+    padding: 0.72rem 1rem !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+[class*="st-key-section_"] h3,
+[class*="st-key-section_"] [data-testid="stCaptionContainer"] p {
+    margin: 0;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"],
 [data-testid="stMetric"] {
     border: 1px solid var(--qsvl-border) !important;
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.045), transparent 42%),
-        var(--qsvl-glass) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.055),
-        var(--qsvl-shadow);
-    -webkit-backdrop-filter: blur(10px) saturate(108%);
-    backdrop-filter: blur(10px) saturate(108%);
-    transition:
-        border-color 160ms ease,
-        box-shadow 160ms ease,
-        background 160ms ease,
-        -webkit-backdrop-filter 160ms ease,
-        backdrop-filter 160ms ease;
+    border-radius: 0 !important;
+    background: var(--qsvl-glass) !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: border-color 140ms ease, background-color 140ms ease;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
     padding: clamp(0.95rem, 1.4vw, 1.2rem) !important;
-    border-radius: var(--qsvl-radius) !important;
 }
 
-.st-key-brief_path_chart,
-.st-key-brief_year_chart {
-    position: relative;
-    overflow: hidden;
-}
-
-.st-key-brief_path_chart::before,
-.st-key-brief_year_chart::before {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 2px;
-    background: var(--qsvl-gradient-warm);
-    content: "";
-    opacity: 0.64;
-    pointer-events: none;
-}
-
-.st-key-brief_path_chart,
-.st-key-brief_year_chart {
-    gap: 0.42rem !important;
-    padding: 0.9rem 1rem 0.95rem !important;
-    background:
-        var(--qsvl-gradient-cool),
-        var(--qsvl-glass) !important;
-}
-
-.st-key-brief_path_chart h3,
-.st-key-brief_year_chart h3 {
-    margin: 0;
-    padding: 0;
-    line-height: 1.25;
-}
-
-.st-key-brief_path_chart [data-testid="stMarkdownContainer"]:has(
-    > [data-testid="stHeadingWithActionElements"]
-),
-.st-key-brief_year_chart [data-testid="stMarkdownContainer"]:has(
-    > [data-testid="stHeadingWithActionElements"]
-) {
-    margin: 0 !important;
-}
-
-.st-key-brief_path_chart [data-testid="stCaptionContainer"],
-.st-key-brief_year_chart [data-testid="stCaptionContainer"] {
-    min-height: 2.65rem;
-    margin: 0 !important;
-    padding-right: 6.75rem;
-}
-
-.st-key-brief_path_chart [data-testid="stCaptionContainer"] p,
-.st-key-brief_year_chart [data-testid="stCaptionContainer"] p {
-    color: rgba(234, 226, 183, 0.64);
-    line-height: 1.35;
-}
-
-.st-key-brief_path_chart [data-testid="stVegaLiteChart"],
-.st-key-brief_year_chart [data-testid="stVegaLiteChart"] {
-    margin-top: 0.15rem;
+[data-testid="stLayoutWrapper"]:has([data-testid="stVegaLiteChart"]) > [data-testid="stVerticalBlock"] {
+    border-left: 3px solid var(--qsvl-gold) !important;
+    background: rgba(10, 61, 98, 0.34) !important;
+    scroll-margin-top: 7rem;
 }
 
 [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"]:hover {
     z-index: 2;
-    border-color: var(--qsvl-border-hover) !important;
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 46%),
-        var(--qsvl-glass-hover) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.075),
-        0 10px 28px rgba(0, 8, 14, 0.24);
-    -webkit-backdrop-filter: blur(16px) saturate(118%);
-    backdrop-filter: blur(16px) saturate(118%);
+    border-color: var(--qsvl-border-focus) !important;
+    background: var(--qsvl-glass-strong) !important;
+}
+
+.st-key-page_header[data-testid="stVerticalBlock"],
+.st-key-page_header[data-testid="stVerticalBlock"]:hover {
+    padding: 1.1rem 4.25rem 1.15rem 1.25rem !important;
+    border: 0 !important;
+    border-left: 3px solid var(--qsvl-gold) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+[class*="st-key-section_"][data-testid="stVerticalBlock"],
+[class*="st-key-section_"][data-testid="stVerticalBlock"]:hover {
+    padding: 0.72rem 1rem !important;
+    border: 0 !important;
+    border-left: 3px solid var(--qsvl-gold) !important;
+    background: rgba(45, 52, 54, 0.92) !important;
+    box-shadow: none !important;
+}
+
+.st-key-app_footer[data-testid="stVerticalBlock"],
+.st-key-app_footer[data-testid="stVerticalBlock"]:hover {
+    padding: 0.85rem 0 0 !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(249, 249, 249, 0.14) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 [data-testid="stMetric"] {
     min-height: 7.1rem;
     justify-content: center;
     padding: 1.05rem 1.15rem;
-    border-radius: var(--qsvl-radius) !important;
+    border-top: 2px solid rgba(212, 175, 55, 0.72) !important;
 }
 
 [data-testid="stMetric"]:hover {
     z-index: 3;
-    border-color: var(--qsvl-border-hover) !important;
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 46%),
-        var(--qsvl-glass-hover) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 10px 28px rgba(0, 8, 14, 0.24);
-    -webkit-backdrop-filter: blur(16px) saturate(118%);
-    backdrop-filter: blur(16px) saturate(118%);
+    border-color: var(--qsvl-border-focus) !important;
+    background: rgba(10, 61, 98, 0.56) !important;
 }
 
 .st-key-page_header .st-key-page_status,
@@ -392,13 +337,8 @@ h3 {
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-}
-
-.st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
-    color: var(--qsvl-gold);
-    font-size: 2rem !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 .st-key-brief_metrics > [data-testid="stVerticalBlock"] {
@@ -406,8 +346,8 @@ h3 {
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 .st-key-brief_metrics [data-testid="stMetric"] {
@@ -415,26 +355,22 @@ h3 {
 }
 
 [data-testid="stMetricLabel"] p {
-    color: rgba(234, 226, 183, 0.72);
+    color: rgba(249, 249, 249, 0.68);
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.025em;
 }
 
 [data-testid="stMetricValue"] {
-    color: var(--qsvl-cream);
+    color: var(--qsvl-ivory);
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.035em;
 }
 
 [data-testid="stVegaLiteChart"] {
-    border-radius: var(--qsvl-radius);
-    animation: qsvl-chart-arrive 240ms ease-out both;
-    transition: filter 160ms ease;
-}
-
-[data-testid="stVegaLiteChart"]:hover {
-    filter: drop-shadow(0 10px 22px rgba(252, 191, 73, 0.08));
+    border-radius: 0;
+    animation: qsvl-chart-arrive 200ms ease-out both;
+    scroll-margin-top: 7rem;
 }
 
 [data-testid="stDataFrame"],
@@ -443,16 +379,12 @@ h3 {
 [data-testid="stExpander"],
 [data-testid="stSegmentedControl"],
 [data-testid="stSelectbox"] > div {
-    border: 1px solid rgba(234, 226, 183, 0.10);
-    border-radius: var(--qsvl-radius);
-    background: rgba(0, 36, 52, 0.26);
-    -webkit-backdrop-filter: blur(6px) saturate(110%);
-    backdrop-filter: blur(6px) saturate(110%);
-    transition:
-        border-color 220ms ease,
-        background 240ms ease,
-        -webkit-backdrop-filter 240ms ease,
-        backdrop-filter 240ms ease;
+    border: 1px solid rgba(249, 249, 249, 0.14);
+    border-radius: 0;
+    background: rgba(10, 61, 98, 0.24);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition: border-color 140ms ease, background-color 140ms ease;
 }
 
 [data-testid="stDataFrame"]:hover,
@@ -461,15 +393,31 @@ h3 {
 [data-testid="stExpander"]:hover,
 [data-testid="stSegmentedControl"]:hover,
 [data-testid="stSelectbox"] > div:hover {
-    border-color: rgba(252, 191, 73, 0.24);
-    background: rgba(0, 31, 46, 0.70);
-    -webkit-backdrop-filter: blur(18px) saturate(132%);
-    backdrop-filter: blur(18px) saturate(132%);
+    border-color: var(--qsvl-border-focus);
+    background: rgba(10, 61, 98, 0.44);
+}
+
+[data-testid="stSegmentedControl"] label:has(input:checked) p,
+[data-testid="stSegmentedControl"] label:has([aria-checked="true"]) p,
+[role="radiogroup"] [role="radio"] p {
+    color: var(--qsvl-ivory) !important;
+    -webkit-text-fill-color: var(--qsvl-ivory) !important;
+    opacity: 1 !important;
+}
+
+[role="radiogroup"] [role="radio"][aria-checked="true"],
+[role="radiogroup"] label:has(input:checked) {
+    border: 1px solid var(--qsvl-gold) !important;
+    background: var(--qsvl-navy) !important;
+}
+
+[role="radiogroup"] [role="radio"][aria-checked="true"] p,
+[role="radiogroup"] label:has(input:checked) p {
+    font-weight: 700 !important;
 }
 
 [data-testid="stAlert"] {
-    border-color: rgba(234, 226, 183, 0.16);
-    background: rgba(0, 38, 55, 0.62);
+    border-left: 3px solid var(--qsvl-gold);
 }
 
 [data-testid="stDataFrame"],
@@ -480,39 +428,29 @@ h3 {
 
 [data-testid^="stBaseButton"],
 [data-testid="stDownloadButton"] button {
-    border-radius: var(--qsvl-radius) !important;
-    transition:
-        border-color 150ms ease,
-        box-shadow 170ms ease,
-        background-color 170ms ease;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: border-color 140ms ease, background-color 140ms ease;
 }
 
 [data-testid^="stBaseButton"]:hover,
 [data-testid="stDownloadButton"] button:hover {
-    border-color: rgba(252, 191, 73, 0.36);
-    box-shadow: 0 6px 18px rgba(0, 8, 14, 0.22);
+    border-color: var(--qsvl-gold);
+    box-shadow: none !important;
 }
 
 [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] {
-    animation: qsvl-page-arrive 180ms ease-out both;
+    animation: qsvl-page-arrive 160ms ease-out both;
 }
 
 @keyframes qsvl-page-arrive {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes qsvl-chart-arrive {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 800px) {
@@ -535,13 +473,8 @@ h3 {
         font-size: 0.84rem;
     }
 
-    .st-key-page_header [data-testid="stHorizontalBlock"] {
-        flex-wrap: nowrap;
-        gap: 0.75rem !important;
-    }
-
     .st-key-page_header {
-        padding-right: 3.25rem;
+        padding: 0.9rem 3.25rem 0.9rem 1rem;
     }
 
     .st-key-page_header h1 {
@@ -565,10 +498,10 @@ h3 {
         width: auto;
         min-width: 4.75rem;
         gap: 0.3rem;
-        color: var(--qsvl-cream);
-        border: 1px solid rgba(234, 226, 183, 0.14);
-        border-radius: var(--qsvl-radius);
-        background: rgba(0, 36, 52, 0.44);
+        color: var(--qsvl-ivory);
+        border: 1px solid rgba(249, 249, 249, 0.16);
+        border-radius: 0;
+        background: var(--qsvl-navy);
     }
 
     [data-testid="stExpandSidebarButton"]::after {
@@ -579,7 +512,7 @@ h3 {
     }
 
     [data-testid="stMainBlockContainer"] {
-        padding-top: 5.45rem;
+        padding-top: 5.2rem;
         padding-right: 1rem;
         padding-left: 1rem;
     }
@@ -591,18 +524,14 @@ h3 {
 
     [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"] {
         padding: 1rem !important;
-        border-radius: var(--qsvl-radius) !important;
+    }
+
+    [class*="st-key-section_"] {
+        top: 4.15rem;
     }
 
     .st-key-research_context {
         min-height: 3.5rem;
-        padding: 0.22rem 0.8rem !important;
-    }
-
-    .st-key-brief_path_chart [data-testid="stCaptionContainer"],
-    .st-key-brief_year_chart [data-testid="stCaptionContainer"] {
-        min-height: 0;
-        padding-right: 0;
     }
 
     [data-testid="stMetric"] {
@@ -619,18 +548,9 @@ h3 {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-
-    [data-testid="stLayoutWrapper"] > [data-testid="stVerticalBlock"]:hover,
-    [data-testid="stMetric"]:hover,
-    [data-testid="stVegaLiteChart"]:hover,
-    [data-testid^="stBaseButton"]:hover,
-    [data-testid="stDownloadButton"] button:hover {
-        transform: none;
-    }
 }
 </style>
 """
-    return css.replace("__BACKGROUND_DATA_URI__", background_data_uri())
 
 
 def inject_visual_system() -> None:
@@ -644,7 +564,7 @@ def render_page_header(
     title: str,
     description: str,
 ) -> None:
-    """Render a prominent page heading with a consistent Material status tile."""
+    """Render a prominent, unboxed page heading with a Material status mark."""
 
     with st.container(key="page_header", gap="xsmall"):
         with st.container(
@@ -680,17 +600,17 @@ def render_research_boundary(meta: dict[str, Any]) -> None:
 
 
 def render_section_header(title: str, description: str, *, key: str) -> None:
-    """Render section copy inside a compact glass tile instead of floating text."""
+    """Render a sticky, unboxed section marker that preserves context while scrolling."""
 
-    with st.container(border=True, key=f"section_{key}", gap="xxsmall"):
+    with st.container(border=False, key=f"section_{key}", gap="xxsmall"):
         st.subheader(title)
         st.caption(description)
 
 
 def render_app_footer(meta: dict[str, Any]) -> None:
-    """Render a concise global artifact footer in its own glass tile."""
+    """Render a concise global artifact footer without a card treatment."""
 
-    with st.container(border=True, key="app_footer", gap="xxsmall"):
+    with st.container(border=False, key="app_footer", gap="xxsmall"):
         st.caption(
             f"Research snapshot · schema {meta['schema_version']} · "
             "aggregate evidence only · raw market data excluded"

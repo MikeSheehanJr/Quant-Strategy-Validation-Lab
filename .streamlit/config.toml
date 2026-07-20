@@ -1,19 +1,19 @@
-# Deep-navy research theme with restrained semantic use of the full reviewed palette.
+# Flat charcoal research theme with navy structure, gold accents, and ivory type.
 
 [theme]
 base = "dark"
-primaryColor = "#2F6174"
-backgroundColor = "#001722"
-secondaryBackgroundColor = "#082B3A"
-codeBackgroundColor = "#001E2C"
-textColor = "#EAE2B7"
-linkColor = "#FCBF49"
-borderColor = "#355965"
-codeTextColor = "#EAE2B7"
+primaryColor = "#0A3D62"
+backgroundColor = "#2D3436"
+secondaryBackgroundColor = "#0A3D62"
+codeBackgroundColor = "#2D3436"
+textColor = "#F9F9F9"
+linkColor = "#D4AF37"
+borderColor = "#0A3D62"
+codeTextColor = "#F9F9F9"
 showWidgetBorder = true
 showSidebarBorder = true
-baseRadius = "6px"
-buttonRadius = "6px"
+baseRadius = "none"
+buttonRadius = "none"
 
 font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
 headingFont = "'Space Grotesk':https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"
@@ -25,45 +25,31 @@ headingFontSizes = ["42px", "25px", "19px", "16px", "14px", "12px"]
 headingFontWeights = [700, 600, 600, 600, 500, 500]
 linkUnderline = false
 
-greenColor = "#A39457"
-redColor = "#D62828"
-yellowColor = "#FCBF49"
-orangeColor = "#F77F00"
-blueColor = "#5E8390"
-violetColor = "#9C6D78"
-grayColor = "#A6A18A"
+greenColor = "#D4AF37"
+redColor = "#D4AF37"
+yellowColor = "#D4AF37"
+orangeColor = "#D4AF37"
+blueColor = "#0A3D62"
+violetColor = "#0A3D62"
+grayColor = "#2D3436"
 
 chartCategoricalColors = [
-    "#003049",
-    "#D62828",
-    "#F77F00",
-    "#FCBF49",
-    "#EAE2B7",
+    "#0A3D62",
+    "#D4AF37",
+    "#F9F9F9",
+    "#2D3436",
 ]
 
-chartSequentialColors = [
-    "#003049",
-    "#542C3E",
-    "#D62828",
-    "#E64F15",
-    "#F77F00",
-    "#F99F24",
-    "#FCBF49",
-    "#F5CE75",
-    "#EFDA9C",
-    "#EAE2B7",
-]
-
-dataframeBorderColor = "#355965"
-dataframeHeaderBackgroundColor = "#0B3443"
+dataframeBorderColor = "#0A3D62"
+dataframeHeaderBackgroundColor = "#0A3D62"
 
 [theme.sidebar]
-backgroundColor = "#001722"
-secondaryBackgroundColor = "#082B3A"
-codeBackgroundColor = "#001E2C"
-textColor = "#EAE2B7"
-borderColor = "#355965"
-primaryColor = "#2F6174"
+backgroundColor = "#2D3436"
+secondaryBackgroundColor = "#0A3D62"
+codeBackgroundColor = "#2D3436"
+textColor = "#F9F9F9"
+borderColor = "#0A3D62"
+primaryColor = "#0A3D62"
 
 [browser]
 gatherUsageStats = false
