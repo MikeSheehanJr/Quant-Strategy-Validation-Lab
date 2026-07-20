@@ -62,6 +62,17 @@ header button[data-testid="stBaseButton-header"]:has(
 
 [data-testid="stTopNavLinkContainer"] {
     padding-block: 0.7rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+}
+
+[data-testid="stTopNavLinkContainer"]::-webkit-scrollbar {
+    display: none;
+}
+
+[data-testid="stExpandSidebarButton"] {
+    display: none !important;
 }
 
 [data-testid="stTopNavLink"] {
@@ -268,7 +279,6 @@ h3 {
     box-shadow: none !important;
 }
 
-.st-key-brief_research_read,
 .st-key-forward_status,
 .st-key-risk_caveat,
 .st-key-implementation_review_boundary,
@@ -277,6 +287,41 @@ h3 {
     border: 0 !important;
     border-left: 3px solid var(--qsvl-navy) !important;
     background: var(--qsvl-panel) !important;
+}
+
+.st-key-brief_research_read[data-testid="stVerticalBlock"],
+.st-key-brief_research_read[data-testid="stVerticalBlock"]:hover {
+    position: relative;
+    padding: clamp(1.25rem, 2.3vw, 2rem) !important;
+    border: 0 !important;
+    border-top: 5px solid var(--qsvl-gold) !important;
+    background: var(--qsvl-navy) !important;
+    box-shadow: none !important;
+}
+
+.st-key-brief_research_read h3,
+.st-key-brief_research_read p,
+.st-key-brief_research_read strong,
+.st-key-brief_research_read [data-testid="stIconMaterial"] {
+    color: var(--qsvl-white) !important;
+}
+
+.st-key-brief_research_read > [data-testid="stElementContainer"]:first-child p {
+    color: #F0D87A !important;
+    letter-spacing: 0.13em;
+}
+
+.st-key-brief_gate[data-testid="stVerticalBlock"] {
+    min-height: 9.5rem;
+    justify-content: center;
+    padding: 1rem 1.1rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.st-key-brief_gate [data-testid="stCaptionContainer"] p {
+    color: #F0D87A !important;
+    letter-spacing: 0.11em;
 }
 
 .st-key-robustness_switcher,
@@ -322,6 +367,55 @@ h3 {
 
 .st-key-brief_metrics [data-testid="stMetric"] {
     min-width: min(100%, 13rem);
+}
+
+.st-key-brief_metrics > [data-testid="stVerticalBlock"] {
+    align-items: stretch;
+}
+
+.st-key-brief_metrics [class*="st-key-brief_metric_"][data-testid="stVerticalBlock"] {
+    min-width: min(100%, 13rem);
+    min-height: 7.25rem;
+    justify-content: center;
+    padding: 0.2rem !important;
+    border: 1px solid var(--qsvl-border) !important;
+    background: var(--qsvl-white) !important;
+}
+
+.st-key-brief_metrics [class*="st-key-brief_metric_"] [data-testid="stMetric"] {
+    min-height: 6.75rem;
+    padding: 0.85rem 1rem;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_pnl[data-testid="stVerticalBlock"] {
+    border-color: var(--qsvl-navy) !important;
+    background: var(--qsvl-navy) !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_pnl [data-testid="stMetricLabel"] p,
+.st-key-brief_metrics .st-key-brief_metric_pnl [data-testid="stMetricValue"] {
+    color: var(--qsvl-white) !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_trades[data-testid="stVerticalBlock"] {
+    border-color: var(--qsvl-navy) !important;
+    background: var(--qsvl-panel) !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_win_rate[data-testid="stVerticalBlock"] {
+    border-top: 5px solid var(--qsvl-gold) !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_profit_factor[data-testid="stVerticalBlock"] {
+    border-color: var(--qsvl-gold) !important;
+    background: var(--qsvl-gold) !important;
+}
+
+.st-key-brief_metrics .st-key-brief_metric_profit_factor [data-testid="stMetricLabel"] p,
+.st-key-brief_metrics .st-key-brief_metric_profit_factor [data-testid="stMetricValue"] {
+    color: var(--qsvl-charcoal) !important;
 }
 
 [data-testid="stMetricLabel"] p {
@@ -455,23 +549,6 @@ h3 {
 
     .st-key-page_status [data-testid="stMarkdownContainer"] span[role="img"] {
         font-size: 1.5rem !important;
-    }
-
-    [data-testid="stExpandSidebarButton"] {
-        width: auto;
-        min-width: 4.75rem;
-        gap: 0.3rem;
-        color: var(--qsvl-white);
-        border: 1px solid var(--qsvl-navy);
-        border-radius: 0;
-        background: var(--qsvl-navy);
-    }
-
-    [data-testid="stExpandSidebarButton"]::after {
-        content: "Pages";
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
     }
 
     [data-testid="stMainBlockContainer"] {

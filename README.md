@@ -91,7 +91,7 @@ docs/                         Methodology, roadmap, and publishing guide
 - **Implementation:** inspectable Pine Script v1–v4.1 evolution, reviewed TradingView aggregates, downloadable CSV evidence, and open acceptance checks
 - **Forward validation:** the hash-pinned v4.1 paper candidate, aggregate-only reporting protocol, and an explicit not-started evidence state
 
-The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed. It is a resampling stress view—not a forecast—and cannot create regimes absent from the historical sample.
+The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed. It is a resampling stress view, not a forecast, and cannot create regimes absent from the historical sample.
 
 ## Work-in-progress roadmap
 

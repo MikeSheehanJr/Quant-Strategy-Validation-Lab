@@ -10,7 +10,7 @@ from src.charts import (
     execution_heatmap,
     gate_sensitivity_chart,
     monthly_pnl_distribution,
-    monte_carlo_fan,
+    monte_carlo_paths,
     parameter_surface_heatmap,
     pinescript_equity_curve,
     rr_sensitivity,
@@ -45,7 +45,7 @@ def test_chart_specs_compile():
         execution_heatmap(execution_frame(snapshot), "daily_sharpe"),
         execution_heatmap(execution_frame(snapshot), "net_pnl_usd"),
         rr_sensitivity(rr_frame(snapshot)),
-        monte_carlo_fan(fan),
+        monte_carlo_paths(paths, fan),
         terminal_distribution(paths, summary),
         drawdown_distribution(paths),
         parameter_surface_heatmap(
@@ -98,13 +98,13 @@ def test_annual_bars_use_full_ordered_palette_and_label_headroom():
 def test_single_series_lines_use_solid_strokes_without_nodes():
     snapshot = load_snapshot()
     monthly = monthly_frame(snapshot)
-    fan, _, _ = monthly_block_bootstrap(
+    fan, paths, _ = monthly_block_bootstrap(
         monthly, horizon_months=24, paths=250, block_months=3, seed=2026
     )
     charts = [
         pinescript_equity_curve(load_pinescript_backtests()["monthly"]),
         rr_sensitivity(rr_frame(snapshot)),
-        monte_carlo_fan(fan),
+        monte_carlo_paths(paths, fan),
     ]
 
     for chart in charts:
@@ -115,9 +115,21 @@ def test_single_series_lines_use_solid_strokes_without_nodes():
             if layer["mark"]["type"] == "line"
         ]
         assert line_marks
-        assert all(mark["color"] == "#0A3D62" for mark in line_marks)
+        assert all(mark["color"] in {"#0A3D62", "#A9BEC9", "#D4AF37"} for mark in line_marks)
         assert all("point" not in mark for mark in line_marks)
         assert "gradient" not in json.dumps(spec).lower()
+
+
+def test_monte_carlo_uses_individual_lines_without_area_fills():
+    monthly = monthly_frame(load_snapshot())
+    fan, paths, _ = monthly_block_bootstrap(
+        monthly, horizon_months=24, paths=250, block_months=3, seed=2026
+    )
+    spec = monte_carlo_paths(paths, fan, max_display_paths=80).to_dict()
+    mark_types = [layer["mark"]["type"] for layer in spec["layer"]]
+    assert mark_types == ["line", "line", "rule"]
+    assert spec["layer"][0]["encoding"]["detail"]["field"] == "path_id"
+    assert "area" not in mark_types
 
 
 def test_gate_sensitivity_lines_have_no_point_nodes():

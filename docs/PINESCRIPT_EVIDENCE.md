@@ -8,11 +8,11 @@ Keeping the tracks separate prevents a common portfolio failure: presenting one 
 
 ## Version lineage
 
-- **v1 — baseline:** one two-sided breakout decision per session, fixed contracts, opposite-range stop, and 1R target.
-- **v2 — risk normalization:** adds capped dollar-risk sizing without changing the signal path.
-- **v3 — isolated optional filter:** adds one frozen, default-off MGC-only margin rule; MNQ cannot arm it.
-- **v4 — operating control:** adds a user-maintained early-close calendar and simplifies chart drawings.
-- **v4.1 — current MNQ paper control:** symbol-locks the script, updates commission, hard-disables the MGC-only rule, and enables the calendar guard by default.
+- **v1, baseline:** one two sided breakout decision per session, fixed contracts, opposite range stop, and 1R target.
+- **v2, risk normalization:** adds capped dollar risk sizing without changing the signal path.
+- **v3, isolated optional filter:** adds one frozen, default off MGC only margin rule; MNQ cannot arm it.
+- **v4, operating control:** adds a user maintained early close calendar and simplifies chart drawings.
+- **v4.1, current MNQ paper control:** locks the script to one symbol, updates commission, disables the MGC only rule, and enables the calendar guard by default.
 
 Every source file and hash is listed in `pinescript/manifest.json`.
 
