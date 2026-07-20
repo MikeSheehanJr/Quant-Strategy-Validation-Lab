@@ -17,29 +17,33 @@ MUTED = "#657179"
 GRID = "#D8DEE1"
 LIGHT_BLUE = "#A9BEC9"
 PALE_BLUE = "#E6EEF2"
+PALE_GOLD = "#FBF4D7"
+LIGHT_GRAY = "#F0F3F4"
 DARK_INK = CHARCOAL
-HEATMAP_BANDS = [PALE_BLUE, LIGHT_BLUE, GOLD, NAVY]
-HEATMAP_BAND_ORDER = ["Low", "Lower middle", "Upper middle", "High"]
+HEATMAP_PALETTES = {
+    "profit_factor": [PALE_BLUE, NAVY],
+    "daily_sharpe": [PALE_GOLD, GOLD],
+    "net_pnl_usd": [LIGHT_GRAY, CHARCOAL],
+}
 ANNUAL_BAR_PALETTE = [NAVY, GOLD, CHARCOAL, LIGHT_BLUE, NAVY, GOLD]
 
 
-def _metric_bands(frame: pd.DataFrame, metric: str) -> pd.DataFrame:
-    """Add four flat, ordered color bands without a continuous color ramp."""
+def _heatmap_text_color(frame: pd.DataFrame, metric: str) -> alt.ValueDef | alt.ConditionalDef:
+    """Keep cell labels readable across each metric's dedicated color scale."""
 
-    result = frame.copy()
-    minimum = float(result[metric].min())
-    maximum = float(result[metric].max())
-    if math.isclose(minimum, maximum):
-        result["metric_band"] = "Upper middle"
-        return result
+    if metric not in HEATMAP_PALETTES:
+        raise ValueError(f"Unsupported heat map metric: {metric}")
+    if metric == "daily_sharpe":
+        return alt.value(DARK_INK)
 
-    result["metric_band"] = pd.cut(
-        result[metric],
-        bins=4,
-        labels=HEATMAP_BAND_ORDER,
-        include_lowest=True,
-    ).astype(str)
-    return result
+    minimum = float(frame[metric].min())
+    maximum = float(frame[metric].max())
+    threshold = minimum + ((maximum - minimum) * 0.55)
+    return alt.condition(
+        f"datum['{metric}'] >= {threshold}",
+        alt.value(WHITE),
+        alt.value(DARK_INK),
+    )
 
 
 def _focused_currency_domain(values: pd.Series) -> list[float]:
@@ -235,23 +239,22 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
         "net_pnl_usd": "Net P&L (USD)",
     }[metric]
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
-    frame = _metric_bands(execution, metric)
+    palette = HEATMAP_PALETTES[metric]
     heatmap = (
-        alt.Chart(frame)
+        alt.Chart(execution)
         .mark_rect(stroke=WHITE, strokeOpacity=0.92)
         .encode(
             x=alt.X("slippage_ticks:O", title="Modeled slippage (ticks)"),
             y=alt.Y("fill_minutes:O", title="Fill resolution (minutes)", sort="ascending"),
             color=alt.Color(
-                "metric_band:N",
-                title=f"{label} band",
-                scale=alt.Scale(
-                    domain=HEATMAP_BAND_ORDER,
-                    range=HEATMAP_BANDS,
-                ),
+                f"{metric}:Q",
+                title=label,
+                scale=alt.Scale(range=palette),
                 legend=alt.Legend(
                     orient="top",
                     direction="horizontal",
+                    gradientLength=220,
+                    gradientThickness=10,
                 ),
             ),
             tooltip=[
@@ -264,9 +267,7 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
     )
     text = heatmap.mark_text(fontSize=12).encode(
         text=alt.Text(f"{metric}:Q", format=fmt),
-        color=alt.condition(
-            "datum.metric_band === 'High'", alt.value(WHITE), alt.value(DARK_INK)
-        ),
+        color=_heatmap_text_color(execution, metric),
     )
     return _base(heatmap + text, height=300)
 
@@ -466,21 +467,23 @@ def parameter_surface_heatmap(
         "net_pnl_usd": "Net P&L (USD)",
     }[metric]
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
-    display_frame = _metric_bands(frame, metric)
+    palette = HEATMAP_PALETTES[metric]
     heatmap = (
-        alt.Chart(display_frame)
+        alt.Chart(frame)
         .mark_rect(stroke=WHITE, strokeOpacity=0.92)
         .encode(
             x=alt.X(f"{x_field}:O", title=x_title, sort="ascending"),
             y=alt.Y(f"{y_field}:O", title=y_title, sort="ascending"),
             color=alt.Color(
-                "metric_band:N",
-                title=f"{label} band",
-                scale=alt.Scale(
-                    domain=HEATMAP_BAND_ORDER,
-                    range=HEATMAP_BANDS,
+                f"{metric}:Q",
+                title=label,
+                scale=alt.Scale(range=palette),
+                legend=alt.Legend(
+                    orient="top",
+                    direction="horizontal",
+                    gradientLength=220,
+                    gradientThickness=10,
                 ),
-                legend=alt.Legend(orient="top", direction="horizontal"),
             ),
             tooltip=[
                 alt.Tooltip(f"{x_field}:O", title=x_title),
@@ -494,13 +497,17 @@ def parameter_surface_heatmap(
     )
     values = heatmap.mark_text(fontSize=10).encode(
         text=alt.Text(f"{metric}:Q", format=fmt),
-        color=alt.condition(
-            "datum.metric_band === 'High'", alt.value(WHITE), alt.value(DARK_INK)
-        ),
+        color=_heatmap_text_color(frame, metric),
     )
     frozen = (
-        alt.Chart(display_frame.loc[display_frame["is_frozen"]])
-        .mark_point(shape="diamond", size=150, filled=False, stroke=CHARCOAL, strokeWidth=2.2)
+        alt.Chart(frame.loc[frame["is_frozen"]])
+        .mark_point(
+            shape="diamond",
+            size=150,
+            filled=False,
+            stroke=CHARCOAL if metric == "daily_sharpe" else GOLD,
+            strokeWidth=2.2,
+        )
         .encode(x=f"{x_field}:O", y=f"{y_field}:O")
     )
     return _base(heatmap + values + frozen, height=360)
