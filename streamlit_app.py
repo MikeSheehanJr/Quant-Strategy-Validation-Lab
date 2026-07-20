@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+import importlib
+
 import streamlit as st
 
 from src.data import load_snapshot
-from src.ui import inject_visual_system, render_app_footer
+from src import ui as ui_module
+
+
+# Streamlit can keep imported helpers alive across a hot deployment. Reloading this small
+# presentation module ensures the current stylesheet and shared chrome ship together.
+ui_module = importlib.reload(ui_module)
 
 
 st.set_page_config(
@@ -15,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-inject_visual_system()
+ui_module.inject_visual_system()
 
 
 page = st.navigation(
@@ -47,4 +54,4 @@ page = st.navigation(
 page.run()
 
 meta = load_snapshot()["meta"]
-render_app_footer(meta)
+ui_module.render_app_footer(meta)
