@@ -30,15 +30,21 @@ from src.simulations import monthly_block_bootstrap
 from src.ui import render_page_header, render_section_header
 
 
+MONTE_CARLO_CACHE_SCHEMA = "cumulative-paths-v1"
+
+
 @st.cache_data(show_spinner=False, max_entries=24)
 def run_research_monte_carlo(
     monthly: pd.DataFrame,
     horizon_months: int,
     paths: int,
     block_months: int,
+    cache_schema: str,
 ):
     """Return deterministic aggregate resamples for the research dashboard."""
 
+    if cache_schema != MONTE_CARLO_CACHE_SCHEMA:
+        raise ValueError("Unsupported Monte Carlo cache schema")
     return monthly_block_bootstrap(
         monthly,
         horizon_months=horizon_months,
@@ -198,6 +204,7 @@ elif view == "Monte Carlo":
         horizon_months,
         paths,
         block_months,
+        MONTE_CARLO_CACHE_SCHEMA,
     )
 
     with st.container(horizontal=True, gap="small"):
