@@ -42,6 +42,19 @@ def test_information_first_layout_and_scroll_focus_are_present():
     assert "stToolbarActionButtonLabel" in css
 
 
+def test_mobile_navigation_uses_hamburger_popover_and_registered_pages():
+    css = visual_css()
+    app_source = (ROOT / "streamlit_app.py").read_text(encoding="utf-8")
+    ui_source = (ROOT / "src" / "ui.py").read_text(encoding="utf-8")
+
+    assert "@media (max-width: 800px)" in css
+    assert ".st-key-mobile_nav_menu" in css
+    assert '[data-testid="stTopNavLinkContainer"]' in css
+    assert 'icon=":material/menu:"' in ui_source
+    assert "st.page_link(nav_page" in ui_source
+    assert "ui_module.render_mobile_navigation(pages)" in app_source
+
+
 def test_work_status_uses_material_symbol_without_emoji():
     ui_source = (ROOT / "src" / "ui.py").read_text(encoding="utf-8")
     assert 'st.markdown(":material/handyman:"' in ui_source

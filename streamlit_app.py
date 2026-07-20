@@ -28,32 +28,32 @@ st.set_page_config(
 ui_module.inject_visual_system()
 
 
-page = st.navigation(
-    [
-        st.Page(
-            "app_pages/research_brief.py",
-            title="Research brief",
-            icon=":material/description:",
-            default=True,
-        ),
-        st.Page(
-            "app_pages/robustness.py",
-            title="Robustness",
-            icon=":material/query_stats:",
-        ),
-        st.Page(
-            "app_pages/implementation.py",
-            title="Implementation",
-            icon=":material/code:",
-        ),
-        st.Page(
-            "app_pages/forward_validation.py",
-            title="Forward validation",
-            icon=":material/schedule:",
-        ),
-    ],
-    position="top",
-)
+pages = [
+    st.Page(
+        "app_pages/research_brief.py",
+        title="Research brief",
+        icon=":material/description:",
+        default=True,
+    ),
+    st.Page(
+        "app_pages/robustness.py",
+        title="Robustness",
+        icon=":material/query_stats:",
+    ),
+    st.Page(
+        "app_pages/implementation.py",
+        title="Implementation",
+        icon=":material/code:",
+    ),
+    st.Page(
+        "app_pages/forward_validation.py",
+        title="Forward validation",
+        icon=":material/schedule:",
+    ),
+]
+
+page = st.navigation(pages, position="top")
+ui_module.render_mobile_navigation(pages)
 page.run()
 
 meta = load_snapshot()["meta"]

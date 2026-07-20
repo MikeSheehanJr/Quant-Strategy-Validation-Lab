@@ -75,6 +75,10 @@ header button[data-testid="stBaseButton-header"]:has(
     display: none !important;
 }
 
+.st-key-mobile_nav_menu {
+    display: none;
+}
+
 [data-testid="stTopNavLink"] {
     min-height: 2.75rem;
     padding: 0.6rem 0.9rem;
@@ -517,16 +521,47 @@ h3 {
     }
 
     [data-testid="stTopNavLinkContainer"] {
-        padding-block: 0.48rem;
+        display: none;
     }
 
-    [data-testid="stTopNavLink"] {
-        min-height: 2.55rem;
-        padding: 0.5rem 0.68rem;
+    [data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"] {
+        animation: none;
     }
 
-    [data-testid="stTopNavLink"] p {
-        font-size: 0.82rem;
+    .st-key-mobile_nav_menu,
+    .st-key-mobile_nav_menu[data-testid="stPopover"] {
+        position: fixed;
+        z-index: 1000001;
+        top: 0.62rem;
+        left: 0.72rem;
+        display: block !important;
+        width: 2.8rem;
+        padding: 0 !important;
+    }
+
+    .st-key-mobile_nav_menu [data-testid="stPopover"] {
+        width: 2.8rem;
+    }
+
+    .st-key-mobile_nav_menu [data-testid="stPopoverButton"] {
+        width: 2.8rem;
+        min-width: 2.8rem;
+        height: 2.8rem;
+        min-height: 2.8rem;
+        padding: 0 !important;
+        border: 1px solid var(--qsvl-border) !important;
+        background: var(--qsvl-white) !important;
+    }
+
+    .st-key-mobile_nav_menu [data-testid="stPopoverButton"] p,
+    .st-key-mobile_nav_menu [data-testid="stPopoverButton"] [aria-hidden="true"] {
+        display: none;
+    }
+
+    .st-key-mobile_nav_menu [data-testid="stIconMaterial"] {
+        margin: 0 !important;
+        color: var(--qsvl-navy);
+        font-size: 1.45rem !important;
     }
 
     .st-key-page_header,
@@ -589,6 +624,21 @@ def inject_visual_system() -> None:
     """Inject static CSS only; no script or untrusted input reaches the page."""
 
     st.html(visual_css())
+
+
+def render_mobile_navigation(pages: list[Any]) -> None:
+    """Render a compact page menu that is visible only on narrow screens."""
+
+    with st.popover(
+        "Navigation",
+        icon=":material/menu:",
+        type="tertiary",
+        width="content",
+        key="mobile_nav_menu",
+    ):
+        st.caption("PAGES")
+        for nav_page in pages:
+            st.page_link(nav_page, width="stretch")
 
 
 def render_page_header(
