@@ -6,13 +6,16 @@ import importlib
 
 import streamlit as st
 
-from src.data import load_snapshot
+from src import charts as charts_module
+from src import simulations as simulations_module
 from src import ui as ui_module
+from src.data import load_snapshot
 
 
-# Streamlit can keep imported helpers alive across a hot deployment. Reloading this small
-# presentation module ensures the current stylesheet and shared chrome ship together.
-ui_module = importlib.reload(ui_module)
+# Streamlit can keep imported helpers alive across a hot deployment. Reload the small modules
+# changed by this app so page scripts, simulations, charts, and shared styling stay in sync.
+for current_module in (simulations_module, charts_module, ui_module):
+    importlib.reload(current_module)
 
 
 st.set_page_config(
