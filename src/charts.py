@@ -12,14 +12,15 @@ CHARCOAL = "#2D3436"
 NAVY = "#0A3D62"
 GOLD = "#D4AF37"
 IVORY = "#F9F9F9"
-INK = IVORY
+WHITE = "#FFFFFF"
+MUTED = "#657179"
+GRID = "#D8DEE1"
+LIGHT_BLUE = "#A9BEC9"
+PALE_BLUE = "#E6EEF2"
 DARK_INK = CHARCOAL
-MUTED = IVORY
-GRID = IVORY
-WHITE = IVORY
-HEATMAP_BANDS = [CHARCOAL, NAVY, GOLD, IVORY]
+HEATMAP_BANDS = [PALE_BLUE, LIGHT_BLUE, GOLD, NAVY]
 HEATMAP_BAND_ORDER = ["Low", "Lower middle", "Upper middle", "High"]
-ANNUAL_BAR_PALETTE = [NAVY, GOLD, IVORY, NAVY, GOLD, IVORY]
+ANNUAL_BAR_PALETTE = [NAVY, GOLD, CHARCOAL, LIGHT_BLUE, NAVY, GOLD]
 
 
 def _metric_bands(frame: pd.DataFrame, metric: str) -> pd.DataFrame:
@@ -53,25 +54,25 @@ def _focused_currency_domain(values: pd.Series) -> list[float]:
 
 def _base(chart: alt.Chart, *, height: int = 300) -> alt.Chart:
     return (
-        chart.properties(height=height)
+        chart.properties(height=height, background=IVORY)
         .configure_axis(
             gridColor=GRID,
-            gridOpacity=0.15,
-            domainColor=GOLD,
-            domainOpacity=0.45,
-            tickColor=IVORY,
-            tickOpacity=0.35,
+            gridOpacity=0.72,
+            domainColor=GRID,
+            domainOpacity=1.0,
+            tickColor=MUTED,
+            tickOpacity=0.5,
             labelColor=MUTED,
-            labelOpacity=0.72,
-            titleColor=MUTED,
-            titleOpacity=0.78,
+            labelOpacity=1.0,
+            titleColor=CHARCOAL,
+            titleOpacity=1.0,
         )
         .configure_view(strokeOpacity=0)
         .configure_legend(
-            labelColor=MUTED,
-            labelOpacity=0.72,
-            titleColor=MUTED,
-            titleOpacity=0.78,
+            labelColor=CHARCOAL,
+            labelOpacity=1.0,
+            titleColor=CHARCOAL,
+            titleOpacity=1.0,
             orient="top",
         )
     )
@@ -83,7 +84,7 @@ def equity_curve(monthly: pd.DataFrame) -> alt.Chart:
     domain = _focused_currency_domain(monthly["cumulative_pnl_usd"])
     line = (
         alt.Chart(monthly)
-        .mark_line(color=GOLD, strokeWidth=3.0)
+        .mark_line(color=NAVY, strokeWidth=3.0)
         .encode(
             x=alt.X("month:T", title="Month", axis=alt.Axis(format="%b %Y", labelAngle=0)),
             y=alt.Y(
@@ -104,7 +105,7 @@ def equity_curve(monthly: pd.DataFrame) -> alt.Chart:
     )
     zero = (
         alt.Chart(pd.DataFrame({"y": [0]}))
-        .mark_rule(color=IVORY, opacity=0.48, strokeWidth=1.2)
+        .mark_rule(color=CHARCOAL, opacity=0.42, strokeWidth=1.2)
         .encode(y="y:Q")
     )
     return _base(line + zero, height=320)
@@ -115,7 +116,7 @@ def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
 
     line = (
         alt.Chart(monthly)
-        .mark_line(color=GOLD, strokeWidth=2.8)
+        .mark_line(color=NAVY, strokeWidth=2.8)
         .encode(
             x=alt.X("month:T", title="Exit month", axis=alt.Axis(format="%b %Y")),
             y=alt.Y(
@@ -132,7 +133,7 @@ def pinescript_equity_curve(monthly: pd.DataFrame) -> alt.Chart:
             ],
         )
     )
-    zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=IVORY, opacity=0.48).encode(y="y:Q")
+    zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=CHARCOAL, opacity=0.42).encode(y="y:Q")
     return _base(line + zero, height=330)
 
 
@@ -187,7 +188,7 @@ def annual_pnl(yearly: pd.DataFrame) -> alt.Chart:
         .mark_text(
             baseline="bottom",
             clip=False,
-            color=GOLD,
+            color=CHARCOAL,
             dy=-7,
             fontSize=11,
             fontWeight=600,
@@ -207,7 +208,7 @@ def monthly_pnl_distribution(monthly: pd.DataFrame) -> alt.Chart:
     sample = monthly.loc[monthly["period_status"] == "Complete"].copy()
     bars = (
         alt.Chart(sample)
-        .mark_bar(color=GOLD, opacity=0.84)
+        .mark_bar(color=NAVY, opacity=0.86)
         .encode(
             x=alt.X(
                 "pnl_usd:Q",
@@ -221,7 +222,7 @@ def monthly_pnl_distribution(monthly: pd.DataFrame) -> alt.Chart:
             ],
         )
     )
-    zero = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color=IVORY, opacity=0.58).encode(x="x:Q")
+    zero = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color=CHARCOAL, opacity=0.5).encode(x="x:Q")
     return _base(bars + zero, height=270)
 
 
@@ -234,13 +235,10 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
         "net_pnl_usd": "Net P&L (USD)",
     }[metric]
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
-    minimum = float(execution[metric].min())
-    maximum = float(execution[metric].max())
-    midpoint = (minimum + maximum) / 2
     frame = _metric_bands(execution, metric)
     heatmap = (
         alt.Chart(frame)
-        .mark_rect(stroke=IVORY, strokeOpacity=0.10)
+        .mark_rect(stroke=WHITE, strokeOpacity=0.92)
         .encode(
             x=alt.X("slippage_ticks:O", title="Modeled slippage (ticks)"),
             y=alt.Y("fill_minutes:O", title="Fill resolution (minutes)", sort="ascending"),
@@ -267,7 +265,7 @@ def execution_heatmap(execution: pd.DataFrame, metric: str) -> alt.Chart:
     text = heatmap.mark_text(fontSize=12).encode(
         text=alt.Text(f"{metric}:Q", format=fmt),
         color=alt.condition(
-            f"datum.{metric} >= {midpoint}", alt.value(DARK_INK), alt.value(WHITE)
+            "datum.metric_band === 'High'", alt.value(WHITE), alt.value(DARK_INK)
         ),
     )
     return _base(heatmap + text, height=300)
@@ -278,7 +276,7 @@ def rr_sensitivity(rr: pd.DataFrame) -> alt.Chart:
 
     curve = (
         alt.Chart(rr)
-        .mark_line(color=GOLD, strokeWidth=2.8)
+        .mark_line(color=NAVY, strokeWidth=2.8)
         .encode(
             x=alt.X("reward_risk:Q", title="Reward:risk target", scale=alt.Scale(zero=False)),
             y=alt.Y("daily_sharpe:Q", title="Daily Sharpe", scale=alt.Scale(zero=True)),
@@ -293,7 +291,7 @@ def rr_sensitivity(rr: pd.DataFrame) -> alt.Chart:
     )
     frozen = (
         alt.Chart(pd.DataFrame({"reward_risk": [1.0]}))
-        .mark_rule(color=IVORY, strokeDash=[5, 4], strokeWidth=1.5)
+        .mark_rule(color=GOLD, strokeDash=[5, 4], strokeWidth=1.5)
         .encode(x="reward_risk:Q")
     )
     return _base(curve + frozen, height=300)
@@ -304,7 +302,7 @@ def monte_carlo_fan(fan: pd.DataFrame) -> alt.Chart:
 
     outer = (
         alt.Chart(fan)
-        .mark_area(color=NAVY, opacity=0.64)
+        .mark_area(color=NAVY, opacity=0.14)
         .encode(
             x=alt.X("month:Q", title="Simulated month", scale=alt.Scale(zero=True)),
             y=alt.Y("p05:Q", title="Cumulative P&L per contract (USD)"),
@@ -319,15 +317,15 @@ def monte_carlo_fan(fan: pd.DataFrame) -> alt.Chart:
     )
     inner = (
         alt.Chart(fan)
-        .mark_area(color=IVORY, opacity=0.12)
+        .mark_area(color=GOLD, opacity=0.20)
         .encode(x="month:Q", y="p25:Q", y2="p75:Q")
     )
     median = (
         alt.Chart(fan)
-        .mark_line(color=GOLD, strokeWidth=2.8)
+        .mark_line(color=NAVY, strokeWidth=2.8)
         .encode(x="month:Q", y="p50:Q")
     )
-    zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=IVORY, opacity=0.50).encode(y="y:Q")
+    zero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=CHARCOAL, opacity=0.42).encode(y="y:Q")
     return _base(outer + inner + median + zero, height=360)
 
 
@@ -336,7 +334,7 @@ def terminal_distribution(paths: pd.DataFrame, summary: dict[str, float | int]) 
 
     bars = (
         alt.Chart(paths)
-        .mark_bar(color=GOLD, opacity=0.82)
+        .mark_bar(color=NAVY, opacity=0.84)
         .encode(
             x=alt.X(
                 "terminal_pnl_usd:Q",
@@ -365,7 +363,7 @@ def terminal_distribution(paths: pd.DataFrame, summary: dict[str, float | int]) 
                 "reference:N",
                 scale=alt.Scale(
                     domain=["Zero", "P05", "Median"],
-                    range=[IVORY, NAVY, GOLD],
+                    range=[CHARCOAL, GOLD, NAVY],
                 ),
                 title=None,
             ),
@@ -388,7 +386,7 @@ def drawdown_distribution(paths: pd.DataFrame) -> alt.Chart:
     frame = paths.assign(drawdown_loss_usd=-paths["max_drawdown_usd"])
     bars = (
         alt.Chart(frame)
-        .mark_bar(color=NAVY, opacity=0.88)
+        .mark_bar(color=GOLD, opacity=0.82)
         .encode(
             x=alt.X(
                 "drawdown_loss_usd:Q",
@@ -422,11 +420,10 @@ def parameter_surface_heatmap(
         "net_pnl_usd": "Net P&L (USD)",
     }[metric]
     fmt = ".3f" if metric != "net_pnl_usd" else "$,.0f"
-    midpoint = float(frame[metric].min() + frame[metric].max()) / 2
     display_frame = _metric_bands(frame, metric)
     heatmap = (
         alt.Chart(display_frame)
-        .mark_rect(stroke=IVORY, strokeOpacity=0.10)
+        .mark_rect(stroke=WHITE, strokeOpacity=0.92)
         .encode(
             x=alt.X(f"{x_field}:O", title=x_title, sort="ascending"),
             y=alt.Y(f"{y_field}:O", title=y_title, sort="ascending"),
@@ -452,12 +449,12 @@ def parameter_surface_heatmap(
     values = heatmap.mark_text(fontSize=10).encode(
         text=alt.Text(f"{metric}:Q", format=fmt),
         color=alt.condition(
-            f"datum.{metric} >= {midpoint}", alt.value(DARK_INK), alt.value(WHITE)
+            "datum.metric_band === 'High'", alt.value(WHITE), alt.value(DARK_INK)
         ),
     )
     frozen = (
         alt.Chart(display_frame.loc[display_frame["is_frozen"]])
-        .mark_point(shape="diamond", size=150, filled=False, stroke=WHITE, strokeWidth=2.2)
+        .mark_point(shape="diamond", size=150, filled=False, stroke=CHARCOAL, strokeWidth=2.2)
         .encode(x=f"{x_field}:O", y=f"{y_field}:O")
     )
     return _base(heatmap + values + frozen, height=360)
@@ -482,7 +479,7 @@ def gate_sensitivity_chart(gates: pd.DataFrame, metric: str) -> alt.Chart:
             color=alt.Color(
                 "gate_kind:N",
                 title="Gate",
-                scale=alt.Scale(domain=["SMA", "EMA"], range=[GOLD, IVORY]),
+                scale=alt.Scale(domain=["SMA", "EMA"], range=[NAVY, GOLD]),
             ),
             strokeDash=alt.StrokeDash(
                 "gate_kind:N",
@@ -499,7 +496,7 @@ def gate_sensitivity_chart(gates: pd.DataFrame, metric: str) -> alt.Chart:
     )
     frozen = (
         alt.Chart(frame.loc[frame["is_frozen"]])
-        .mark_rule(color=IVORY, strokeDash=[5, 4], strokeWidth=1.5)
+        .mark_rule(color=CHARCOAL, strokeDash=[5, 4], strokeWidth=1.5)
         .encode(x="gate_length:Q")
     )
     return _base(lines + frozen, height=300)
@@ -527,8 +524,8 @@ def cutoff_sensitivity_chart(cutoffs: pd.DataFrame, metric: str) -> alt.Chart:
             y=alt.Y(f"{metric}:Q", title=label, scale=alt.Scale(zero=True)),
             color=alt.condition(
                 "datum.is_frozen",
-                alt.value(GOLD),
-                alt.value(GOLD),
+                alt.value(NAVY),
+                alt.value(LIGHT_BLUE),
             ),
             opacity=alt.condition("datum.is_frozen", alt.value(1.0), alt.value(0.46)),
             tooltip=[
