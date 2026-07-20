@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from src.charts import annual_pnl, equity_curve
-from src.data import load_snapshot, monthly_frame, snapshot_sha256, yearly_frame
+from src.data import load_snapshot, monthly_frame, yearly_frame
 from src.ui import render_page_header, render_research_boundary, render_section_header
 
 
@@ -114,32 +114,26 @@ evidence_register = pd.DataFrame(
     [
         {
             "Review": "Lookahead and prior input audit",
-            "State": ":blue-badge[Reviewed]",
             "Interpretation": "No future information found in the reviewed path",
         },
         {
             "Review": "Costs, slippage, and fill resolution",
-            "State": ":blue-badge[Reviewed]",
             "Interpretation": "Headline result remains positive in the displayed battery",
         },
         {
             "Review": "CPCV, permutation, regime, and parameter stress",
-            "State": ":blue-badge[Reviewed]",
             "Interpretation": "Historical fragility challenged from multiple angles",
         },
         {
             "Review": "Paper forward test",
-            "State": ":gray-badge[Missing]",
             "Interpretation": "No prospective performance conclusion",
         },
         {
             "Review": "Before 2021 and broader data provider coverage",
-            "State": ":gray-badge[Missing]",
             "Interpretation": "Time and source coverage remain bounded",
         },
         {
             "Review": "Persistence of historical performance",
-            "State": ":gray-badge[Unknowable]",
             "Interpretation": "Historical evidence is not a forecast",
         },
     ]
@@ -152,9 +146,8 @@ with st.container(border=True, key="brief_evidence_register"):
         hide_index=True,
         column_config={
             "Review": st.column_config.TextColumn("Review", pinned=True, width="medium"),
-            "State": st.column_config.MarkdownColumn("State", width="small"),
             "Interpretation": st.column_config.TextColumn(
-                "What it establishes", width="large"
+                "Conclusion", width="large"
             ),
         },
     )
@@ -164,6 +157,5 @@ with st.container(border=True, key="research_disclosure", gap="xxsmall"):
         "Built as an AI assisted passion project: I set the research question, modeling "
         "choices, and publication standards; AI accelerated coding, documentation, and "
         "interface iteration. Every public claim remains tied to reviewed aggregate evidence. "
-        "Historical research only. This is not a trading recommendation or signal service. "
-        f"Snapshot digest: `{snapshot_sha256()}`"
+        "Historical research only. This is not a trading recommendation or signal service."
     )

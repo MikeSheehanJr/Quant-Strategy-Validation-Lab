@@ -67,3 +67,20 @@ def test_forward_page_states_that_evidence_has_not_started():
     assert any(item.value == "Forward test contract" for item in app.subheader)
     assert not any(metric.label == "Evidence state" for metric in app.metric)
     assert any(item.value == "Next required gate" for item in app.subheader)
+
+
+def test_public_pages_hide_badge_markup_and_source_hashes():
+    page_sources = [
+        APP.read_text(encoding="utf-8"),
+        IMPLEMENTATION.read_text(encoding="utf-8"),
+        FORWARD_VALIDATION.read_text(encoding="utf-8"),
+        (ROOT / "app_pages" / "research_brief.py").read_text(encoding="utf-8"),
+    ]
+    visible_source = "\n".join(page_sources)
+    for hidden_text in (
+        ":blue-badge[",
+        ":gray-badge[",
+        "Source SHA-256",
+        "Snapshot digest",
+    ):
+        assert hidden_text not in visible_source
