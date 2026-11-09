@@ -20,8 +20,12 @@ from pathlib import Path
 from typing import Any
 
 
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "public_snapshot.json"
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.contracts import validate_public_snapshot
 
 
 def file_sha256(path: Path) -> str:
@@ -249,7 +253,7 @@ def build_snapshot(source_root: Path) -> dict[str, Any]:
             "trade_count": stats["n"],
             "win_rate_pct": stats["win"],
             "profit_factor": stats["pf"],
-            "net_pnl_per_contract_usd": stats["net"],
+            "net_pnl_per_contract_usd": round(stats["net"]),
             "max_loss_per_contract_usd": stats["maxloss"],
             "expectancy_r": stats["expr"],
             "daily_sharpe": round(qa.sharpe(trades, context["univ"]), 3),
@@ -426,6 +430,7 @@ def main() -> None:
         snapshot = build_snapshot(source_root)
     finally:
         os.chdir(previous_working_directory)
+    validate_public_snapshot(snapshot)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(snapshot, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote aggregate-only snapshot: {args.output}")

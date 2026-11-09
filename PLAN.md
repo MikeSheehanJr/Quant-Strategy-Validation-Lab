@@ -1,7 +1,9 @@
 # In-depth build plan
 
-Status date: July 18, 2026  
-Project state: **Work in progress — MVP implemented locally, not yet published**
+Status date: November 8, 2026
+Project state: **Work in progress — public GitHub repository exists; current hosted app and remote controls are unverified**
+
+Evidence dates are distinct: the Python research snapshot is dated July 18, 2026; the Pine TradingView export was reviewed July 16, 2026; this status and software review is dated November 8, 2026. The November review does not refresh historical strategy evidence. Paper forward observations have not been collected.
 
 ## 1. Objective
 
@@ -69,7 +71,7 @@ Top navigation keeps the full project to four pages: Research brief, Robustness,
 - A restrained single-root blue palette across charts, controls, tables, and navigation
 - No gradients inside chart marks
 - No fake cards, balances, wallets, or brokerage controls
-- No custom CSS; use Streamlit’s native theme and components
+- Use Streamlit’s native components and the existing scoped visual layer; avoid broad CSS redesign
 - Mobile-friendly stacking and no more than four fixed columns
 
 ## 4. Public data contract
@@ -116,13 +118,13 @@ data/public_snapshot.json
         +--> tests + release preflight + CI
 ```
 
-The deployed app has no network connection, secrets, or private source dependency. Its only data dependency is the checked-in aggregate JSON snapshot.
+The intended hosted app has no network connection, secrets, or private source dependency. Its only strategy-data dependency is the checked-in aggregate JSON snapshot. The currently hosted app was not verified during this status review.
 
 ## 6. Workstreams and execution status
 
 ### Phase 1 — Isolate the public project
 
-Status: **Complete**
+Status: **Complete locally**
 
 Tasks:
 
@@ -134,11 +136,11 @@ Tasks:
 Exit evidence:
 
 - Replication gate returned 729 trades, 58.8% win rate, and 1.315 profit factor for the 30-minute fill baseline.
-- No private files are imported by the deployed app.
+- No private files are imported by the app code in this repository.
 
 ### Phase 2 — Build the aggregate evidence snapshot
 
-Status: **Complete**
+Status: **Complete locally**
 
 Tasks:
 
@@ -213,22 +215,22 @@ Exit evidence:
 
 ### Phase 6 — Publish and verify
 
-Status: **Pending user action**
+Status: **Partially complete; repository exists, hosted deployment and remote controls unverified**
 
 Tasks:
 
-- Create the GitHub repository, preferably private first.
-- Run `scripts/release_gate.py`; CI independently reruns the same fail-closed gate.
-- Make the repository public only after the final audit.
+- Confirm the public GitHub repository remains accessible while logged out.
+- Run `scripts/release_gate.py`; confirm CI independently reruns the same fail-closed gate.
+- Recheck repository visibility and release boundary after the final audit.
 - Run `scripts/configure_github_security.py OWNER/REPO` to enable and verify supported remote controls.
-- Deploy the Streamlit app from `main` using Python 3.12 and no secrets.
-- Open both URLs in a logged-out/private browser window.
+- Verify the Streamlit deployment from `main` using Python 3.12 and no secrets.
+- Open both URLs in a logged-out/private browser window and confirm the app matches the reviewed snapshot.
 - Add the project to LinkedIn and the resume.
 
 Exit criteria:
 
 - Public GitHub URL works when logged out.
-- Live app works when logged out and contains no private content.
+- Hosted app is verified while logged out and contains no private content.
 - CI is green.
 - LinkedIn and resume links resolve correctly.
 

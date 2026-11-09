@@ -12,6 +12,9 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# Standalone script entrypoints must resolve the same pure contracts as the app.
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 MAX_PUBLIC_FILE_BYTES = 1_500_000
 TEXT_SUFFIXES = {
     ".csv",
@@ -307,6 +310,12 @@ def _snapshot_problems(root: Path) -> list[str]:
     except json.JSONDecodeError as exc:
         return problems + [f"invalid public snapshot JSON: {exc}"]
 
+    try:
+        from src.contracts import validate_public_snapshot
+        validate_public_snapshot(snapshot)
+    except (ValueError, TypeError, KeyError, AttributeError) as exc:
+        return problems + [f"invalid public snapshot contract: {exc}"]
+
     present_raw_keys = RAW_SNAPSHOT_KEYS.intersection(_walk_keys(snapshot))
     if present_raw_keys:
         problems.append(f"raw/trade-level snapshot keys found: {sorted(present_raw_keys)}")
@@ -336,47 +345,16 @@ def _forward_validation_problems(root: Path) -> list[str]:
     except json.JSONDecodeError as exc:
         return [f"invalid forward-validation JSON: {exc}"]
 
-    required = {
-        "schema_version",
-        "status",
-        "last_updated",
-        "candidate",
-        "public_reporting",
-        "evidence",
-        "next_gate",
-    }
-    missing = required.difference(status)
-    if missing:
-        problems.append(f"forward-validation status missing sections: {sorted(missing)}")
-        return problems
-
-    reporting = status.get("public_reporting", {})
-    if reporting.get("live_signals") is not False:
-        problems.append("forward-validation status does not exclude live signals")
-    if reporting.get("trade_level_records") is not False:
-        problems.append("forward-validation status does not exclude trade-level records")
-    if str(reporting.get("granularity", "")).lower() != "aggregate monthly":
-        problems.append("forward-validation public granularity is not aggregate monthly")
-
-    evidence = status.get("evidence", {})
-    if status.get("status") == "not_started" and (
-        evidence.get("public_observation_count") != 0
-        or evidence.get("complete_months") != 0
-    ):
-        problems.append("not-started forward-validation status reports observations")
-
-    candidate = status.get("candidate", {})
+    present_raw_keys = RAW_SNAPSHOT_KEYS.intersection(_walk_keys(status))
+    if present_raw_keys:
+        problems.append(f"raw/trade-level forward keys found: {sorted(present_raw_keys)}")
     manifest_path = root / "pinescript" / "manifest.json"
     try:
+        from src.forward import validate_forward_status
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        current = next(version for version in manifest["versions"] if version["current"])
-    except (FileNotFoundError, json.JSONDecodeError, KeyError, StopIteration) as exc:
-        problems.append(f"cannot validate forward candidate against Pine manifest: {exc}")
-        return problems
-    if candidate.get("version") != current.get("version"):
-        problems.append("forward candidate version differs from current Pine version")
-    if candidate.get("source_sha256") != current.get("sha256"):
-        problems.append("forward candidate hash differs from current Pine source hash")
+        validate_forward_status(status, manifest)
+    except (OSError, ValueError, TypeError, KeyError, AttributeError, StopIteration) as exc:
+        problems.append(f"invalid forward-validation contract: {exc}")
     return problems
 
 

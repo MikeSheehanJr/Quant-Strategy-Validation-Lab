@@ -42,7 +42,7 @@ lineage = pd.DataFrame(
     [
         {
             "Track": "Pine companion",
-            "Specification": "15 minute symmetric ORB",
+            "Specification": "Symmetric ORB on 15-minute bars; 30-minute opening range",
             "Evidence role": "Implementation and TradingView traceability",
         },
         {
@@ -79,7 +79,7 @@ script_flow = pd.DataFrame(
         {
             "Stage": "Range",
             "Decision rule": "09:30–10:00 ET high / low",
-            "Guardrail": "MNQ · 15 minute lock",
+            "Guardrail": "MNQ · 15-minute chart lock; two bars define the range",
         },
         {
             "Stage": "Trigger",
@@ -105,7 +105,10 @@ script_flow = pd.DataFrame(
 )
 with st.container(border=True, key="script_flow"):
     st.subheader("Execution state machine")
-    st.caption("Five stages connect the research rule to explicit engineering controls.")
+    st.caption(
+        "Five stages connect the research rule to explicit engineering controls. "
+        "The 09:30–10:00 ET range spans two bars on the locked 15-minute chart."
+    )
     st.dataframe(
         script_flow,
         hide_index=True,
@@ -183,7 +186,9 @@ with st.container(border=True, key="pine_evidence_summary"):
     st.caption(
         "These aggregates derive from the July 16, 2026 TradingView List of Trades export. "
         "The source trade list is retained privately; timestamps, prices, "
-        "quantities, and individual outcomes remain outside the release boundary."
+        "quantities, and individual outcomes remain outside the release boundary. "
+        "This Pine track uses dynamic sizing, $1.82 round-turn commission, and one tick "
+        "of slippage per fill; those assumptions differ from the Python headline track."
     )
     with st.container(horizontal=True, gap="small"):
         st.metric("Full export net P&L", f"${full_export['net_pnl_usd']:,.0f}", border=True)

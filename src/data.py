@@ -10,9 +10,20 @@ from typing import Any
 
 import pandas as pd
 
+from src.contracts import validate_public_snapshot
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SNAPSHOT = PROJECT_ROOT / "data" / "public_snapshot.json"
+
+
+def _unique_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"Snapshot JSON contains duplicate key: {key}")
+        value[key] = item
+    return value
 
 
 @lru_cache(maxsize=2)
@@ -25,30 +36,9 @@ def load_snapshot(path: str | Path = DEFAULT_SNAPSHOT) -> dict[str, Any]:
 
     snapshot_path = Path(path)
     with snapshot_path.open(encoding="utf-8") as handle:
-        snapshot: dict[str, Any] = json.load(handle)
+        snapshot: dict[str, Any] = json.load(handle, object_pairs_hook=_unique_json_keys)
 
-    required = {
-        "meta",
-        "headline",
-        "monthly",
-        "yearly",
-        "sides",
-        "execution",
-        "rr_sensitivity",
-        "parameter_surfaces",
-        "gate_sensitivity",
-        "entry_cutoff_sensitivity",
-        "validation",
-        "failed_ideas",
-        "project_status",
-        "limitations",
-    }
-    missing = required.difference(snapshot)
-    if missing:
-        raise ValueError(f"Snapshot is missing required sections: {sorted(missing)}")
-    if snapshot["meta"].get("raw_market_data_included") is not False:
-        raise ValueError("Public snapshot must explicitly exclude raw market data")
-    return snapshot
+    return validate_public_snapshot(snapshot)
 
 
 def snapshot_sha256(path: str | Path = DEFAULT_SNAPSHOT) -> str:

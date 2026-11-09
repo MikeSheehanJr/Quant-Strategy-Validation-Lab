@@ -16,6 +16,17 @@ The strategy case study uses:
 
 This is enough specification to understand the experiment. The public project does not distribute raw data or operate as a live signal service.
 
+The headline values below belong only to the Python research snapshot dated 2026-07-18. The Pine Script companion is a separate implementation/evidence track with its own chart resolution, position sizing, TradingView fee configuration, and export windows. No values or costs are pooled across tracks.
+
+## Evidence tracks and dates
+
+| Track | Evidence and specification | As-of date | Cost and window boundary |
+|---|---|---|---|
+| Python headline | 30-minute opening range, one contract, filtered rules; public monthly and reviewed stress aggregates | Snapshot 2026-07-18 | $1.20 round-turn commission plus 0.5 tick modeled slippage; June 2021–June 2026, with partial edge months and partial 2026 |
+| Pine Script companion | Symmetric ORB on a 15-minute chart; its 09:30–10:00 ET range uses the first two 15-minute bars; v4.1 MNQ TradingView export | Export reviewed 2026-07-16 | Dynamic sizing, $1.82 round-turn commission, and one tick of slippage per fill; full export, 2026 YTD, and diagnostic windows are reported separately |
+
+The Pine export's full-history and 2026 YTD metrics describe that exported strategy run. They do not inherit the Python headline commission/slippage model, are not independent out-of-sample tests, and do not establish paper or live performance. See [PINESCRIPT_EVIDENCE.md](PINESCRIPT_EVIDENCE.md) for the export boundary and acceptance status.
+
 ## Headline metric definitions
 
 ### Trade count

@@ -2,17 +2,24 @@
 
 from __future__ import annotations
 
+from datetime import date
+
 import pandas as pd
 import streamlit as st
 
 from src.charts import annual_pnl, equity_curve
 from src.data import load_snapshot, monthly_frame, yearly_frame
+from src.forward import load_forward_status
 from src.ui import render_page_header, render_research_boundary, render_section_header
 
 
 snapshot = load_snapshot()
 headline = snapshot["headline"]
 meta = snapshot["meta"]
+forward_status = load_forward_status()
+forward_observations = forward_status["evidence"]["public_observation_count"]
+snapshot_date = date.fromisoformat(meta["snapshot_date"])
+snapshot_date_label = f"{snapshot_date:%B} {snapshot_date.day}, {snapshot_date.year}"
 monthly = monthly_frame(snapshot)
 yearly = yearly_frame(snapshot)
 complete_years = yearly.loc[yearly["period_status"] == "Complete"]
@@ -26,6 +33,26 @@ render_page_header(
     "out of sample checks, parameter changes, and skeptical review?",
 )
 render_research_boundary(meta)
+
+with st.container(border=True, key="evidence_status_panel"):
+    st.subheader("Evidence status and next gates")
+    st.caption(
+        f"Evidence snapshot: {snapshot_date_label} · software and documentation review: "
+        "November 8, 2026. The later review date does not refresh historical results."
+    )
+    status_rows = pd.DataFrame(
+        [
+            {"Track": "Python headline", "Known evidence": "Reviewed historical aggregates through Jun 2026", "Status": "Historical only; final year partial"},
+            {"Track": "Pine companion", "Known evidence": "Reviewed TradingView export dated Jul 16, 2026", "Status": "Negative 2026 YTD retained; open UI acceptance checks"},
+            {
+                "Track": "Paper forward test",
+                "Known evidence": "No observations collected" if forward_observations == 0 else f"{forward_observations} published paper observations",
+                "Status": f"{forward_status['status'].replace('_', ' ').capitalize()}; see Forward validation",
+            },
+            {"Track": "Hosted app", "Known evidence": "Public GitHub repository exists", "Status": "Current hosted deployment unverified"},
+        ]
+    )
+    st.dataframe(status_rows, hide_index=True, width="stretch")
 
 with st.container(border=False, key="brief_research_read", gap="small"):
     st.caption("MY CURRENT READ")
@@ -98,7 +125,7 @@ with market_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("01 / REFERENCE")
         st.subheader("Define the morning range")
-        st.write("Use only the 09:30–10:00 ET session high and low.")
+        st.write("Use the 09:30–10:00 ET session high and low: a 30-minute range.")
 with signal_col:
     with st.container(border=True, height="stretch", gap="xxsmall"):
         st.caption("02 / ENTRY")
