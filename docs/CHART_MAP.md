@@ -17,3 +17,5 @@
 | Robustness · Validation | What hypotheses failed? | Table | idea, result, decision | Rejected ideas are part of the research record. | Neutral | Reviewed failure journal |
 
 Final QA surface: the locally running Streamlit app at desktop and narrow browser widths.
+
+Evidence status is also shown on the Research brief: Python and Pine snapshot dates, the negative Pine 2026 YTD result, outstanding Pine acceptance checks, no collected paper-forward observations, and unverified hosted-app state. Software review date (2026-11-08) is labeled separately from both evidence dates.

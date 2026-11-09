@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0.0",
   "track_name": "ORB Symmetric Pine Script evolution",
-  "track_scope": "15-minute, two-sided opening-range breakout companion implementation",
+  "track_scope": "15-minute chart bars; 30-minute opening range (09:30–10:00 ET); two-sided breakout companion implementation",
   "relationship_to_headline": "This Pine Script track is a related implementation study, not the exact 30-minute filtered Python engine behind the dashboard headline metrics.",
   "versions": [
     {

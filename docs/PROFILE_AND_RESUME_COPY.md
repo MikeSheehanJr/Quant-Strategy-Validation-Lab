@@ -8,7 +8,7 @@ The current ready-to-publish package is split into three focused files:
 
 Use those files for the final launch. The longer variants below remain available for future applications and role-specific tailoring.
 
-Replace bracketed URL placeholders only after both links work while logged out.
+Replace bracketed URL placeholders only after each link works while logged out. The hosted app link has not been verified as of the November 8, 2026 software review; do not describe it as a confirmed live demo until checked.
 
 For a plain-English GitHub announcement, repository description, profile-pin copy, and first-release notes, use [GITHUB_LAUNCH_COPY.md](GITHUB_LAUNCH_COPY.md).
 
@@ -91,20 +91,20 @@ A work-in-progress research lab showing how a simple intraday strategy was teste
 ## Resume entry: balanced quant and research version
 
 **Quant Strategy Validation Lab (Work in Progress)** | Python, pandas, Altair, Streamlit, pytest  
-[GITHUB_URL] | [APP_URL]
+[GITHUB_URL]
 
-- Built a bias-aware research pipeline for a 30-minute MNQ opening-range breakout; evaluated 729 historical cost-adjusted trades from Jun 2021–Jun 2026, observing a 58.8% win rate and 1.315 profit factor in the research sample.
-- Applied lookahead reconstruction, combinatorial purged cross-validation, permutation tests, multiple-testing controls, and execution/parameter stress matrices; documented rejected hypotheses and unresolved limitations.
-- Developed a public-safe Streamlit dashboard and aggregate data contract with pytest, GitHub Actions, source hashes, and release checks that exclude licensed raw data, trade-level records, secrets, and local paths.
+- Built a modular Python research application with separate data-contract, metric, chart, and presentation layers using pandas, Altair, and Streamlit.
+- Added automated checks for aggregate-data contracts, chart specifications, page rendering, and public-release boundaries; wired the project into GitHub Actions.
+- Packaged reviewed research outputs as aggregate-only artifacts with provenance hashes and documented limitations; the hosted app and remote CI state require current verification.
 
 ## Resume entry: quant developer version
 
 **Quant Strategy Validation Lab (Work in Progress)** | Python, Streamlit, pandas, Altair, pytest, GitHub Actions  
-[GITHUB_URL] | [APP_URL]
+[GITHUB_URL]
 
-- Engineered a modular quantitative research app with separate data-contract, metric, chart, and presentation layers; added reproducible dependency pins, automated CI, and Streamlit rendering tests.
-- Packaged reviewed backtest outputs into a versioned aggregate-only JSON artifact with source hashes and reconciliation tests, keeping licensed intraday and trade-level data outside the public boundary.
-- Implemented interactive execution-cost and parameter-sensitivity diagnostics for 729 historical trades, plus a fail-closed release scanner for secrets, local paths, oversized files, and prohibited market-data formats.
+- Engineered a modular quantitative research app with separate data-contract, metric, chart, and presentation layers; added dependency pins, automated CI configuration, and Streamlit rendering checks.
+- Built aggregate-only data contracts and reconciliation checks that keep licensed intraday bars and trade-level records outside the public application.
+- Added interactive execution and parameter diagnostic views plus a release scanner for secrets, local paths, oversized files, and prohibited market-data formats.
 
 ## Resume entry: data science version
 

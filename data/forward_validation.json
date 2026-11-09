@@ -1,13 +1,128 @@
 {
-  "schema_version": "1.0.0",
-  "status": "not_started",
-  "last_updated": "2026-07-18",
+  "schema_version": "2.0.0",
+  "status": "not_ready",
+  "last_updated": "2026-11-08",
   "candidate": {
+    "id": "mnq-paper-prospective-1",
     "track": "15-minute symmetric ORB Pine Script companion",
     "version": "v4.1",
-    "freeze_date": "2026-07-16",
+    "registered_at": "2026-11-08",
+    "relationship_to_headline": "Related paper-control implementation; not the 30-minute Python headline engine.",
     "source_sha256": "e240d1259a0343ad92aee521004f977ed1c7cd01f6b6795b881dc34fcd423275",
-    "relationship_to_headline": "Related paper-control implementation; not the 30-minute Python headline engine."
+    "source_file": "pinescript/versions/orb_sym_v4_1_mnq.pine",
+    "settings": {
+      "chart_symbol": "MNQ continuous contract",
+      "chart_timeframe": "15 minutes",
+      "timezone": "America/New_York",
+      "session": "RTH 09:30-16:00 ET",
+      "opening_range": "09:30-10:00 ET",
+      "sizing_mode": "Dynamic $ budget",
+      "risk_budget_usd": 300,
+      "max_micro_contracts": 10,
+      "commission_usd_per_side": 0.91,
+      "slippage_ticks_per_fill": 1,
+      "early_close_guard": true,
+      "alerts": "observation only",
+      "early_close_dates": "2026-09-07,2026-11-26,2026-11-27,2026-12-24,2027-01-18,2027-02-15,2027-05-31,2027-06-18,2027-07-05"
+    },
+    "settings_sha256": null,
+    "calendar": {
+      "source": null,
+      "sha256": null,
+      "verified_at": null
+    },
+    "freeze_date": null,
+    "collection_start": null,
+    "ready_registered_at": null
+  },
+  "candidate_history": [
+    {
+      "id": "v4.1-legacy-2026-07-16",
+      "track": "15-minute symmetric ORB Pine Script companion",
+      "version": "v4.1",
+      "freeze_date": "2026-07-16",
+      "source_sha256": "e240d1259a0343ad92aee521004f977ed1c7cd01f6b6795b881dc34fcd423275",
+      "settings_sha256": null,
+      "calendar_sha256": null,
+      "protocol_sha256": null,
+      "status": "archived",
+      "public_observation_count": 0,
+      "note": "Archived v1.0.0 status; no paper observations or acceptance approval were recorded.",
+      "monthly_records": []
+    }
+  ],
+  "protocol": {
+    "id": "mnq-paper-forward-v1",
+    "version": "1.0.0",
+    "registered_at": "2026-11-08",
+    "first_review_complete_months": 3,
+    "first_review_resolved_trades": 60,
+    "max_unresolved_for_conclusion": 0,
+    "month_definition": "Complete America/New_York calendar month, starting on day 1",
+    "opportunity_accounting": "Every detected opportunity is resolved trade, no-trade decision, or unresolved",
+    "revision_policy": "Append corrections; retain original and negative outcomes",
+    "decision_rule": "At first review, if any tracking errors were recorded, decision is inconclusive; otherwise total net R above zero supports further research and total net R at or below zero does not support. This descriptive checkpoint is not an alpha guarantee.",
+    "sha256": "1ce95e1e8dcef70e6a36c6d77422573a8f911af99fb03d9c82d1f0ebe378142c",
+    "decision_policy": {
+      "tracking_errors_present": "inconclusive",
+      "positive_total_net_r": "supports_further_research",
+      "nonpositive_total_net_r": "does_not_support"
+    }
+  },
+  "acceptance": {
+    "status": "pending",
+    "cases": [
+      {
+        "id": "wrong_symbol",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "wrong_timeframe",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "rth_eth_missing_post_session_bar",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "early_close",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "opening_range_missing",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "entry_exit",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "brackets",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "fees",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "sizing",
+        "status": "pending",
+        "evidence_ref": null
+      },
+      {
+        "id": "alerts",
+        "status": "pending",
+        "evidence_ref": null
+      }
+    ]
   },
   "public_reporting": {
     "cadence": "complete calendar months only",
@@ -19,7 +134,12 @@
   "evidence": {
     "public_observation_count": 0,
     "complete_months": 0,
-    "conclusion": "No forward-performance conclusion."
+    "resolved_trades": 0,
+    "unresolved_opportunities": 0,
+    "monthly_records": [],
+    "conclusion": "No forward-performance conclusion.",
+    "review": null
   },
-  "next_gate": "Register the minimum sample, integrity checks, and decision rule in version control before observation collection begins."
+  "next_gate": "Confirm the TradingView acceptance cases, verified calendar source and hash, exact settings hash, freeze date, and future first-of-month collection start before paper collection.",
+  "protocol_history": []
 }

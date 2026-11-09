@@ -43,6 +43,11 @@ def _dependency_audit_command() -> list[str]:
 
 
 def main() -> int:
+    try:
+        audit_command = _dependency_audit_command()
+    except RuntimeError as exc:
+        print(f"\nRelease gate FAILED: {exc}", file=sys.stderr)
+        return 1
     checks = [
         (
             "Compile Python",
@@ -59,8 +64,9 @@ def main() -> int:
             ],
         ),
         ("Public-release scan", [sys.executable, "scripts/preflight_public_release.py"]),
+        ("Forward evidence history", [sys.executable, "scripts/check_forward_transition.py"]),
         ("Automated tests", [sys.executable, "-m", "pytest", "-q"]),
-        ("Dependency vulnerability audit", _dependency_audit_command()),
+        ("Dependency vulnerability audit", audit_command),
     ]
     try:
         for label, command in checks:

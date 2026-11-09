@@ -1,6 +1,6 @@
 # Quant strategy validation lab
 
-> **Work in progress:** an AI-assisted passion project in quantitative research and Python engineering.
+> **Work in progress:** an AI-assisted passion project in quantitative research and Python engineering. Repository snapshot: July 18, 2026; project documentation and interface reviewed November 8, 2026. The hosted app's current state has not been verified.
 
 I started this project because I wanted to understand how a promising backtest behaves when
 the research process is designed to challenge it. AI has been a development partner for code
@@ -11,7 +11,7 @@ This project asks a deliberately narrow question:
 
 > Can a simple intraday strategy survive realistic costs, out-of-sample testing, parameter perturbation, and skeptical review?
 
-The headline case study is a 30-minute opening-range breakout on MNQ. A separate Pine Script evidence track preserves the real `v1`–`v4.1` evolution of a related 15-minute symmetric ORB and its reviewed aggregate TradingView results. The tracks are labeled separately and their metrics are never combined. The project contains no raw market data, credentials, brokerage information, live signals, or trade-level records.
+The headline case study is a 30-minute opening-range breakout on MNQ. A separate Pine Script evidence track preserves the `v1`–`v4.1` evolution of a related symmetric ORB evaluated on a 15-minute chart. Its 09:30–10:00 ET opening range spans two chart bars. The tracks use different engines, sizing, cost assumptions, and evidence windows; their metrics are labeled separately and never combined. The project contains no raw market data, credentials, brokerage information, live signals, or trade-level records.
 
 ## Current research snapshot
 
@@ -21,9 +21,9 @@ The headline case study is a 30-minute opening-range breakout on MNQ. A separate
 - 1.317 calendar-honest daily Sharpe
 - 45/45 CPCV splits positive out of sample
 - 24/24 fill-resolution × cost stress cells profitable
-- Research window: June 2021 through June 2026
+- Research window: June 2021 through June 2026 (partial final year)
 
-These are historical research results, not expected returns. The sample begins in June 2021, the 2026 result is partial, and paper forward-testing is still outstanding.
+These are historical Python-engine research results, not expected returns. The sample begins in June 2021, the 2026 result is partial, and paper forward-testing is still outstanding. The Pine track also retains its negative 2026 YTD aggregate and is not evidence of forward performance. Snapshot date: July 18, 2026; software/documentation review date: November 8, 2026.
 
 ## What this demonstrates
 
@@ -78,6 +78,10 @@ scripts/build_public_snapshot.py
 scripts/preflight_public_release.py
                               Fail-closed artifact and runtime scan
 scripts/release_gate.py       One-command tests, scan, compile, and dependency audit
+scripts/check_forward_transition.py
+                              Compare paper evidence with its trusted Git baseline
+scripts/build_forward_evidence.py
+                              Offline publisher for reconciled monthly aggregates
 scripts/configure_github_security.py
                               One-time remote security configuration
 tests/                        Data, chart, app, and safety tests
@@ -89,19 +93,21 @@ docs/                         Methodology, roadmap, and publishing guide
 - **Research brief:** plain-English strategy, headline evidence, historical path, and the current research conclusion
 - **Robustness:** one focused control for historical risk, Monte Carlo, parameter stability, validation evidence, and rejected ideas
 - **Implementation:** inspectable Pine Script v1–v4.1 evolution, reviewed TradingView aggregates, downloadable CSV evidence, and open acceptance checks
-- **Forward validation:** the hash-pinned v4.1 paper candidate, aggregate-only reporting protocol, and an explicit not-started evidence state
+- **Forward validation:** the proposed v4.1 paper candidate, registered sample and decision rules, pending acceptance checks, and zero observations
 
 The Monte Carlo uses 59 complete monthly P&L aggregates and a fixed public seed. It is a resampling stress view, not a forecast, and cannot create regimes absent from the historical sample.
 
 ## Work-in-progress roadmap
 
-The public build and safety boundary are complete. The remaining research work includes:
+The local build and safety boundary are implemented. The public GitHub repository exists; remote CI/security settings and the hosted app were not re-verified for this snapshot. The remaining research work includes:
 
-1. Register the forward-test sample, integrity checks, and decision rule before collection begins.
-2. Complete and reconcile the paper forward-test.
+1. Complete the [TradingView acceptance matrix](docs/PAPER_ACCEPTANCE.md), verify the applied calendar, freeze the settings, and register a future collection start. The first-review sample and descriptive decision rules are already versioned in the [forward protocol](docs/FORWARD_VALIDATION.md).
+2. Collect and reconcile real paper observations, then publish closed-month aggregates through the offline publisher. The current status is `not_ready`; no forward results are included.
 3. Add pre-2021 MNQ/NQ validation under an appropriate data license.
 
 See [PLAN.md](PLAN.md) for the full build plan, [docs/GITHUB_LAUNCH_COPY.md](docs/GITHUB_LAUNCH_COPY.md) for plain-English GitHub copy, and [docs/PUBLISHING_GUIDE.md](docs/PUBLISHING_GUIDE.md) for safe launch instructions.
+
+The release gate compares forward evidence against the PR base or previous push commit in CI. A local Git checkout is required for that history check; `FORWARD_BASE_REF` can select an explicit trusted baseline when reviewing a release. Candidate replacement is deliberately blocked until a separately reviewed archival workflow can retain the complete prior evidence.
 
 ## Data and risk boundary
 
